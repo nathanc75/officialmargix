@@ -92,7 +92,19 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
     font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+  }
+
+  table, th, td, .font-mono {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
   }
 }
 
