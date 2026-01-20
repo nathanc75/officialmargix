@@ -18,10 +18,17 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">M</span>
-            </div>
+          <a href="/" className="flex items-center gap-2.5">
+            <div 
+              className="w-7 h-7 rounded-[10px] shadow-lg"
+              style={{
+                background: `
+                  radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
+                  linear-gradient(135deg, rgba(60,120,255,0.95), rgba(130,80,255,0.80))
+                `,
+                boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
+              }}
+            />
             <span className="text-xl font-bold text-foreground">MARGIX</span>
           </a>
 
