@@ -50,9 +50,8 @@ const ContactSection = () => {
               <p className="text-sm font-semibold text-primary uppercase tracking-wider">
                 Contacts
               </p>
-              <div className="space-y-2">
+              <div>
                 <p className="text-foreground">help@margix.io</p>
-                <p className="text-foreground">+1 (555) 123-4567</p>
               </div>
             </div>
           </div>
