@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -49,6 +50,7 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
             <Button variant="ghost" size="sm">
               Book Demo
             </Button>
@@ -83,11 +85,12 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
-              <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <Button variant="ghost" size="sm" className="justify-start">
+              <div className="flex items-center gap-2 pt-4 border-t border-border">
+                <ThemeToggle />
+                <Button variant="ghost" size="sm" className="flex-1 justify-start">
                   Book Demo
                 </Button>
-                <Button size="sm">Get Started</Button>
+                <Button size="sm" className="flex-1">Get Started</Button>
               </div>
             </div>
           </div>
