@@ -51,7 +51,7 @@ const FAQSection = () => {
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
               Frequently{" "}
-              <span className="text-muted-foreground">Asked Questions</span>
+              <span className="text-gradient">Asked Questions</span>
             </h2>
             <p className="text-muted-foreground max-w-md leading-relaxed">
               Have questions? Our FAQ section has you covered with quick answers to the most common inquiries.
