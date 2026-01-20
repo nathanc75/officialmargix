@@ -8,6 +8,7 @@ import BookDemoSection from "@/components/BookDemoSection";
 import FAQSection from "@/components/FAQSection";
 import ContactSection from "@/components/ContactSection";
 import SectionDivider from "@/components/SectionDivider";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -28,6 +29,7 @@ const Index = () => {
       <FAQSection />
       <SectionDivider />
       <ContactSection />
+      <Footer />
     </div>
   );
 };
