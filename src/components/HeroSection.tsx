@@ -38,7 +38,7 @@ const HeroSection = () => {
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">327+</span> restaurants recovering revenue
+              Join <span className="font-semibold text-foreground">327+</span> restaurants recovering revenue
             </span>
           </div>
 
