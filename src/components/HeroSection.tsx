@@ -45,7 +45,7 @@ const HeroSection = () => {
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
             AI-Driven Insights to Recover Lost{" "}
-            <span className="text-primary">Restaurant Revenue</span>
+            <span className="text-gradient">Restaurant Revenue</span>
           </h1>
 
           {/* Subheadline */}
