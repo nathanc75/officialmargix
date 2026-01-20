@@ -66,7 +66,7 @@ const Navbar = () => {
                 Book Demo
               </Button>
             </a>
-            <Button size="default">Get Started</Button>
+            <Button size="default" onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}>Get Started</Button>
           </div>
 
           {/* Mobile Menu Button */}
