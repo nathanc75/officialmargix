@@ -61,9 +61,9 @@ const HeroSection = () => {
               <ArrowRight className="w-4 h-4" />
             </Button>
             <Button 
-              variant="outline" 
-              size="lg" 
-              className="h-11 px-6 text-sm font-medium gap-2"
+              variant="link" 
+              size="default" 
+              className="text-muted-foreground hover:text-foreground gap-2"
             >
               <Play className="w-4 h-4" />
               Book Demo
