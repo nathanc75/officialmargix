@@ -50,7 +50,11 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-            <Button size="lg" className="h-11 px-6 text-sm font-medium gap-2">
+            <Button 
+              size="lg" 
+              className="h-11 px-6 text-sm font-medium gap-2"
+              onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}
+            >
               Get Started
               <ArrowRight className="w-4 h-4" />
             </Button>
