@@ -58,7 +58,7 @@ const PricingSection = () => {
   const [isYearly, setIsYearly] = useState(false);
 
   return (
-    <section className="relative py-24 bg-secondary/30 overflow-hidden">
+    <section id="pricing" className="relative py-24 bg-secondary/30 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] rounded-full bg-primary/5 blur-3xl" />

@@ -57,7 +57,7 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <section className="relative py-24 bg-background overflow-hidden">
+    <section id="features" className="relative py-24 bg-background overflow-hidden">
       {/* Background gradient arc */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div 

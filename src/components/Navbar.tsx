@@ -8,11 +8,20 @@ const Navbar = () => {
 
   const navLinks = [
     { label: "Features", href: "#features" },
-    { label: "Benefits", href: "#benefits" },
+    { label: "How It Works", href: "#how-it-works" },
     { label: "Pricing", href: "#pricing" },
-    { label: "Contact", href: "#contact" },
     { label: "FAQ", href: "#faq" },
+    { label: "Contact", href: "#contact" },
   ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav className="fixed top-4 left-4 right-4 z-50 mx-auto max-w-7xl backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08),0_0_60px_-15px_hsl(221,83%,53%,0.3)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_2px_8px_rgba(0,0,0,0.3),0_0_60px_-15px_hsl(221,83%,53%,0.25)] border border-white/20 dark:border-white/10" style={{ background: 'linear-gradient(135deg, hsl(var(--hero-gradient-start) / 0.4) 0%, hsl(var(--hero-gradient-end) / 0.3) 100%)' }}>
@@ -41,6 +50,7 @@ const Navbar = () => {
               <a
                 key={link.label}
                 href={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className="text-base font-medium text-foreground hover:text-primary transition-colors"
               >
                 {link.label}
@@ -80,7 +90,7 @@ const Navbar = () => {
                   key={link.label}
                   href={link.href}
                   className="text-base font-medium text-foreground hover:text-primary transition-colors px-2"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={(e) => handleNavClick(e, link.href)}
                 >
                   {link.label}
                 </a>
