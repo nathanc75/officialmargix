@@ -4,23 +4,10 @@ import { useState } from "react";
 
 const plans = [
   {
-    name: "Free Plan",
-    price: { monthly: 0, yearly: 0 },
-    cta: "Start For Free",
-    features: [
-      "Basic revenue tracking",
-      "1 delivery platform",
-      "Up to 100 orders/month",
-      "Weekly reports",
-      "Community support",
-    ],
-  },
-  {
     name: "Starter",
     price: { monthly: 29, yearly: 20 },
     cta: "Get the Starter Plan",
     features: [
-      "Everything in Free",
       "3 delivery platforms",
       "Unlimited orders",
       "Daily reports",
@@ -111,7 +98,7 @@ const PricingSection = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div className="grid md:grid-cols-3 gap-6 mt-12">
           {plans.map((plan) => (
             <div
               key={plan.name}
