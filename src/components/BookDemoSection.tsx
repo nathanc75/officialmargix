@@ -31,7 +31,7 @@ const BookDemoSection = () => {
 
             <div className="space-y-4">
               {[
-                { icon: Clock, text: "30-minute personalized walkthrough" },
+                { icon: Clock, text: "15-minute personalized walkthrough" },
                 { icon: Users, text: "Meet with a revenue recovery specialist" },
                 { icon: Calendar, text: "Flexible scheduling to fit your needs" },
               ].map((item, index) => (
