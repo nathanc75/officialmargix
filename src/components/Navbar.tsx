@@ -29,7 +29,7 @@ const Navbar = () => {
                 boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
               }}
             >
-              <span className="text-white font-bold text-sm">M</span>
+              <span className="text-white font-semibold text-sm" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
             </div>
             <span className="text-xl font-bold text-foreground">MARGIX</span>
           </a>
