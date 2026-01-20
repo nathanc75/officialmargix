@@ -108,6 +108,16 @@ const BookDemoSection = () => {
                   />
                 </div>
 
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 block">
+                    Delivery Platforms Used
+                  </label>
+                  <Input 
+                    placeholder="e.g., Uber Eats, DoorDash, Grubhub" 
+                    className="bg-secondary/50 border-border"
+                  />
+                </div>
+
                 <Button type="submit" size="lg" className="w-full mt-2">
                   Schedule Demo
                 </Button>
