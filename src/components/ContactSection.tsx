@@ -26,7 +26,7 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="relative py-24 bg-secondary/30 overflow-hidden">
+    <section id="contact" className="relative py-24 bg-secondary/50 overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl" />

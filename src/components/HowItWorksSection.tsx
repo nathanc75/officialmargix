@@ -37,7 +37,7 @@ const HowItWorksSection = () => {
   const currentStep = steps[activeStep];
 
   return (
-    <section id="how-it-works" className="relative py-24 bg-secondary/30 overflow-hidden">
+    <section id="how-it-works" className="relative py-24 bg-secondary/50 overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-primary/3 blur-3xl" />
