@@ -86,7 +86,7 @@ const AnimatedDashboard = () => {
   };
 
   return (
-    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden group animate-float">
+    <div className="relative aspect-[4/3] sm:aspect-[16/10] rounded-2xl overflow-hidden group animate-float">
       {/* Outer glow effect */}
       <div className="absolute -inset-0.5 bg-gradient-to-br from-primary/20 via-transparent to-primary/10 rounded-2xl blur-sm opacity-60" />
       
@@ -95,26 +95,26 @@ const AnimatedDashboard = () => {
         {/* Inner highlight */}
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
         
-        <div className="absolute inset-0 p-4 sm:p-6 flex flex-col">
+        <div className="absolute inset-0 p-3 sm:p-6 flex flex-col">
           {/* Header bar */}
-          <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/30">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-destructive/70 shadow-sm shadow-destructive/30" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500/70 shadow-sm shadow-yellow-500/30" />
-              <div className="w-3 h-3 rounded-full bg-green-500/70 shadow-sm shadow-green-500/30" />
+          <div className="flex items-center justify-between mb-3 sm:mb-4 pb-2 sm:pb-3 border-b border-border/30">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-destructive/70 shadow-sm shadow-destructive/30" />
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/70 shadow-sm shadow-yellow-500/30" />
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500/70 shadow-sm shadow-green-500/30" />
             </div>
-            <div className="text-xs sm:text-sm font-medium text-muted-foreground px-3 py-1.5 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/30">
+            <div className="text-[10px] sm:text-sm font-medium text-muted-foreground px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/30">
               {getStatusDisplay()}
             </div>
           </div>
 
           {/* CSV Table */}
-          <div className="flex-1 rounded-xl bg-secondary/20 overflow-hidden border border-border/20 shadow-inner">
-            {/* Table Header */}
-            <div className="grid grid-cols-6 gap-2 px-4 py-2.5 bg-gradient-to-r from-secondary/60 to-secondary/40 text-[10px] sm:text-xs font-semibold text-muted-foreground border-b border-border/30 uppercase tracking-wide">
-              <span>Order ID</span>
-              <span>Platform</span>
-              <span>Date</span>
+          <div className="flex-1 rounded-lg sm:rounded-xl bg-secondary/20 overflow-hidden border border-border/20 shadow-inner">
+            {/* Table Header - Show fewer columns on mobile */}
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2.5 bg-gradient-to-r from-secondary/60 to-secondary/40 text-[8px] sm:text-xs font-semibold text-muted-foreground border-b border-border/30 uppercase tracking-wide">
+              <span>Order</span>
+              <span className="hidden sm:block">Platform</span>
+              <span className="hidden sm:block">Date</span>
               <span>Amount</span>
               <span>Issue</span>
               <span className="text-right">Recovered</span>
@@ -125,7 +125,7 @@ const AnimatedDashboard = () => {
               {fakeData.map((row, index) => (
                 <div
                   key={row.id}
-                  className={`grid grid-cols-6 gap-2 px-4 py-2.5 text-[10px] sm:text-xs transition-all duration-500 ${
+                  className={`grid grid-cols-4 sm:grid-cols-6 gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2.5 text-[8px] sm:text-xs transition-all duration-500 ${
                     highlightedRow === index
                       ? "bg-gradient-to-r from-primary/15 via-primary/10 to-transparent scale-[1.01] shadow-sm"
                       : highlightedRow > index
@@ -133,11 +133,11 @@ const AnimatedDashboard = () => {
                       : "bg-transparent hover:bg-secondary/30"
                   }`}
                 >
-                  <span className="font-mono text-foreground font-medium">{row.id}</span>
-                  <span className="text-muted-foreground">{row.platform}</span>
-                  <span className="text-muted-foreground">{row.date}</span>
+                  <span className="font-mono text-foreground font-medium truncate">{row.id}</span>
+                  <span className="hidden sm:block text-muted-foreground truncate">{row.platform}</span>
+                  <span className="hidden sm:block text-muted-foreground">{row.date}</span>
                   <span className="text-foreground font-medium">{row.amount}</span>
-                  <span className={`transition-colors duration-300 ${highlightedRow >= index ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                  <span className={`transition-colors duration-300 truncate ${highlightedRow >= index ? "text-destructive font-medium" : "text-muted-foreground"}`}>
                     {row.issue}
                   </span>
                   <span className={`text-right font-semibold transition-all duration-300 ${
@@ -151,13 +151,13 @@ const AnimatedDashboard = () => {
           </div>
 
           {/* Bottom Stats */}
-          <div className="mt-4 pt-3 flex items-center justify-between border-t border-border/30">
-            <span className="text-xs text-muted-foreground font-medium">
+          <div className="mt-2 sm:mt-4 pt-2 sm:pt-3 flex items-center justify-between border-t border-border/30">
+            <span className="text-[10px] sm:text-xs text-muted-foreground font-medium">
               {status === "found" ? "6 issues detected" : `${Math.max(0, highlightedRow + 1)} of 6 orders scanned`}
             </span>
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
-              <span className="text-xs text-muted-foreground">Total:</span>
-              <span className="text-sm font-bold text-primary">
+            <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+              <span className="text-[10px] sm:text-xs text-muted-foreground">Total:</span>
+              <span className="text-xs sm:text-sm font-bold text-primary">
                 ${displayAmount.toFixed(2)}
               </span>
             </div>
