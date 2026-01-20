@@ -26,6 +26,11 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center">
           {/* Social Proof Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border mb-4">
+            <div className="flex items-center gap-1">
+              {['🍽️', '📈', '🛍️', '💰'].map((emoji, i) => (
+                <span key={i} className="text-sm">{emoji}</span>
+              ))}
+            </div>
             <span className="text-sm text-muted-foreground">
               Helping restaurants uncover hidden losses
             </span>
