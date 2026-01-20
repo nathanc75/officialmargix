@@ -16,17 +16,17 @@ const BookDemoSection = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <span className="text-xs font-medium text-primary uppercase tracking-wider">
-                Book a Demo
+                Schedule a Demo
               </span>
             </div>
             
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
-              See MARGIX in Action
+              See Restaurant Revenue Recovery in Action
             </h2>
             
             <p className="text-lg text-muted-foreground mb-8">
-              Schedule a personalized demo with our team to discover how MARGIX can help 
-              your restaurant recover lost revenue and optimize delivery operations.
+              Schedule a personalized demo to see how MARGIX helps restaurants recover 
+              lost revenue from Uber Eats, DoorDash, Grubhub and other delivery platforms.
             </p>
 
             <div className="space-y-4">

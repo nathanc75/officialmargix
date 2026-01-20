@@ -38,12 +38,12 @@ const ContactSection = () => {
           <div>
             <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                Contact Us
+                Get In Touch
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-8">
-              Need Help? Reach{" "}
-              <span className="text-muted-foreground">out to us</span>
+              Questions About Restaurant{" "}
+              <span className="text-muted-foreground">Revenue Recovery?</span>
             </h2>
 
             <div className="space-y-4">

@@ -13,44 +13,44 @@ const features = [
   {
     icon: TrendingUp,
     iconBg: "bg-orange-500",
-    title: "Revenue Recovery",
-    subtitle: "Automated Detection",
-    description: "Automatically identify pricing errors, missed refunds, and lost revenue across all your delivery platforms.",
+    title: "Revenue Recovery Engine",
+    subtitle: "Automated Loss Detection",
+    description: "Automatically detect pricing errors, missed refunds, and hidden fees across Uber Eats, DoorDash, and Grubhub.",
   },
   {
     icon: Bell,
     iconBg: "bg-blue-500",
-    title: "Smart Alerts",
-    subtitle: "Real-time Notifications",
-    description: "Get instant alerts when pricing discrepancies or promotional issues are detected on any platform.",
+    title: "Real-Time Delivery Alerts",
+    subtitle: "Instant Platform Notifications",
+    description: "Get instant alerts when delivery platforms change fees, apply incorrect pricing, or create promotional discrepancies.",
   },
   {
     icon: BarChart3,
     iconBg: "bg-purple-500",
     title: "Multi-Platform Analytics",
-    subtitle: "Unified Dashboard",
-    description: "Track performance across Uber Eats, DoorDash, Grubhub, and more from a single dashboard.",
+    subtitle: "Unified Delivery Dashboard",
+    description: "Compare performance across Uber Eats, DoorDash, Grubhub, and more from a single restaurant analytics dashboard.",
   },
   {
     icon: Shield,
     iconBg: "bg-green-500",
-    title: "Secure Integration",
-    subtitle: "Data Protection",
-    description: "We prioritize the security of your data with encrypted connections and secure API integrations.",
+    title: "Secure Platform Integration",
+    subtitle: "Enterprise Data Protection",
+    description: "Bank-level encryption for all delivery platform connections with SOC 2 compliant security standards.",
   },
   {
     icon: FileText,
     iconBg: "bg-yellow-500",
-    title: "Detailed Reports",
-    subtitle: "Export & Insights",
-    description: "Generate comprehensive reports to understand your revenue patterns and optimization opportunities.",
+    title: "Revenue Recovery Reports",
+    subtitle: "Export & Analytics",
+    description: "Generate detailed reports showing recovered revenue, platform comparisons, and profit optimization opportunities.",
   },
   {
     icon: Smartphone,
     iconBg: "bg-primary",
-    title: "Mobile Friendly",
-    subtitle: "Responsive Design",
-    description: "Access your dashboard and insights on any device with our fully responsive mobile interface.",
+    title: "Mobile Restaurant Dashboard",
+    subtitle: "Manage On-The-Go",
+    description: "Monitor your delivery platform performance and revenue recovery from any device with our mobile-optimized dashboard.",
     isNew: true,
   },
 ];
@@ -73,18 +73,18 @@ const FeaturesSection = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Our Features
+              Delivery Analytics Features
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Our Well Defined Features{" "}
-            <span className="text-muted-foreground">That Boost Your Business</span>
+            Restaurant Revenue Recovery Tools{" "}
+            <span className="text-muted-foreground">That Drive Profits</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            All our amazing features that make us stand out
+            AI-powered features designed for restaurant delivery platform management
           </p>
           <Button className="gap-2">
-            View About MARGIX
+            Explore MARGIX Features
           </Button>
         </div>
 

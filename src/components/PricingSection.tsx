@@ -5,51 +5,51 @@ import { useState } from "react";
 const plans = [
   {
     name: "Starter",
-    subtitle: "Owner Essentials",
+    subtitle: "Restaurant Owner Essentials",
     price: { monthly: 29, yearly: 20 },
-    cta: "Get Started",
-    positioning: "Know your numbers without spreadsheets",
+    cta: "Start Recovering Revenue",
+    positioning: "Track delivery platform performance without spreadsheets",
     features: [
       "Up to 3 delivery platforms",
-      "Unlimited orders",
-      "Daily reports",
-      "Promo & fee tracking",
-      "Basic alerts (missing payouts, promo spikes)",
+      "Unlimited order tracking",
+      "Daily revenue reports",
+      "Promo & fee monitoring",
+      "Basic delivery alerts",
       "Email support",
     ],
   },
   {
     name: "Pro",
-    subtitle: "Profit Optimizer",
+    subtitle: "Full Revenue Recovery",
     price: { monthly: 79, yearly: 55 },
-    cta: "Go Pro",
+    cta: "Maximize Recovery",
     popular: true,
-    positioning: "Most customers save 3–10× the monthly fee",
+    positioning: "Most restaurants recover 3–10× the monthly subscription",
     features: [
       "Everything in Starter",
       "Unlimited delivery platforms",
-      "AI profit analysis (fees, promos, pricing leaks)",
-      "Real-time alerts (fee changes, promo losses)",
-      "Item-level profitability",
-      "Platform comparison (Uber vs DoorDash vs Grubhub)",
-      "Analytics dashboard",
+      "AI-powered revenue analysis",
+      "Real-time pricing alerts",
+      "Item-level profit tracking",
+      "Uber Eats vs DoorDash vs Grubhub comparison",
+      "Advanced analytics dashboard",
       "Priority support",
     ],
   },
   {
     name: "Enterprise",
-    subtitle: "Multi-Location / Franchise",
+    subtitle: "Multi-Location Restaurant Groups",
     price: { monthly: "Custom", yearly: "Custom" },
     cta: "Contact Sales",
-    positioning: "For serious operators",
+    positioning: "For restaurant chains and franchise operators",
     features: [
-      "Multiple locations",
-      "Fully custom setup",
-      "POS integration",
+      "Unlimited locations",
+      "Custom platform integrations",
+      "POS system integration",
       "Dedicated account manager",
-      "Custom reports",
+      "Custom revenue reports",
       "SLA guarantees",
-      "24/7 chat support",
+      "24/7 priority support",
     ],
   },
 ];
@@ -69,14 +69,14 @@ const PricingSection = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Pricing
+              Restaurant Pricing Plans
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Flexible Pricing Plans
+            Delivery Revenue Recovery Pricing
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Choose a plan that fits your business needs and unlock the full potential of our platform
+            Choose a plan that fits your restaurant's delivery platform management needs
           </p>
 
           {/* Toggle */}
