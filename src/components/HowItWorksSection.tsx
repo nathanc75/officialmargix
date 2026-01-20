@@ -6,29 +6,29 @@ const steps = [
   {
     id: 1,
     icon: UserPlus,
-    title: "Get Registered",
+    title: "Connect Platforms",
     number: "01",
-    heading: "Register by signing up",
-    description: "Sign up and connect your delivery platforms to get started with MARGIX.",
-    features: ["Easy registration", "Quick onboarding", "Connect platforms"],
+    heading: "Connect your delivery platforms",
+    description: "Link Uber Eats, DoorDash, Grubhub, and other delivery apps to start automated revenue tracking.",
+    features: ["One-click integration", "Secure API connections", "All major platforms supported"],
   },
   {
     id: 2,
     icon: Settings,
-    title: "Customize",
+    title: "Configure Analytics",
     number: "02",
-    heading: "Customize your settings",
-    description: "Configure alerts, thresholds, and preferences to match your business needs.",
-    features: ["Set profit margins", "Configure alerts", "Custom dashboards"],
+    heading: "Set up delivery analytics alerts",
+    description: "Configure profit thresholds, pricing alerts, and custom reports for your restaurant's needs.",
+    features: ["Profit margin tracking", "Real-time fee alerts", "Custom revenue dashboards"],
   },
   {
     id: 3,
     icon: TrendingUp,
-    title: "Actionable Insights",
+    title: "Recover Revenue",
     number: "03",
-    heading: "Get actionable insights",
-    description: "Receive AI-powered recommendations to recover lost revenue and optimize pricing.",
-    features: ["Revenue analytics", "Smart recommendations", "Real-time monitoring"],
+    heading: "Start recovering lost revenue",
+    description: "Get AI-powered insights on pricing errors, promotional losses, and refund discrepancies across all platforms.",
+    features: ["Revenue recovery reports", "Platform comparison", "Actionable recommendations"],
   },
 ];
 
@@ -48,11 +48,11 @@ const HowItWorksSection = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Simple Three Steps
+              Delivery Platform Integration
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
-            How It Works
+            How Restaurant Revenue Recovery Works
           </h2>
         </div>
 

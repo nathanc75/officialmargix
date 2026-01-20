@@ -33,20 +33,20 @@ const HeroSection = () => {
               ))}
             </div>
             <span className="text-sm text-muted-foreground">
-              Join <span className="font-semibold text-foreground">327+</span> restaurants recovering revenue
+              Join <span className="font-semibold text-foreground">327+</span> restaurants recovering delivery revenue
             </span>
           </div>
 
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
-            AI-Driven Insights to Recover Lost{" "}
-            <span className="text-gradient">Restaurant Revenue</span>
+            Restaurant Revenue Recovery for{" "}
+            <span className="text-gradient">Delivery Platforms</span>
           </h1>
 
           {/* Subheadline */}
           <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            MARGIX monitors your delivery apps pricing, promos, and refunds to uncover 
-            where your restaurant is quietly losing money — and tells you exactly what to fix.
+            MARGIX uses AI-powered delivery analytics to monitor Uber Eats, DoorDash, and Grubhub — 
+            detecting pricing errors, missed refunds, and promotional losses so you recover every dollar.
           </p>
 
           {/* CTA Buttons */}
