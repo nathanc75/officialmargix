@@ -45,7 +45,7 @@ const HeroSection = () => {
 
           {/* Subheadline */}
           <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            MARGIX uses AI-powered delivery analytics to monitor Uber Eats, DoorDash, and Grubhub — 
+            MARGIX uses AI-powered delivery analytics to monitor Uber Eats, DoorDash, Grubhub, and more — 
             detecting pricing errors, missed refunds, and promotional losses so you recover every dollar.
           </p>
 
