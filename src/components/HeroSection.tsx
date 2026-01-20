@@ -4,7 +4,7 @@ import AnimatedDashboard from "./AnimatedDashboard";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-screen bg-background overflow-hidden">
+    <section className="relative min-h-fit lg:min-h-screen bg-background overflow-hidden">
       {/* Abstract Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {/* Large gradient orb */}
