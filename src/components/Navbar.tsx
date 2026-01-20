@@ -61,7 +61,7 @@ const Navbar = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            <Button variant="ghost" size="default">
+            <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
               Book Demo
             </Button>
             <Button size="default">Get Started</Button>
