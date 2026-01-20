@@ -17,11 +17,11 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 hero-gradient backdrop-blur-md border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2.5">
+          <a href="/" className="flex items-center gap-3">
             <div 
-              className="w-7 h-7 rounded-[10px] flex items-center justify-center"
+              className="w-9 h-9 rounded-[12px] flex items-center justify-center"
               style={{
                 background: `
                   radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
@@ -30,18 +30,18 @@ const Navbar = () => {
                 boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
               }}
             >
-              <span className="text-white font-semibold text-sm" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
+              <span className="text-white font-semibold text-base" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
             </div>
-            <span className="text-xl font-bold text-foreground">MARGIX</span>
+            <span className="text-2xl font-bold text-foreground">MARGIX</span>
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-10">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                className="text-base font-medium text-foreground hover:text-primary transition-colors"
               >
                 {link.label}
               </a>
@@ -49,12 +49,12 @@ const Navbar = () => {
           </div>
 
           {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="default">
               Book Demo
             </Button>
-            <Button size="sm">Get Started</Button>
+            <Button size="default">Get Started</Button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -79,7 +79,7 @@ const Navbar = () => {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2"
+                  className="text-base font-medium text-foreground hover:text-primary transition-colors px-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.label}
