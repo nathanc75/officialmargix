@@ -43,27 +43,27 @@ const HeroSection = () => {
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
             AI-Driven Insights to Recover Lost{" "}
             <span className="text-gradient">Restaurant Revenue</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
             MARGIX monitors your delivery apps pricing, promos, and refunds to uncover 
             where your restaurant is quietly losing money — and tells you exactly what to fix.
           </p>
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-            <Button size="lg" className="h-12 px-8 text-base font-medium gap-2">
+            <Button size="lg" className="h-11 px-6 text-sm font-medium gap-2">
               Get Started
               <ArrowRight className="w-4 h-4" />
             </Button>
             <Button 
               variant="outline" 
               size="lg" 
-              className="h-12 px-8 text-base font-medium gap-2"
+              className="h-11 px-6 text-sm font-medium gap-2"
             >
               <Play className="w-4 h-4" />
               Book Demo
