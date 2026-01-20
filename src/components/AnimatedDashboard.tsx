@@ -86,70 +86,82 @@ const AnimatedDashboard = () => {
   };
 
   return (
-    <div className="relative aspect-[16/10] rounded-2xl bg-card border border-border shadow-2xl shadow-primary/5 overflow-hidden">
-      <div className="absolute inset-0 p-4 sm:p-6 flex flex-col">
-        {/* Header bar */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-destructive/60" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-            <div className="w-3 h-3 rounded-full bg-green-500/60" />
-          </div>
-          <div className="text-xs sm:text-sm font-medium text-muted-foreground">
-            {getStatusDisplay()}
-          </div>
-        </div>
-
-        {/* CSV Table */}
-        <div className="flex-1 rounded-xl bg-secondary/30 overflow-hidden">
-          {/* Table Header */}
-          <div className="grid grid-cols-6 gap-2 px-3 py-2 bg-secondary/50 text-[10px] sm:text-xs font-medium text-muted-foreground border-b border-border/50">
-            <span>Order ID</span>
-            <span>Platform</span>
-            <span>Date</span>
-            <span>Amount</span>
-            <span>Issue</span>
-            <span className="text-right">Recovered</span>
+    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden group">
+      {/* Outer glow effect */}
+      <div className="absolute -inset-0.5 bg-gradient-to-br from-primary/20 via-transparent to-primary/10 rounded-2xl blur-sm opacity-60" />
+      
+      {/* Main card */}
+      <div className="relative h-full rounded-2xl bg-gradient-to-br from-card via-card to-secondary/20 border border-border/50 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] overflow-hidden backdrop-blur-sm">
+        {/* Inner highlight */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
+        
+        <div className="absolute inset-0 p-4 sm:p-6 flex flex-col">
+          {/* Header bar */}
+          <div className="flex items-center justify-between mb-4 pb-3 border-b border-border/30">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-destructive/70 shadow-sm shadow-destructive/30" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/70 shadow-sm shadow-yellow-500/30" />
+              <div className="w-3 h-3 rounded-full bg-green-500/70 shadow-sm shadow-green-500/30" />
+            </div>
+            <div className="text-xs sm:text-sm font-medium text-muted-foreground px-3 py-1.5 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/30">
+              {getStatusDisplay()}
+            </div>
           </div>
 
-          {/* Table Rows */}
-          <div className="divide-y divide-border/30">
-            {fakeData.map((row, index) => (
-              <div
-                key={row.id}
-                className={`grid grid-cols-6 gap-2 px-3 py-2 text-[10px] sm:text-xs transition-all duration-300 ${
-                  highlightedRow === index
-                    ? "bg-primary/10 scale-[1.01]"
-                    : highlightedRow > index
-                    ? "bg-green-500/5"
-                    : "bg-transparent"
-                }`}
-              >
-                <span className="font-mono text-foreground">{row.id}</span>
-                <span className="text-muted-foreground">{row.platform}</span>
-                <span className="text-muted-foreground">{row.date}</span>
-                <span className="text-foreground">{row.amount}</span>
-                <span className={`${highlightedRow >= index ? "text-destructive" : "text-muted-foreground"}`}>
-                  {row.issue}
-                </span>
-                <span className={`text-right font-medium ${
-                  highlightedRow >= index ? "text-green-600 dark:text-green-400" : "text-muted-foreground"
-                }`}>
-                  {highlightedRow >= index ? row.recovered : "—"}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+          {/* CSV Table */}
+          <div className="flex-1 rounded-xl bg-secondary/20 overflow-hidden border border-border/20 shadow-inner">
+            {/* Table Header */}
+            <div className="grid grid-cols-6 gap-2 px-4 py-2.5 bg-gradient-to-r from-secondary/60 to-secondary/40 text-[10px] sm:text-xs font-semibold text-muted-foreground border-b border-border/30 uppercase tracking-wide">
+              <span>Order ID</span>
+              <span>Platform</span>
+              <span>Date</span>
+              <span>Amount</span>
+              <span>Issue</span>
+              <span className="text-right">Recovered</span>
+            </div>
 
-        {/* Bottom Stats */}
-        <div className="mt-4 flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">
-            {status === "found" ? "6 issues detected" : `${Math.max(0, highlightedRow + 1)} of 6 orders scanned`}
-          </span>
-          <span className="text-sm font-bold text-primary">
-            Total: ${displayAmount.toFixed(2)}
-          </span>
+            {/* Table Rows */}
+            <div className="divide-y divide-border/20">
+              {fakeData.map((row, index) => (
+                <div
+                  key={row.id}
+                  className={`grid grid-cols-6 gap-2 px-4 py-2.5 text-[10px] sm:text-xs transition-all duration-500 ${
+                    highlightedRow === index
+                      ? "bg-gradient-to-r from-primary/15 via-primary/10 to-transparent scale-[1.01] shadow-sm"
+                      : highlightedRow > index
+                      ? "bg-green-500/5"
+                      : "bg-transparent hover:bg-secondary/30"
+                  }`}
+                >
+                  <span className="font-mono text-foreground font-medium">{row.id}</span>
+                  <span className="text-muted-foreground">{row.platform}</span>
+                  <span className="text-muted-foreground">{row.date}</span>
+                  <span className="text-foreground font-medium">{row.amount}</span>
+                  <span className={`transition-colors duration-300 ${highlightedRow >= index ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+                    {row.issue}
+                  </span>
+                  <span className={`text-right font-semibold transition-all duration-300 ${
+                    highlightedRow >= index ? "text-green-600 dark:text-green-400" : "text-muted-foreground/50"
+                  }`}>
+                    {highlightedRow >= index ? row.recovered : "—"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom Stats */}
+          <div className="mt-4 pt-3 flex items-center justify-between border-t border-border/30">
+            <span className="text-xs text-muted-foreground font-medium">
+              {status === "found" ? "6 issues detected" : `${Math.max(0, highlightedRow + 1)} of 6 orders scanned`}
+            </span>
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+              <span className="text-xs text-muted-foreground">Total:</span>
+              <span className="text-sm font-bold text-primary">
+                ${displayAmount.toFixed(2)}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
