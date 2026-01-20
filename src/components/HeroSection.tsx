@@ -60,14 +60,16 @@ const HeroSection = () => {
               Get Started
               <ArrowRight className="w-4 h-4" />
             </Button>
-            <Button 
-              variant="link" 
-              size="default" 
-              className="text-muted-foreground hover:text-foreground gap-2"
-            >
-              <Play className="w-4 h-4" />
-              Book Demo
-            </Button>
+            <a href="#book-demo" onClick={(e) => { e.preventDefault(); document.querySelector('#book-demo')?.scrollIntoView({ behavior: 'smooth' }); }}>
+              <Button 
+                variant="link" 
+                size="default" 
+                className="text-muted-foreground hover:text-foreground gap-2"
+              >
+                <Play className="w-4 h-4" />
+                Book Demo
+              </Button>
+            </a>
           </div>
 
 
