@@ -15,7 +15,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-4 left-4 right-4 z-50 mx-auto max-w-7xl bg-background/70 backdrop-blur-md rounded-2xl shadow-lg shadow-black/10 dark:shadow-black/30 border border-border/50">
+    <nav className="fixed top-4 left-4 right-4 z-50 mx-auto max-w-7xl hero-gradient/60 backdrop-blur-xl rounded-2xl shadow-lg shadow-black/10 dark:shadow-black/30 border border-border/30" style={{ background: 'linear-gradient(135deg, hsl(var(--hero-gradient-start) / 0.6) 0%, hsl(var(--hero-gradient-end) / 0.5) 100%)' }}>
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
