@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
-import margixLogo from "@/assets/margix-logo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,12 +28,19 @@ const Navbar = () => {
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2">
-            <img 
-              src={margixLogo} 
-              alt="Margix Logo" 
-              className="h-10 w-auto"
-            />
+          <a href="/" className="flex items-center gap-3">
+            <div 
+              className="w-9 h-9 rounded-[12px] flex items-center justify-center"
+              style={{
+                background: `
+                  radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
+                  linear-gradient(135deg, rgba(60,120,255,0.95), rgba(130,80,255,0.80))
+                `,
+                boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
+              }}
+            >
+              <span className="text-white font-semibold text-base" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
+            </div>
             <span className="text-2xl font-bold text-foreground">MARGIX</span>
           </a>
 
