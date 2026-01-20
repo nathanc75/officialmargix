@@ -61,9 +61,11 @@ const Navbar = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
             <ThemeToggle />
-            <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
-              Book Demo
-            </Button>
+            <a href="#book-demo" onClick={(e) => { e.preventDefault(); document.querySelector('#book-demo')?.scrollIntoView({ behavior: 'smooth' }); }}>
+              <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
+                Book Demo
+              </Button>
+            </a>
             <Button size="default">Get Started</Button>
           </div>
 
