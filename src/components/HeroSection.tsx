@@ -60,7 +60,7 @@ const HeroSection = () => {
 
 
           {/* Animated Dashboard Preview */}
-          <div className="mt-16 w-full max-w-4xl">
+          <div className="mt-12 sm:mt-16 w-full max-w-4xl">
             <AnimatedDashboard />
             <p className="text-xs text-muted-foreground/60 text-right mt-2">Example analysis shown</p>
           </div>
