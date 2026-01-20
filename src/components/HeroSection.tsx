@@ -39,8 +39,8 @@ const HeroSection = () => {
 
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
-            Restaurant Revenue Recovery for{" "}
-            <span className="text-gradient">Delivery Platforms</span>
+            AI-Powered Delivery Analytics for{" "}
+            <span className="text-gradient">Smarter Restaurants</span>
           </h1>
 
           {/* Subheadline */}
