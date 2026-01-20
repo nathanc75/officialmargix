@@ -70,22 +70,6 @@ const HeroSection = () => {
             </Button>
           </div>
 
-          {/* Platform Icons */}
-          <div className="mt-16 flex flex-col items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              Works with your favorite delivery platforms
-            </p>
-            <div className="flex items-center gap-8 opacity-60">
-              {["Uber Eats", "DoorDash", "Grubhub", "Postmates"].map((platform) => (
-                <div
-                  key={platform}
-                  className="text-sm font-medium text-muted-foreground"
-                >
-                  {platform}
-                </div>
-              ))}
-            </div>
-          </div>
 
           {/* Abstract Visual / Dashboard Preview */}
           <div className="mt-16 w-full max-w-4xl">
