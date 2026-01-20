@@ -86,7 +86,7 @@ const AnimatedDashboard = () => {
   };
 
   return (
-    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden group">
+    <div className="relative aspect-[16/10] rounded-2xl overflow-hidden group animate-float">
       {/* Outer glow effect */}
       <div className="absolute -inset-0.5 bg-gradient-to-br from-primary/20 via-transparent to-primary/10 rounded-2xl blur-sm opacity-60" />
       
