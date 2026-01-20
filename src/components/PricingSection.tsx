@@ -5,41 +5,51 @@ import { useState } from "react";
 const plans = [
   {
     name: "Starter",
+    subtitle: "Owner Essentials",
     price: { monthly: 29, yearly: 20 },
-    cta: "Get the Starter Plan",
+    cta: "Get Started",
+    positioning: "Know your numbers without spreadsheets",
     features: [
-      "3 delivery platforms",
+      "Up to 3 delivery platforms",
       "Unlimited orders",
       "Daily reports",
+      "Promo & fee tracking",
+      "Basic alerts (missing payouts, promo spikes)",
       "Email support",
-      "Basic alerts",
     ],
   },
   {
     name: "Pro",
+    subtitle: "Profit Optimizer",
     price: { monthly: 79, yearly: 55 },
     cta: "Go Pro",
     popular: true,
+    positioning: "Most customers save 3–10× the monthly fee",
     features: [
       "Everything in Starter",
-      "Unlimited platforms",
-      "Priority email support",
-      "Advanced AI insights",
-      "Real-time alerts",
+      "Unlimited delivery platforms",
+      "AI profit analysis (fees, promos, pricing leaks)",
+      "Real-time alerts (fee changes, promo losses)",
+      "Item-level profitability",
+      "Platform comparison (Uber vs DoorDash vs Grubhub)",
       "Analytics dashboard",
+      "Priority support",
     ],
   },
   {
     name: "Enterprise",
+    subtitle: "Multi-Location / Franchise",
     price: { monthly: "Custom", yearly: "Custom" },
     cta: "Contact Sales",
+    positioning: "For serious operators",
     features: [
-      "Fully customized setup",
-      "All integrations",
+      "Multiple locations",
+      "Fully custom setup",
+      "POS integration",
       "Dedicated account manager",
-      "24/7 phone & chat support",
-      "Custom reporting",
+      "Custom reports",
       "SLA guarantees",
+      "24/7 chat support",
     ],
   },
 ];
@@ -118,10 +128,15 @@ const PricingSection = () => {
                 </div>
               )}
 
-              {/* Plan name */}
-              <h3 className="text-lg font-semibold text-foreground mb-4">
-                {plan.name}
-              </h3>
+              {/* Plan name & subtitle */}
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-foreground">
+                  {plan.name}
+                </h3>
+                <p className="text-sm text-primary font-medium">
+                  {plan.subtitle}
+                </p>
+              </div>
 
               {/* Price */}
               <div className="mb-6">
@@ -146,6 +161,11 @@ const PricingSection = () => {
               >
                 {plan.cta}
               </Button>
+
+              {/* Positioning */}
+              <p className="text-xs text-muted-foreground italic mb-4 pb-4 border-b border-border">
+                "{plan.positioning}"
+              </p>
 
               {/* Features */}
               <div className="space-y-3">
