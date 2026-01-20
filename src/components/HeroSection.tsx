@@ -24,18 +24,6 @@ const HeroSection = () => {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
         <div className="flex flex-col items-center text-center">
-          {/* Social Proof Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border mb-4">
-            <div className="flex items-center gap-1">
-              {['🍽️', '📈', '🛍️', '💰'].map((emoji, i) => (
-                <span key={i} className="text-sm">{emoji}</span>
-              ))}
-            </div>
-            <span className="text-sm text-muted-foreground">
-              Helping restaurants uncover hidden losses
-            </span>
-          </div>
-
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
             AI-Powered Delivery Analytics for{" "}
