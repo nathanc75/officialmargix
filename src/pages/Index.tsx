@@ -5,6 +5,7 @@ import FeaturesSection from "@/components/FeaturesSection";
 import WhyDifferentSection from "@/components/WhyDifferentSection";
 import PricingSection from "@/components/PricingSection";
 import FAQSection from "@/components/FAQSection";
+import ContactSection from "@/components/ContactSection";
 
 const Index = () => {
   return (
@@ -16,6 +17,7 @@ const Index = () => {
       <WhyDifferentSection />
       <PricingSection />
       <FAQSection />
+      <ContactSection />
     </div>
   );
 };
