@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, Users } from "lucide-react";
+import { Calendar, Clock, Users, ShieldCheck } from "lucide-react";
 
 const BookDemoSection = () => {
   return (
@@ -34,6 +34,7 @@ const BookDemoSection = () => {
                 { icon: Clock, text: "15-minute personalized walkthrough" },
                 { icon: Users, text: "Meet with a revenue recovery specialist" },
                 { icon: Calendar, text: "Flexible scheduling to fit your needs" },
+                { icon: ShieldCheck, text: "No prep, no pressure, no obligation" },
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
