@@ -20,7 +20,7 @@ const Navbar = () => {
           {/* Logo */}
           <a href="/" className="flex items-center gap-2.5">
             <div 
-              className="w-7 h-7 rounded-[10px] shadow-lg"
+              className="w-7 h-7 rounded-[10px] flex items-center justify-center"
               style={{
                 background: `
                   radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
@@ -28,7 +28,9 @@ const Navbar = () => {
                 `,
                 boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
               }}
-            />
+            >
+              <span className="text-white font-bold text-sm">M</span>
+            </div>
             <span className="text-xl font-bold text-foreground">MARGIX</span>
           </a>
 
