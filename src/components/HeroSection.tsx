@@ -22,7 +22,7 @@ const HeroSection = () => {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
         <div className="flex flex-col items-center text-center">
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
@@ -60,7 +60,7 @@ const HeroSection = () => {
 
 
           {/* Animated Dashboard Preview */}
-          <div className="mt-12 sm:mt-16 w-full max-w-4xl">
+          <div className="mt-10 sm:mt-14 w-full max-w-4xl">
             <AnimatedDashboard />
             <p className="text-xs text-muted-foreground/60 text-right mt-2">Example analysis shown</p>
           </div>
