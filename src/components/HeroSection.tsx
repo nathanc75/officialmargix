@@ -24,7 +24,7 @@ const HeroSection = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
         <div className="flex flex-col items-center text-center">
           {/* Social Proof Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary border border-border mb-4">
             <div className="flex -space-x-2">
               {[1, 2, 3, 4].map((i) => (
                 <div
