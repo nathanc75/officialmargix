@@ -8,6 +8,7 @@ import AIRecommendations from "@/components/dashboard/AIRecommendations";
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("7days");
+  const [platform, setPlatform] = useState("all");
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -29,7 +30,7 @@ const Dashboard = () => {
       </div>
 
       <div className="relative pt-4">
-        <DashboardHeader dateRange={dateRange} setDateRange={setDateRange} />
+        <DashboardHeader dateRange={dateRange} setDateRange={setDateRange} platform={platform} setPlatform={setPlatform} />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           <ProfitOverview />
