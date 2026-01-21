@@ -32,56 +32,56 @@ const InsightsSection = () => {
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <Card className="border-red-500/20 bg-red-500/5 overflow-hidden">
         <CollapsibleTrigger asChild>
-          <button className="w-full px-5 py-5 flex items-center justify-between hover:bg-red-500/10 transition-colors">
-            <div className="flex items-center gap-5">
-              <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
+          <button className="w-full px-4 py-4 flex items-center justify-between hover:bg-red-500/10 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
               </div>
               <div className="text-left">
-                <h3 className="text-base font-bold text-red-900 dark:text-red-100 flex items-center gap-2">
+                <h3 className="text-sm font-bold text-red-900 dark:text-red-100 flex items-center gap-2">
                   {criticalCount} Critical Revenue Insights
-                  <Badge variant="destructive" className="h-5 px-2 text-xs uppercase font-bold tracking-widest">Action Required</Badge>
+                  <Badge variant="destructive" className="h-4 px-1.5 text-[10px] uppercase font-bold">Action Required</Badge>
                 </h3>
-                <p className="text-sm text-red-700/70 dark:text-red-300/70 font-bold">
-                  Potential revenue recovery: <span className="font-bold text-red-700 dark:text-red-300">$2,145.00</span>
+                <p className="text-xs text-red-700/70 dark:text-red-300/70">
+                  Potential revenue recovery: <span className="font-bold">$2,145.00</span>
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-red-700 dark:text-red-300">
+              <span className="text-xs font-medium text-red-700 dark:text-red-300">
                 {isOpen ? 'View Less' : 'View All'}
               </span>
               {isOpen ? (
-                <ChevronUp className="h-5 w-5 text-red-600" />
+                <ChevronUp className="h-4 w-4 text-red-600" />
               ) : (
-                <ChevronDown className="h-5 w-5 text-red-600" />
+                <ChevronDown className="h-4 w-4 text-red-600" />
               )}
             </div>
           </button>
         </CollapsibleTrigger>
         
         <CollapsibleContent>
-          <div className="px-5 pb-5 space-y-3">
+          <div className="px-4 pb-4 space-y-3">
             {insights.map((insight, index) => (
               <div 
                 key={index}
-                className={`flex items-center justify-between p-4 rounded-xl border ${
+                className={`flex items-center justify-between p-3 rounded-lg border ${
                   insight.severity === 'high' 
                     ? 'bg-red-500/10 border-red-500/20' 
                     : 'bg-amber-500/10 border-amber-500/20'
                 }`}
               >
-                <div className="flex items-center gap-4">
-                  <div className={`p-2 rounded-md ${
+                <div className="flex items-center gap-3">
+                  <div className={`p-1.5 rounded-md ${
                     insight.severity === 'high' ? 'bg-red-500/20' : 'bg-amber-500/20'
                   }`}>
-                    <insight.icon className={`h-5 w-5 ${
+                    <insight.icon className={`h-4 w-4 ${
                       insight.severity === 'high' ? 'text-red-600' : 'text-amber-600'
                     }`} />
                   </div>
-                  <p className="text-base font-bold text-foreground tracking-tight">{insight.title}</p>
+                  <p className="text-sm font-medium text-foreground">{insight.title}</p>
                 </div>
-                <Button variant="ghost" size="sm" className="h-9 px-4 text-xs uppercase font-bold text-muted-foreground hover:text-foreground border shadow-sm">
+                <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold text-muted-foreground hover:text-foreground">
                   View details
                 </Button>
               </div>

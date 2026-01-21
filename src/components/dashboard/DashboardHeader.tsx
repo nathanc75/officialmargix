@@ -21,37 +21,37 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
           <div className="flex items-center gap-4">
             <Link to="/">
               <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
             <div className="flex items-center gap-3">
               <div 
                 className="w-10 h-10 rounded-lg flex items-center justify-center bg-primary shadow-sm"
               >
-                <span className="text-primary-foreground font-bold text-lg">M</span>
+                <span className="text-primary-foreground font-bold text-sm">M</span>
               </div>
               <div>
-                <h1 className="text-base font-bold text-foreground leading-none">Restaurant</h1>
-                <p className="text-xs text-muted-foreground mt-1 font-medium">Analytics Dashboard</p>
+                <h1 className="text-sm font-semibold text-foreground leading-none">Restaurant</h1>
+                <p className="text-[10px] text-muted-foreground mt-1">Analytics Dashboard</p>
               </div>
             </div>
             
             <div className="hidden md:flex items-center gap-2 ml-4">
-              <Badge variant="secondary" className="gap-1 py-1 px-2.5 text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold uppercase">
-                <CheckCircle2 className="h-3 w-3" />
+              <Badge variant="secondary" className="gap-1 py-0.5 px-2 text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
+                <CheckCircle2 className="h-2.5 w-2.5" />
                 Uber Eats
               </Badge>
-              <Badge variant="secondary" className="gap-1 py-1 px-2.5 text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold uppercase">
-                <CheckCircle2 className="h-3 w-3" />
+              <Badge variant="secondary" className="gap-1 py-0.5 px-2 text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
+                <CheckCircle2 className="h-2.5 w-2.5" />
                 DoorDash
               </Badge>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-lg border">
+            <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-lg border">
               <Select value={platform} onValueChange={setPlatform}>
-                <SelectTrigger className="w-[140px] h-9 text-sm border-0 bg-transparent focus:ring-0 font-semibold uppercase">
+                <SelectTrigger className="w-[120px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
                   <SelectValue placeholder="Platform" />
                 </SelectTrigger>
                 <SelectContent>
@@ -61,9 +61,9 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
                   <SelectItem value="grubhub">Grubhub</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="w-px h-5 bg-border" />
+              <div className="w-px h-4 bg-border" />
               <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger className="w-[140px] h-9 text-sm border-0 bg-transparent focus:ring-0 font-semibold uppercase">
+                <SelectTrigger className="w-[120px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
                   <SelectValue placeholder="Period" />
                 </SelectTrigger>
                 <SelectContent>
@@ -78,7 +78,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
               <Button 
                 variant="default" 
                 size="sm"
-                className="h-9 gap-2 shadow-sm font-bold text-sm px-4"
+                className="h-11 px-6 text-sm font-medium gap-2 shadow-sm"
               >
                 <Upload className="h-4 w-4" />
                 <span className="hidden sm:inline">Sync Data</span>
