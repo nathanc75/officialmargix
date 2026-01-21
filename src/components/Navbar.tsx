@@ -95,13 +95,13 @@ const Navbar = () => {
                   {link.label}
                 </a>
               ))}
-              <div className="flex items-center gap-2 pt-4 border-t border-border">
+              <div className="flex items-center gap-3 pt-4 border-t border-border">
                 <Link to="/dashboard" className="flex-1">
-                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                  <Button variant="outline" size="default" className="w-full justify-center">
                     Sign in
                   </Button>
                 </Link>
-                <Button size="sm" className="flex-1">Get Started</Button>
+                <Button size="default" className="flex-1">Get Started</Button>
               </div>
             </div>
           </div>
