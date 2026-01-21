@@ -1,9 +1,27 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag } from "lucide-react";
+
+interface UploadData {
+  name: string;
+  date: string;
+  status: string;
+  summary: {
+    totalOrders: number;
+    totalRevenue: number;
+    totalFees: number;
+    netProfit: number;
+    topItem: string;
+    avgOrderValue: number;
+  };
+}
 
 const UploadsAndPOS = () => {
+  const [selectedUpload, setSelectedUpload] = useState<UploadData | null>(null);
+
   const platforms = [
     { name: "UberEats", icon: "🚗", connected: true, color: "bg-green-500" },
     { name: "DoorDash", icon: "🚪", connected: false, color: "bg-red-500" },
@@ -13,10 +31,46 @@ const UploadsAndPOS = () => {
     { name: "Toast", icon: "🍞", connected: false, color: "bg-orange-600" },
   ];
 
-  const recentUploads = [
-    { name: "UberEats_Report_Jan2024.csv", date: "2 hours ago", status: "processed" },
-    { name: "DoorDash_Weekly_W3.xlsx", date: "1 day ago", status: "processed" },
-    { name: "Grubhub_December.csv", date: "3 days ago", status: "processed" },
+  const recentUploads: UploadData[] = [
+    { 
+      name: "UberEats_Report_Jan2024.csv", 
+      date: "2 hours ago", 
+      status: "processed",
+      summary: {
+        totalOrders: 847,
+        totalRevenue: 12450.80,
+        totalFees: 3112.70,
+        netProfit: 9338.10,
+        topItem: "Chicken Burrito Bowl",
+        avgOrderValue: 14.70
+      }
+    },
+    { 
+      name: "DoorDash_Weekly_W3.xlsx", 
+      date: "1 day ago", 
+      status: "processed",
+      summary: {
+        totalOrders: 312,
+        totalRevenue: 4890.25,
+        totalFees: 1467.08,
+        netProfit: 3423.17,
+        topItem: "BBQ Pulled Pork Sandwich",
+        avgOrderValue: 15.67
+      }
+    },
+    { 
+      name: "Grubhub_December.csv", 
+      date: "3 days ago", 
+      status: "processed",
+      summary: {
+        totalOrders: 1245,
+        totalRevenue: 18920.50,
+        totalFees: 5676.15,
+        netProfit: 13244.35,
+        topItem: "Margherita Pizza",
+        avgOrderValue: 15.20
+      }
+    },
   ];
 
   return (
@@ -87,7 +141,8 @@ const UploadsAndPOS = () => {
                   {recentUploads.map((file, index) => (
                     <div 
                       key={index}
-                      className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
+                      onClick={() => setSelectedUpload(file)}
+                      className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors cursor-pointer"
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
@@ -158,6 +213,78 @@ const UploadsAndPOS = () => {
           </section>
         </main>
       </div>
+
+      {/* Upload Summary Dialog */}
+      <Dialog open={!!selectedUpload} onOpenChange={() => setSelectedUpload(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-primary" />
+              Report Summary
+            </DialogTitle>
+            <DialogDescription>{selectedUpload?.name}</DialogDescription>
+          </DialogHeader>
+          
+          {selectedUpload && (
+            <div className="space-y-4">
+              {/* Key Metrics Grid */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-lg bg-secondary/50">
+                  <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+                    <ShoppingBag className="h-3 w-3" />
+                    Total Orders
+                  </div>
+                  <p className="text-lg font-bold text-foreground">{selectedUpload.summary.totalOrders.toLocaleString()}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-secondary/50">
+                  <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+                    <DollarSign className="h-3 w-3" />
+                    Total Revenue
+                  </div>
+                  <p className="text-lg font-bold text-foreground">${selectedUpload.summary.totalRevenue.toLocaleString()}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-red-50">
+                  <div className="flex items-center gap-2 text-red-600 text-xs mb-1">
+                    <TrendingDown className="h-3 w-3" />
+                    Platform Fees
+                  </div>
+                  <p className="text-lg font-bold text-red-600">-${selectedUpload.summary.totalFees.toLocaleString()}</p>
+                </div>
+                <div className="p-3 rounded-lg bg-emerald-50">
+                  <div className="flex items-center gap-2 text-emerald-600 text-xs mb-1">
+                    <TrendingUp className="h-3 w-3" />
+                    Net Profit
+                  </div>
+                  <p className="text-lg font-bold text-emerald-600">${selectedUpload.summary.netProfit.toLocaleString()}</p>
+                </div>
+              </div>
+
+              {/* Additional Insights */}
+              <div className="p-4 rounded-lg border border-border/50 bg-muted/30 space-y-3">
+                <h4 className="font-medium text-foreground text-sm">Quick Insights</h4>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Top Selling Item</span>
+                    <span className="font-medium text-foreground">{selectedUpload.summary.topItem}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Avg Order Value</span>
+                    <span className="font-medium text-foreground">${selectedUpload.summary.avgOrderValue.toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Fee Percentage</span>
+                    <span className="font-medium text-red-600">{((selectedUpload.summary.totalFees / selectedUpload.summary.totalRevenue) * 100).toFixed(1)}%</span>
+                  </div>
+                </div>
+              </div>
+
+              <Button className="w-full" variant="outline">
+                View Full Report
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
