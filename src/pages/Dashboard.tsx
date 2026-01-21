@@ -35,12 +35,14 @@ const Dashboard = () => {
           <ProfitOverview />
           <InsightsSection />
           
-          <div className="grid lg:grid-cols-2 gap-8">
-            <ItemBreakdownTable />
-            <PromoAnalysis />
-          </div>
+          {/* Main table - full width */}
+          <ItemBreakdownTable />
           
-          <AIRecommendations />
+          {/* Secondary sections */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            <PromoAnalysis />
+            <AIRecommendations />
+          </div>
         </main>
       </div>
     </div>
