@@ -1,7 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DollarSign, Percent, Tag, TrendingUp } from "lucide-react";
+import { useState } from "react";
 
 const ProfitOverview = () => {
+  const [activeTab, setActiveTab] = useState("overview");
+  
   const metrics = [
     {
       label: "Gross Sales",
@@ -40,7 +44,19 @@ const ProfitOverview = () => {
 
   return (
     <section>
-      <h2 className="text-lg font-semibold text-foreground mb-4">Profit Overview</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-foreground">Profit Overview</h2>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="bg-white/50 border border-white/30 backdrop-blur-sm">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="uploads" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              Uploads & POS
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((metric) => (
           <Card 
