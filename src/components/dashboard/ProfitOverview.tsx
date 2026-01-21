@@ -1,11 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { DollarSign, Percent, Tag, TrendingUp, Upload } from "lucide-react";
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const ProfitOverview = () => {
-  const [activeTab, setActiveTab] = useState("overview");
-  
   const metrics = [
     {
       label: "Gross Sales",
@@ -46,23 +44,15 @@ const ProfitOverview = () => {
     <section>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h2 className="text-lg font-semibold text-foreground">Profit Overview</h2>
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="h-10 sm:h-11 p-1 bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 shadow-md backdrop-blur-sm rounded-xl">
-            <TabsTrigger 
-              value="overview" 
-              className="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary"
-            >
-              Overview
-            </TabsTrigger>
-            <TabsTrigger 
-              value="uploads" 
-              className="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary flex items-center gap-1.5 sm:gap-2"
-            >
-              <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-              <span className="hidden xs:inline">Uploads &</span> POS
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <Link to="/uploads-pos">
+          <Button 
+            variant="outline" 
+            className="h-10 sm:h-11 px-4 sm:px-5 bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 shadow-md backdrop-blur-sm rounded-xl hover:bg-white gap-2"
+          >
+            <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <span className="text-xs sm:text-sm font-medium">Uploads & POS</span>
+          </Button>
+        </Link>
       </div>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((metric) => (
