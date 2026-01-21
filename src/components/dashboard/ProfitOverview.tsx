@@ -48,40 +48,49 @@ const ProfitOverview = () => {
 
   return (
     <section>
-      <h2 className="text-lg font-semibold text-foreground mb-4">Profit Overview</h2>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Profit Overview</h2>
+        <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md border">
+          Real-time updates
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((metric) => (
           <Card 
             key={metric.label} 
-            className={`backdrop-blur-xl border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 ${
+            className={`border shadow-sm transition-all duration-200 hover:shadow-md ${
               metric.isHighlighted 
-                ? 'ring-2 ring-emerald-500/50 bg-gradient-to-br from-emerald-50/80 to-white/80' 
-                : 'bg-white/70'
+                ? 'bg-emerald-500/5 border-emerald-500/20' 
+                : 'bg-card'
             }`}
           >
-            <CardContent className="p-4 sm:p-5">
-              <div className="flex items-center justify-between mb-2">
-                <div 
-                  className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl ${metric.iconBg} flex items-center justify-center shadow-sm`}
-                >
-                  <metric.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${metric.iconColor}`} />
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">{metric.label}</p>
+                  <p className={`text-2xl font-bold tracking-tight ${metric.color}`}>{metric.value}</p>
                 </div>
-                {/* Trend indicator */}
-                <div className={`flex items-center gap-0.5 text-xs font-medium px-1.5 py-0.5 rounded-md ${
+                <div 
+                  className={`p-2 rounded-lg ${metric.iconBg} bg-opacity-10`}
+                >
+                  <metric.icon className={`h-4 w-4 ${metric.iconColor}`} />
+                </div>
+              </div>
+              <div className="mt-4 flex items-center gap-1.5">
+                <div className={`flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${
                   metric.trendUp 
-                    ? 'text-emerald-600 bg-emerald-50' 
-                    : 'text-red-600 bg-red-50'
+                    ? 'text-emerald-700 bg-emerald-500/10' 
+                    : 'text-red-700 bg-red-500/10'
                 }`}>
                   {metric.trendUp ? (
-                    <ArrowUp className="h-3 w-3" />
+                    <ArrowUp className="h-2.5 w-2.5" />
                   ) : (
-                    <ArrowDown className="h-3 w-3" />
+                    <ArrowDown className="h-2.5 w-2.5" />
                   )}
                   {metric.trend}
                 </div>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-tight">vs last period</span>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground mb-0.5">{metric.label}</p>
-              <p className={`text-xl sm:text-2xl font-bold ${metric.color}`}>{metric.value}</p>
             </CardContent>
           </Card>
         ))}

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 type FilterType = 'all' | 'profitable' | 'loss';
 
@@ -40,10 +42,10 @@ const ItemBreakdownTable = () => {
 
   const getPlatformColor = (platform: string) => {
     switch (platform) {
-      case "Uber Eats": return "bg-emerald-100 text-emerald-700";
-      case "DoorDash": return "bg-red-100 text-red-700";
-      case "Grubhub": return "bg-orange-100 text-orange-700";
-      default: return "bg-secondary text-muted-foreground";
+      case "Uber Eats": return "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400";
+      case "DoorDash": return "bg-red-500/10 text-red-700 dark:text-red-400";
+      case "Grubhub": return "bg-orange-500/10 text-orange-700 dark:text-orange-400";
+      default: return "bg-muted text-muted-foreground";
     }
   };
 
@@ -54,155 +56,147 @@ const ItemBreakdownTable = () => {
   ];
 
   return (
-    <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
-      <div className="absolute -inset-1 bg-gradient-to-br from-primary/30 via-transparent to-primary/20 rounded-xl sm:rounded-2xl blur-md opacity-70" />
-      
-      <div className="relative h-full rounded-xl sm:rounded-2xl bg-gradient-to-br from-card via-card to-secondary/20 border border-border/50 shadow-[0_25px_80px_-20px_rgba(0,0,0,0.35)] overflow-hidden backdrop-blur-sm">
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
-        
-        <div className="relative p-4 sm:p-6 lg:p-8 flex flex-col">
-          {/* Header with filter */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-border/30">
-            <div className="flex items-center gap-3">
-              <h3 className="text-base sm:text-lg font-semibold text-foreground">Item Breakdown</h3>
-              <span className="text-xs text-muted-foreground bg-secondary/50 px-2 py-0.5 rounded-full">
-                {lossCount} at loss
-              </span>
-            </div>
-            
-            {/* Filter buttons */}
-            <div className="flex items-center gap-1 p-1 bg-secondary/40 rounded-lg">
-              {filterButtons.map(btn => (
-                <button
-                  key={btn.value}
-                  onClick={() => setFilter(btn.value)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                    filter === btn.value
-                      ? 'bg-white shadow-sm text-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  {btn.label}
-                </button>
-              ))}
-            </div>
+    <Card className="border shadow-sm bg-card overflow-hidden">
+      <CardContent className="p-0">
+        <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b">
+          <div className="space-y-1">
+            <h3 className="text-lg font-bold tracking-tight">Order Breakdown</h3>
+            <p className="text-xs text-muted-foreground">Detailed analysis of individual platform transactions</p>
+          </div>
+          
+          <div className="flex items-center gap-2 p-1 bg-muted rounded-lg border">
+            {filterButtons.map(btn => (
+              <button
+                key={btn.value}
+                onClick={() => setFilter(btn.value)}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                  filter === btn.value
+                    ? 'bg-background shadow-sm text-foreground border'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {btn.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Table - Desktop */}
+        <div className="hidden md:block">
+          <div className="grid grid-cols-7 gap-4 px-6 py-3 bg-muted/30 text-[10px] font-bold text-muted-foreground uppercase tracking-wider border-b">
+            <span>Order ID</span>
+            <span>Item Name</span>
+            <span>Platform</span>
+            <span className="text-right">Price</span>
+            <span className="text-right">Fees</span>
+            <span className="text-right">Promo</span>
+            <span className="text-right">Profit</span>
           </div>
 
-          {/* Table - Desktop */}
-          <div className="hidden md:block flex-1 rounded-xl bg-secondary/20 overflow-hidden border border-border/20 shadow-inner">
-            <div className="grid grid-cols-7 gap-4 px-6 py-3 bg-gradient-to-r from-secondary/60 to-secondary/40 text-xs font-semibold text-muted-foreground border-b border-border/30 uppercase tracking-wide">
-              <span>Order ID</span>
-              <span>Item</span>
-              <span>Platform</span>
-              <span className="text-right">Price</span>
-              <span className="text-right">Fees</span>
-              <span className="text-right">Promo</span>
-              <span className="text-right">Profit</span>
-            </div>
-
-            <div className="divide-y divide-border/20">
-              {displayItems.map((item) => (
-                <div
-                  key={item.orderId}
-                  className={`grid grid-cols-7 gap-4 px-6 py-3 text-sm transition-all duration-300 ${
-                    !item.profitable
-                      ? "bg-gradient-to-r from-red-500/10 via-red-500/5 to-transparent"
-                      : "bg-transparent hover:bg-secondary/30"
-                  }`}
-                >
-                  <span className="font-mono text-muted-foreground text-xs">{item.orderId}</span>
-                  <span className="font-medium text-foreground">{item.name}</span>
-                  <span>
-                    <span className={`inline-flex px-2 py-0.5 rounded-md text-xs font-medium ${getPlatformColor(item.platform)}`}>
-                      {item.platform}
-                    </span>
-                  </span>
-                  <span className="text-right text-muted-foreground">{item.price}</span>
-                  <span className="text-right text-red-500 font-medium">{item.fees}</span>
-                  <span className={`text-right font-medium ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-500"}`}>
-                    {item.promo}
-                  </span>
-                  <span className={`text-right font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
-                    {item.profit}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Mobile Card Layout */}
-          <div className="md:hidden space-y-2">
+          <div className="divide-y divide-border">
             {displayItems.map((item) => (
               <div
                 key={item.orderId}
-                className={`rounded-lg p-3 border transition-all ${
+                className={`grid grid-cols-7 gap-4 px-6 py-4 text-sm items-center transition-colors ${
                   !item.profitable
-                    ? "bg-red-500/5 border-red-200/50"
-                    : "bg-white/50 border-border/30"
+                    ? "bg-red-500/[0.03]"
+                    : "hover:bg-muted/30"
                 }`}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div>
-                    <p className="font-medium text-sm text-foreground">{item.name}</p>
-                    <p className="text-xs text-muted-foreground font-mono">{item.orderId}</p>
-                  </div>
-                  <span className={`inline-flex px-2 py-0.5 rounded-md text-xs font-medium ${getPlatformColor(item.platform)}`}>
+                <span className="font-mono text-xs text-muted-foreground">{item.orderId}</span>
+                <span className="font-semibold">{item.name}</span>
+                <span>
+                  <Badge variant="outline" className={`text-[10px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
                     {item.platform}
-                  </span>
-                </div>
-                <div className="grid grid-cols-4 gap-2 text-xs">
-                  <div>
-                    <p className="text-muted-foreground">Price</p>
-                    <p className="font-medium">{item.price}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Fees</p>
-                    <p className="font-medium text-red-500">{item.fees}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Promo</p>
-                    <p className={`font-medium ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-500"}`}>{item.promo}</p>
-                  </div>
-                  <div>
-                    <p className="text-muted-foreground">Profit</p>
-                    <p className={`font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>{item.profit}</p>
-                  </div>
-                </div>
+                  </Badge>
+                </span>
+                <span className="text-right font-medium">{item.price}</span>
+                <span className="text-right text-red-600 font-medium">{item.fees}</span>
+                <span className={`text-right font-medium ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>
+                  {item.promo}
+                </span>
+                <span className={`text-right font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
+                  {item.profit}
+                </span>
               </div>
             ))}
           </div>
+        </div>
 
-          {/* View All / Show Less + Stats */}
-          <div className="mt-4 pt-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-t border-border/30">
+        {/* Mobile Card Layout */}
+        <div className="md:hidden divide-y divide-border">
+          {displayItems.map((item) => (
+            <div
+              key={item.orderId}
+              className={`p-4 transition-colors ${
+                !item.profitable
+                  ? "bg-red-500/[0.03]"
+                  : "hover:bg-muted/30"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="space-y-1">
+                  <p className="font-bold text-sm leading-none">{item.name}</p>
+                  <p className="text-[10px] text-muted-foreground font-mono">{item.orderId}</p>
+                </div>
+                <Badge variant="outline" className={`text-[10px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
+                  {item.platform}
+                </Badge>
+              </div>
+              <div className="grid grid-cols-4 gap-2 text-center">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Price</p>
+                  <p className="text-xs font-semibold">{item.price}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Fees</p>
+                  <p className="text-xs font-semibold text-red-600">{item.fees}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Promo</p>
+                  <p className={`text-xs font-semibold ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>{item.promo}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase">Profit</p>
+                  <p className={`text-xs font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>{item.profit}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 bg-muted/30 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
             {filteredItems.length > 5 && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => setShowAll(!showAll)}
-                className="text-xs text-muted-foreground hover:text-foreground gap-1"
+                className="h-8 text-xs font-semibold"
               >
-                {showAll ? (
-                  <>Show Less <ChevronUp className="h-3 w-3" /></>
-                ) : (
-                  <>View All {filteredItems.length} Items <ChevronDown className="h-3 w-3" /></>
-                )}
+                {showAll ? "Show less" : `View all ${filteredItems.length} entries`}
               </Button>
             )}
-            
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3 ml-auto">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
-                <span className="text-xs text-muted-foreground">Total:</span>
-                <span className="text-sm font-bold text-primary">${totalProfit.toFixed(2)}</span>
-              </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20">
-                <span className="text-xs text-muted-foreground">Avg:</span>
-                <span className="text-sm font-bold text-emerald-600">${avgProfit.toFixed(2)}</span>
-              </div>
+            <span className="text-[10px] font-bold text-muted-foreground uppercase px-2 py-1 bg-muted rounded border tracking-wider">
+              {lossCount} issues detected
+            </span>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <div className="space-y-0.5 text-right">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">Total Profit</p>
+              <p className="text-sm font-bold text-primary">${totalProfit.toFixed(2)}</p>
+            </div>
+            <div className="w-px h-8 bg-border" />
+            <div className="space-y-0.5 text-right">
+              <p className="text-[10px] font-bold text-muted-foreground uppercase">Average/Order</p>
+              <p className="text-sm font-bold text-emerald-600">${avgProfit.toFixed(2)}</p>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 
