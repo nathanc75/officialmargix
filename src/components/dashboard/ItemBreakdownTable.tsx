@@ -57,18 +57,18 @@ const ItemBreakdownTable = () => {
   return (
     <Card className="border shadow-sm bg-card overflow-hidden">
       <CardContent className="p-0">
-        <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b">
+        <div className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b">
           <div className="space-y-1">
-            <h3 className="text-lg font-bold tracking-tight">Order Breakdown</h3>
-            <p className="text-xs text-muted-foreground">Detailed analysis of individual platform transactions</p>
+            <h3 className="text-base sm:text-lg font-bold tracking-tight">Order Breakdown</h3>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">Detailed analysis of individual platform transactions</p>
           </div>
           
-          <div className="flex items-center gap-2 p-1 bg-muted rounded-lg border">
+          <div className="flex items-center gap-1 sm:gap-2 p-1 bg-muted rounded-lg border w-full sm:w-auto overflow-x-auto">
             {filterButtons.map(btn => (
               <button
                 key={btn.value}
                 onClick={() => setFilter(btn.value)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                className={`flex-1 sm:flex-none px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold rounded-md transition-all whitespace-nowrap ${
                   filter === btn.value
                     ? 'bg-background shadow-sm text-foreground border'
                     : 'text-muted-foreground hover:text-foreground'
@@ -80,75 +80,121 @@ const ItemBreakdownTable = () => {
           </div>
         </div>
 
-        {/* Table - Desktop */}
-        <div className="hidden md:block">
-          <div className="grid grid-cols-7 gap-4 px-6 py-3 bg-muted/30 text-[10px] font-bold text-muted-foreground uppercase tracking-wider border-b">
-            <span>Order ID</span>
-            <span>Item Name</span>
-            <span>Platform</span>
-            <span className="text-right">Price</span>
-            <span className="text-right">Fees</span>
-            <span className="text-right">Promo</span>
-            <span className="text-right">Profit</span>
-          </div>
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
+          <div className="min-w-[800px]">
+            <div className="grid grid-cols-7 gap-4 px-6 py-3 bg-muted/30 text-[10px] font-bold text-muted-foreground uppercase tracking-wider border-b">
+              <span>Order ID</span>
+              <span>Item Name</span>
+              <span>Platform</span>
+              <span className="text-right">Price</span>
+              <span className="text-right">Fees</span>
+              <span className="text-right">Promo</span>
+              <span className="text-right">Profit</span>
+            </div>
 
-          <div className="divide-y divide-border">
-            {displayItems.map((item) => (
-              <div
-                key={item.orderId}
-                className={`grid grid-cols-7 gap-4 px-6 py-4 text-sm items-center transition-colors ${
-                  !item.profitable
-                    ? "bg-red-500/[0.03]"
-                    : "hover:bg-muted/30"
-                }`}
-              >
-                <span className="font-mono text-xs text-muted-foreground">{item.orderId}</span>
-                <span className="font-semibold">{item.name}</span>
-                <span>
-                  <Badge variant="outline" className={`text-[10px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
-                    {item.platform}
-                  </Badge>
-                </span>
-                <span className="text-right font-medium">{item.price}</span>
-                <span className="text-right text-red-600 font-medium">{item.fees}</span>
-                <span className={`text-right font-medium ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>
-                  {item.promo}
-                </span>
-                <span className={`text-right font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
-                  {item.profit}
-                </span>
-              </div>
-            ))}
+            <div className="divide-y divide-border">
+              {displayItems.map((item) => (
+                <div
+                  key={item.orderId}
+                  className={`grid grid-cols-7 gap-4 px-6 py-4 text-sm items-center transition-colors ${
+                    !item.profitable
+                      ? "bg-red-500/[0.03]"
+                      : "hover:bg-muted/30"
+                  }`}
+                >
+                  <span className="font-mono text-xs text-muted-foreground">{item.orderId}</span>
+                  <span className="font-semibold">{item.name}</span>
+                  <span>
+                    <Badge variant="outline" className={`text-[10px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
+                      {item.platform}
+                    </Badge>
+                  </span>
+                  <span className="text-right font-medium">{item.price}</span>
+                  <span className="text-right text-red-600 font-medium">{item.fees}</span>
+                  <span className={`text-right font-medium ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>
+                    {item.promo}
+                  </span>
+                  <span className={`text-right font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
+                    {item.profit}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
+        {/* Mobile List View */}
+        <div className="md:hidden divide-y divide-border">
+          {displayItems.map((item) => (
+            <div
+              key={item.orderId}
+              className={`p-4 space-y-3 transition-colors ${
+                !item.profitable ? "bg-red-500/[0.03]" : "hover:bg-muted/30"
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="text-[10px] font-mono text-muted-foreground">{item.orderId}</p>
+                  <p className="text-sm font-bold">{item.name}</p>
+                </div>
+                <Badge variant="outline" className={`text-[9px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
+                  {item.platform}
+                </Badge>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-2">
+                <div className="space-y-0.5">
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Price</p>
+                  <p className="text-xs font-medium">{item.price}</p>
+                </div>
+                <div className="space-y-0.5 text-center">
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Fees+Promo</p>
+                  <p className="text-xs font-medium text-red-600">
+                    {parseFloat(item.fees.replace('$', '')) + parseFloat(item.promo.replace('$', '')) < 0 
+                      ? `-$${Math.abs(parseFloat(item.fees.replace('$', '')) + parseFloat(item.promo.replace('$', ''))).toFixed(2)}`
+                      : "$0.00"
+                    }
+                  </p>
+                </div>
+                <div className="space-y-0.5 text-right">
+                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Net Profit</p>
+                  <p className={`text-sm font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
+                    {item.profit}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
         <div className="p-4 bg-muted/20 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between w-full sm:w-auto gap-2">
             {filteredItems.length > 5 && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowAll(!showAll)}
-                className="h-8 text-xs font-semibold"
+                className="h-8 text-[10px] sm:text-xs font-semibold px-2"
               >
-                {showAll ? "Show less" : `View all ${filteredItems.length} entries`}
-                {showAll ? <ChevronUp className="ml-2 h-3 w-3" /> : <ChevronDown className="ml-2 h-3 w-3" />}
+                {showAll ? "Show less" : `View all ${filteredItems.length}`}
+                {showAll ? <ChevronUp className="ml-1 sm:ml-2 h-3 w-3" /> : <ChevronDown className="ml-1 sm:ml-2 h-3 w-3" />}
               </Button>
             )}
-            <Badge variant="secondary" className="text-[10px] font-bold uppercase py-0.5 bg-muted">
-              {lossCount} issues detected
+            <Badge variant="secondary" className="text-[9px] sm:text-[10px] font-bold uppercase py-0.5 bg-muted">
+              {lossCount} issues
             </Badge>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="space-y-0.5 text-right">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Total Period Profit</p>
-              <p className="text-base font-bold text-primary">${totalProfit.toFixed(2)}</p>
+          <div className="flex items-center justify-between w-full sm:w-auto gap-4 sm:gap-6 border-t sm:border-t-0 pt-3 sm:pt-0">
+            <div className="space-y-0.5 text-left sm:text-right flex-1 sm:flex-none">
+              <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase">Total Period Profit</p>
+              <p className="text-sm sm:text-base font-bold text-primary">${totalProfit.toFixed(2)}</p>
             </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="space-y-0.5 text-right">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Avg / Transaction</p>
-              <p className="text-base font-bold text-emerald-600">${avgProfit.toFixed(2)}</p>
+            <div className="w-px h-8 bg-border hidden sm:block" />
+            <div className="space-y-0.5 text-right flex-1 sm:flex-none">
+              <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase">Avg / Transaction</p>
+              <p className="text-sm sm:text-base font-bold text-emerald-600">${avgProfit.toFixed(2)}</p>
             </div>
           </div>
         </div>
