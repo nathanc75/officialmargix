@@ -8,28 +8,32 @@ const ProfitOverview = () => {
       value: "$12,480",
       icon: DollarSign,
       color: "text-foreground",
-      bgColor: "bg-secondary",
+      iconBg: "bg-secondary",
+      iconColor: "text-foreground",
     },
     {
       label: "Platform Fees",
       value: "-$3,220",
       icon: Percent,
       color: "text-red-600",
-      bgColor: "bg-red-50",
+      iconBg: "bg-red-50",
+      iconColor: "text-red-600",
     },
     {
       label: "Promo Discounts",
       value: "-$1,840",
       icon: Tag,
       color: "text-red-600",
-      bgColor: "bg-red-50",
+      iconBg: "bg-red-50",
+      iconColor: "text-red-600",
     },
     {
       label: "Net Profit",
       value: "$7,420",
       icon: TrendingUp,
       color: "text-emerald-600",
-      bgColor: "bg-emerald-50",
+      iconBg: "bg-emerald-50",
+      iconColor: "text-emerald-600",
       isHighlighted: true,
     },
   ];
@@ -41,12 +45,18 @@ const ProfitOverview = () => {
         {metrics.map((metric) => (
           <Card 
             key={metric.label} 
-            className={`${metric.isHighlighted ? 'ring-2 ring-emerald-500 bg-emerald-50/50' : ''}`}
+            className={`backdrop-blur-xl border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 ${
+              metric.isHighlighted 
+                ? 'ring-2 ring-emerald-500/50 bg-gradient-to-br from-emerald-50/80 to-white/80' 
+                : 'bg-white/70'
+            }`}
           >
             <CardContent className="p-5">
               <div className="flex items-center gap-3 mb-3">
-                <div className={`w-10 h-10 rounded-lg ${metric.bgColor} flex items-center justify-center`}>
-                  <metric.icon className={`h-5 w-5 ${metric.color}`} />
+                <div 
+                  className={`w-10 h-10 rounded-xl ${metric.iconBg} flex items-center justify-center shadow-sm`}
+                >
+                  <metric.icon className={`h-5 w-5 ${metric.iconColor}`} />
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-1">{metric.label}</p>
