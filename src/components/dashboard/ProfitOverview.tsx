@@ -47,49 +47,49 @@ const ProfitOverview = () => {
   ];
 
   return (
-    <section className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-black uppercase tracking-widest text-muted-foreground">Profit Overview</h2>
-        <div className="text-base font-black text-muted-foreground bg-muted px-6 py-2.5 rounded-xl border-2 shadow-sm uppercase tracking-wider">
-          Live Analysis
+    <section>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Profit Overview</h2>
+        <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md border">
+          Real-time updates
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((metric) => (
           <Card 
             key={metric.label} 
-            className={`border-2 shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${
+            className={`border shadow-sm transition-all duration-200 hover:shadow-md ${
               metric.isHighlighted 
                 ? 'bg-emerald-500/5 border-emerald-500/20' 
-                : 'bg-card border-border'
+                : 'bg-card'
             }`}
           >
-            <CardContent className="p-8">
+            <CardContent className="p-6">
               <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <p className="text-sm font-black text-muted-foreground uppercase tracking-widest">{metric.label}</p>
-                  <p className={`text-5xl font-black tracking-tighter ${metric.color}`}>{metric.value}</p>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground">{metric.label}</p>
+                  <p className={`text-2xl font-bold tracking-tight ${metric.color}`}>{metric.value}</p>
                 </div>
                 <div 
-                  className={`p-4 rounded-2xl ${metric.iconBg} bg-opacity-10 border-2 shadow-inner`}
+                  className={`p-2 rounded-lg ${metric.iconBg} bg-opacity-10`}
                 >
-                  <metric.icon className={`h-8 w-8 ${metric.iconColor}`} />
+                  <metric.icon className={`h-4 w-4 ${metric.iconColor}`} />
                 </div>
               </div>
-              <div className="mt-8 flex items-center gap-3">
-                <div className={`flex items-center gap-2 text-sm font-black px-3 py-2 rounded-lg uppercase tracking-wider ${
+              <div className="mt-4 flex items-center gap-1.5">
+                <div className={`flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${
                   metric.trendUp 
                     ? 'text-emerald-700 bg-emerald-500/10' 
                     : 'text-red-700 bg-red-500/10'
                 }`}>
                   {metric.trendUp ? (
-                    <ArrowUp className="h-4 w-4" />
+                    <ArrowUp className="h-2.5 w-2.5" />
                   ) : (
-                    <ArrowDown className="h-4 w-4" />
+                    <ArrowDown className="h-2.5 w-2.5" />
                   )}
                   {metric.trend}
                 </div>
-                <span className="text-xs text-muted-foreground uppercase tracking-widest font-black">vs last period</span>
+                <span className="text-[10px] text-muted-foreground uppercase tracking-tight">vs last period</span>
               </div>
             </CardContent>
           </Card>

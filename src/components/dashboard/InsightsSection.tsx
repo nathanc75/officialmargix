@@ -30,60 +30,59 @@ const InsightsSection = () => {
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card className="border-4 border-red-500/20 bg-red-500/5 overflow-hidden shadow-xl">
+      <Card className="border-red-500/20 bg-red-500/5 overflow-hidden">
         <CollapsibleTrigger asChild>
-          <button className="w-full px-8 py-8 flex items-center justify-between hover:bg-red-500/10 transition-colors">
-            <div className="flex items-center gap-8">
-              <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border-4 border-red-500/20 shadow-inner">
-                <AlertTriangle className="h-10 w-10 text-red-600" />
+          <button className="w-full px-4 py-4 flex items-center justify-between hover:bg-red-500/10 transition-colors">
+            <div className="flex items-center gap-4">
+              <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
               </div>
               <div className="text-left">
-                <h3 className="text-2xl font-black text-red-900 dark:text-red-100 flex items-center gap-4 tracking-tight">
+                <h3 className="text-sm font-bold text-red-900 dark:text-red-100 flex items-center gap-2">
                   {criticalCount} Critical Revenue Insights
-                  <Badge variant="destructive" className="h-8 px-4 text-xs uppercase font-black tracking-widest border-2">Action Required</Badge>
+                  <Badge variant="destructive" className="h-4 px-1.5 text-[10px] uppercase">Action Required</Badge>
                 </h3>
-                <p className="text-lg text-red-700/80 dark:text-red-300/80 font-bold uppercase tracking-wide">
-                  Addressable revenue recovery: <span className="font-black text-red-700 dark:text-red-300 text-3xl ml-2 tracking-tighter">$2,145.00</span>
+                <p className="text-xs text-red-700/70 dark:text-red-300/70">
+                  Potential revenue recovery: <span className="font-bold">$2,145.00</span>
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
-              <span className="text-base font-black text-red-700 dark:text-red-300 uppercase tracking-widest mr-2">
-                {isOpen ? 'Collapse Details' : 'View All Insights'}
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium text-red-700 dark:text-red-300">
+                {isOpen ? 'View Less' : 'View All'}
               </span>
               {isOpen ? (
-                <ChevronUp className="h-8 w-8 text-red-600" />
+                <ChevronUp className="h-4 w-4 text-red-600" />
               ) : (
-                <ChevronDown className="h-8 w-8 text-red-600" />
+                <ChevronDown className="h-4 w-4 text-red-600" />
               )}
             </div>
           </button>
         </CollapsibleTrigger>
         
         <CollapsibleContent>
-          <div className="px-8 pb-8 space-y-6">
-            <div className="h-1 bg-red-500/10 mb-6 rounded-full" />
+          <div className="px-4 pb-4 space-y-3">
             {insights.map((insight, index) => (
               <div 
                 key={index}
-                className={`flex items-center justify-between p-6 rounded-2xl border-2 ${
+                className={`flex items-center justify-between p-3 rounded-lg border ${
                   insight.severity === 'high' 
                     ? 'bg-red-500/10 border-red-500/20' 
                     : 'bg-amber-500/10 border-amber-500/20'
-                } shadow-md transition-all hover:scale-[1.01] hover:shadow-lg`}
+                }`}
               >
-                <div className="flex items-center gap-6">
-                  <div className={`p-4 rounded-xl ${
+                <div className="flex items-center gap-3">
+                  <div className={`p-1.5 rounded-md ${
                     insight.severity === 'high' ? 'bg-red-500/20' : 'bg-amber-500/20'
-                  } border-2 shadow-inner`}>
-                    <insight.icon className={`h-8 w-8 ${
+                  }`}>
+                    <insight.icon className={`h-4 w-4 ${
                       insight.severity === 'high' ? 'text-red-600' : 'text-amber-600'
                     }`} />
                   </div>
-                  <p className="text-xl font-black text-foreground tracking-tight">{insight.title}</p>
+                  <p className="text-sm font-medium text-foreground">{insight.title}</p>
                 </div>
-                <Button variant="outline" size="lg" className="h-12 px-8 text-sm font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-background border-2 shadow-sm">
-                  Full Analysis
+                <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold text-muted-foreground hover:text-foreground">
+                  View details
                 </Button>
               </div>
             ))}
