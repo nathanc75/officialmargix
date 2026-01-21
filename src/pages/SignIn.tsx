@@ -61,13 +61,13 @@ const SignIn = () => {
       </div>
 
       {/* Right Side - Sign In Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative z-10">
-        <div className="w-full max-w-md">
+      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 py-8 sm:p-12 relative z-10">
+        <div className="w-full max-w-lg">
           {/* Mobile Logo */}
-          <div className="lg:hidden mb-8">
+          <div className="lg:hidden mb-10">
             <Link to="/" className="flex items-center gap-3 justify-center">
               <div 
-                className="w-9 h-9 rounded-[12px] flex items-center justify-center"
+                className="w-10 h-10 rounded-[12px] flex items-center justify-center"
                 style={{
                   background: `
                     radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
@@ -76,36 +76,36 @@ const SignIn = () => {
                   boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
                 }}
               >
-                <span className="text-white font-semibold text-base" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
+                <span className="text-white font-semibold text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
               </div>
-              <span className="text-2xl font-bold text-foreground">MARGIX</span>
+              <span className="text-3xl font-bold text-foreground">MARGIX</span>
             </Link>
           </div>
 
           {/* Form Card */}
           <div 
-            className="p-8 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
+            className="p-8 sm:p-10 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
             style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}
           >
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-foreground mb-2">Sign in</h2>
-              <p className="text-muted-foreground text-sm">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-foreground mb-3">Sign in</h2>
+              <p className="text-muted-foreground text-base">
                 Enter your credentials to access your dashboard
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-foreground">Email</Label>
+                <Label htmlFor="email" className="text-foreground text-base">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="you@restaurant.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-11 bg-background/50 border-border focus:border-primary"
+                    className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                     required
                   />
                 </div>
@@ -113,43 +113,43 @@ const SignIn = () => {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-foreground">Password</Label>
-                  <a href="#" className="text-xs text-primary hover:underline">
+                  <Label htmlFor="password" className="text-foreground text-base">Password</Label>
+                  <a href="#" className="text-sm text-primary hover:underline">
                     Forgot password?
                   </a>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10 h-11 bg-background/50 border-border focus:border-primary"
+                    className="pl-12 pr-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {showPassword ? (
-                      <EyeOff className="w-4 h-4" />
+                      <EyeOff className="w-5 h-5" />
                     ) : (
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-5 h-5" />
                     )}
                   </button>
                 </div>
               </div>
 
-              <Button type="submit" className="w-full h-11 brand-gradient border-0 text-white">
+              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white">
                 Sign in
               </Button>
             </form>
 
-            <div className="mt-6 text-center">
-              <p className="text-sm text-muted-foreground">
+            <div className="mt-8 text-center">
+              <p className="text-base text-muted-foreground">
                 Don't have an account?{" "}
                 <Link to="/signup" className="text-primary hover:underline font-medium">
                   Get started
