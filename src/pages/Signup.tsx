@@ -234,7 +234,7 @@ const Signup = () => {
         {/* Trust Section */}
         <div className="text-center">
           <p className="text-sm text-muted-foreground mb-4">
-            30-day money-back guarantee • Cancel anytime • No credit card required to start
+            30-day money-back guarantee • Cancel anytime
           </p>
           <p className="text-xs text-muted-foreground">
             Questions? <a href="/#contact" className="text-primary hover:underline">Contact our team</a>
