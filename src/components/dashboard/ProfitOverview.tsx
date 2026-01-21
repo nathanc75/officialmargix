@@ -49,8 +49,8 @@ const ProfitOverview = () => {
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Profit Overview</h2>
-        <div className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-md border">
+        <h2 className="text-base font-bold uppercase tracking-wider text-muted-foreground">Profit Overview</h2>
+        <div className="text-sm font-bold text-muted-foreground bg-muted px-3 py-1.5 rounded-md border">
           Real-time updates
         </div>
       </div>
@@ -67,29 +67,29 @@ const ProfitOverview = () => {
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <p className="text-xs font-medium text-muted-foreground">{metric.label}</p>
-                  <p className={`text-2xl font-bold tracking-tight ${metric.color}`}>{metric.value}</p>
+                  <p className="text-sm font-bold text-muted-foreground uppercase tracking-tight">{metric.label}</p>
+                  <p className={`text-3xl font-bold tracking-tight ${metric.color}`}>{metric.value}</p>
                 </div>
                 <div 
-                  className={`p-2 rounded-lg ${metric.iconBg} bg-opacity-10`}
+                  className={`p-2.5 rounded-lg ${metric.iconBg} bg-opacity-10`}
                 >
-                  <metric.icon className={`h-4 w-4 ${metric.iconColor}`} />
+                  <metric.icon className={`h-5 w-5 ${metric.iconColor}`} />
                 </div>
               </div>
-              <div className="mt-4 flex items-center gap-1.5">
-                <div className={`flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${
+              <div className="mt-4 flex items-center gap-2">
+                <div className={`flex items-center gap-1 text-xs font-bold px-2 py-1 rounded uppercase ${
                   metric.trendUp 
                     ? 'text-emerald-700 bg-emerald-500/10' 
                     : 'text-red-700 bg-red-500/10'
                 }`}>
                   {metric.trendUp ? (
-                    <ArrowUp className="h-2.5 w-2.5" />
+                    <ArrowUp className="h-3 w-3" />
                   ) : (
-                    <ArrowDown className="h-2.5 w-2.5" />
+                    <ArrowDown className="h-3 w-3" />
                   )}
                   {metric.trend}
                 </div>
-                <span className="text-[10px] text-muted-foreground uppercase tracking-tight">vs last period</span>
+                <span className="text-xs text-muted-foreground uppercase tracking-tight font-bold">vs last period</span>
               </div>
             </CardContent>
           </Card>

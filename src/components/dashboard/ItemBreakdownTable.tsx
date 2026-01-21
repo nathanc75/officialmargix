@@ -50,27 +50,27 @@ const ItemBreakdownTable = () => {
 
   const filterButtons: { value: FilterType; label: string }[] = [
     { value: 'all', label: 'All' },
-    { value: 'loss', label: 'At Loss' },
-    { value: 'profitable', label: 'Profitable' },
+    { value: 'loss', label: 'Losses' },
+    { value: 'profitable', label: 'Profits' },
   ];
 
   return (
-    <Card className="border shadow-sm bg-card overflow-hidden">
+    <Card className="border shadow-md bg-card overflow-hidden">
       <CardContent className="p-0">
-        <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b">
+        <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b bg-muted/10">
           <div className="space-y-1">
-            <h3 className="text-lg font-bold tracking-tight">Order Breakdown</h3>
-            <p className="text-xs text-muted-foreground">Detailed analysis of individual platform transactions</p>
+            <h3 className="text-xl font-bold tracking-tight uppercase">Order Breakdown</h3>
+            <p className="text-sm text-muted-foreground font-bold uppercase tracking-wider">Detailed platform transaction analysis</p>
           </div>
           
-          <div className="flex items-center gap-2 p-1 bg-muted rounded-lg border">
+          <div className="flex items-center gap-2 p-1.5 bg-muted rounded-lg border-2 shadow-inner">
             {filterButtons.map(btn => (
               <button
                 key={btn.value}
                 onClick={() => setFilter(btn.value)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                className={`px-4 py-2 text-sm font-bold rounded-md transition-all uppercase tracking-widest ${
                   filter === btn.value
-                    ? 'bg-background shadow-sm text-foreground border'
+                    ? 'bg-background shadow-md text-foreground border'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -82,7 +82,7 @@ const ItemBreakdownTable = () => {
 
         {/* Table - Desktop */}
         <div className="hidden md:block">
-          <div className="grid grid-cols-7 gap-4 px-6 py-3 bg-muted/30 text-[10px] font-bold text-muted-foreground uppercase tracking-wider border-b">
+          <div className="grid grid-cols-7 gap-4 px-6 py-4 bg-muted/30 text-xs font-bold text-muted-foreground uppercase tracking-widest border-b">
             <span>Order ID</span>
             <span>Item Name</span>
             <span>Platform</span>
@@ -96,25 +96,25 @@ const ItemBreakdownTable = () => {
             {displayItems.map((item) => (
               <div
                 key={item.orderId}
-                className={`grid grid-cols-7 gap-4 px-6 py-4 text-sm items-center transition-colors ${
+                className={`grid grid-cols-7 gap-4 px-6 py-5 text-base items-center transition-colors ${
                   !item.profitable
-                    ? "bg-red-500/[0.03]"
+                    ? "bg-red-500/[0.04]"
                     : "hover:bg-muted/30"
                 }`}
               >
-                <span className="font-mono text-xs text-muted-foreground">{item.orderId}</span>
-                <span className="font-semibold">{item.name}</span>
+                <span className="font-mono text-xs font-bold text-muted-foreground">{item.orderId}</span>
+                <span className="font-bold text-foreground">{item.name}</span>
                 <span>
-                  <Badge variant="outline" className={`text-[10px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
+                  <Badge variant="outline" className={`text-xs uppercase font-bold border-0 ${getPlatformColor(item.platform)} px-2.5 py-1 tracking-wider`}>
                     {item.platform}
                   </Badge>
                 </span>
-                <span className="text-right font-medium">{item.price}</span>
-                <span className="text-right text-red-600 font-medium">{item.fees}</span>
-                <span className={`text-right font-medium ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>
+                <span className="text-right font-bold text-muted-foreground">{item.price}</span>
+                <span className="text-right text-red-600 font-bold">{item.fees}</span>
+                <span className={`text-right font-bold ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>
                   {item.promo}
                 </span>
-                <span className={`text-right font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
+                <span className={`text-right font-black text-lg ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
                   {item.profit}
                 </span>
               </div>
@@ -122,73 +122,33 @@ const ItemBreakdownTable = () => {
           </div>
         </div>
 
-        {/* Mobile Card Layout */}
-        <div className="md:hidden divide-y divide-border">
-          {displayItems.map((item) => (
-            <div
-              key={item.orderId}
-              className={`p-4 transition-colors ${
-                !item.profitable ? "bg-red-500/[0.03]" : "hover:bg-muted/10"
-              }`}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="space-y-0.5">
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-[10px] text-muted-foreground font-mono">{item.orderId}</p>
-                </div>
-                <Badge variant="outline" className={`text-[10px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
-                  {item.platform}
-                </Badge>
-              </div>
-              <div className="grid grid-cols-4 gap-2 text-center">
-                <div className="space-y-1">
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Price</p>
-                  <p className="text-xs font-medium">{item.price}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Fees</p>
-                  <p className="text-xs font-semibold text-red-600">{item.fees}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Promo</p>
-                  <p className={`text-xs font-semibold ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>{item.promo}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-[9px] font-bold text-muted-foreground uppercase">Profit</p>
-                  <p className={`text-xs font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>{item.profit}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="p-4 bg-muted/20 border-t flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+        <div className="p-6 bg-muted/20 border-t flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3">
             {filteredItems.length > 5 && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowAll(!showAll)}
-                className="h-8 text-xs font-semibold"
+                className="h-9 px-5 text-xs font-bold uppercase tracking-widest border shadow-sm"
               >
                 {showAll ? "Show less" : `View all ${filteredItems.length} entries`}
                 {showAll ? <ChevronUp className="ml-2 h-3 w-3" /> : <ChevronDown className="ml-2 h-3 w-3" />}
               </Button>
             )}
-            <Badge variant="secondary" className="text-[10px] font-bold uppercase py-0.5 bg-muted">
-              {lossCount} issues detected
+            <Badge variant="secondary" className="text-xs font-bold uppercase py-1 bg-muted tracking-widest">
+              {lossCount} leaks detected
             </Badge>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="space-y-0.5 text-right">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Total Period Profit</p>
-              <p className="text-base font-bold text-primary">${totalProfit.toFixed(2)}</p>
+          <div className="flex items-center gap-6">
+            <div className="space-y-1 text-right">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Total Period Profit</p>
+              <p className="text-xl font-bold text-primary tracking-tight">${totalProfit.toFixed(2)}</p>
             </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="space-y-0.5 text-right">
-              <p className="text-[10px] font-bold text-muted-foreground uppercase">Avg / Transaction</p>
-              <p className="text-base font-bold text-emerald-600">${avgProfit.toFixed(2)}</p>
+            <div className="w-px h-10 bg-border shadow-sm" />
+            <div className="space-y-1 text-right">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Avg / Transaction</p>
+              <p className="text-xl font-bold text-emerald-600 tracking-tight">${avgProfit.toFixed(2)}</p>
             </div>
           </div>
         </div>
