@@ -159,7 +159,7 @@ const SignIn = () => {
           </div>
 
           {/* Back to Home */}
-          <div className="mt-6 text-center">
+          <div className="mt-3 text-center">
             <Link to="/">
               <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
                 <ArrowLeft className="w-4 h-4" />
