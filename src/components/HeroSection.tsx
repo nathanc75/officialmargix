@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
+import { Link } from "react-router-dom";
 import AnimatedDashboard from "./AnimatedDashboard";
 
 const HeroSection = () => {
@@ -38,14 +39,15 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-            <Button 
-              size="lg" 
-              className="h-11 px-6 text-sm font-medium gap-2"
-              onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}
-            >
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            <Link to="/signup">
+              <Button 
+                size="lg" 
+                className="h-11 px-6 text-sm font-medium gap-2"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
             <a href="#book-demo" onClick={(e) => { e.preventDefault(); document.querySelector('#book-demo')?.scrollIntoView({ behavior: 'smooth' }); }}>
               <Button 
                 variant="link" 

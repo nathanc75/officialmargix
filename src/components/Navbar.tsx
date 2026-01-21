@@ -64,7 +64,9 @@ const Navbar = () => {
                 Sign in
               </Button>
             </Link>
-            <Button size="sm" className="xl:text-base xl:px-4 xl:py-2" onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}>Get Started</Button>
+            <Link to="/signup">
+              <Button size="sm" className="xl:text-base xl:px-4 xl:py-2">Get Started</Button>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -101,7 +103,9 @@ const Navbar = () => {
                     Sign in
                   </Button>
                 </Link>
-                <Button size="default" className="flex-1">Get Started</Button>
+                <Link to="/signup" className="flex-1">
+                  <Button size="default" className="w-full justify-center">Get Started</Button>
+                </Link>
               </div>
             </div>
           </div>
