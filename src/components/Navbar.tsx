@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,11 +58,12 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
-              Sign in
-            </Button>
+            <Link to="/dashboard">
+              <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
+                Sign in
+              </Button>
+            </Link>
             <Button size="default" onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}>Get Started</Button>
           </div>
 
@@ -94,9 +96,11 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="flex items-center gap-2 pt-4 border-t border-border">
-                <Button variant="ghost" size="sm" className="flex-1 justify-start">
-                  Sign in
-                </Button>
+                <Link to="/dashboard" className="flex-1">
+                  <Button variant="ghost" size="sm" className="w-full justify-start">
+                    Sign in
+                  </Button>
+                </Link>
                 <Button size="sm" className="flex-1">Get Started</Button>
               </div>
             </div>

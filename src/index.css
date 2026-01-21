@@ -45,6 +45,12 @@
     /* Brand gradient */
     --gradient-start: 221 100% 62%;
     --gradient-end: 263 60% 55%;
+
+    /* Dashboard semantic colors */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 8%;
   }
 
 }
