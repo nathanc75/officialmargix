@@ -87,15 +87,15 @@ const SignIn = () => {
             className="p-8 sm:p-10 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
             style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}
           >
-            <div className="mb-5">
-              <h2 className="text-3xl font-bold text-foreground mb-2">Sign in</h2>
+            <div className="mb-4">
+              <h2 className="text-3xl font-bold text-foreground mb-1">Sign in</h2>
               <p className="text-muted-foreground text-base">
                 Enter your credentials to access your dashboard
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div className="space-y-1">
                 <Label htmlFor="email" className="text-foreground text-base">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -111,7 +111,7 @@ const SignIn = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password" className="text-foreground text-base">Password</Label>
                   <a href="#" className="text-sm text-primary hover:underline">
@@ -148,7 +148,7 @@ const SignIn = () => {
               </Button>
             </form>
 
-            <div className="mt-5 text-center">
+            <div className="mt-4 text-center">
               <p className="text-base text-muted-foreground">
                 Don't have an account?{" "}
                 <Link to="/signup" className="text-primary hover:underline font-medium">
