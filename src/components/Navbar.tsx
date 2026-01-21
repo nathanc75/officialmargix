@@ -60,7 +60,7 @@ const Navbar = () => {
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
             <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
-              Login
+              Sign in
             </Button>
             <Button size="default" onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}>Get Started</Button>
           </div>
@@ -95,7 +95,7 @@ const Navbar = () => {
               ))}
               <div className="flex items-center gap-2 pt-4 border-t border-border">
                 <Button variant="ghost" size="sm" className="flex-1 justify-start">
-                  Book Demo
+                  Sign in
                 </Button>
                 <Button size="sm" className="flex-1">Get Started</Button>
               </div>
