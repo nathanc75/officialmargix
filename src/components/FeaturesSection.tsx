@@ -36,7 +36,7 @@ const features = [
     iconBg: "bg-green-500",
     title: "Secure Platform Integration",
     subtitle: "Enterprise Data Protection",
-    description: "Bank-level encryption for all delivery platform connections with SOC 2 compliant security standards.",
+    description: "We secure info using modern encryption, least-privilege access, and audited security controls designed around SOC 2 Trust Services Criteria",
   },
   {
     icon: FileText,
