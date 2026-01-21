@@ -89,7 +89,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
                     <Menu className="h-4 w-4" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetContent side="right" className="w-[300px] sm:w-[400px] z-[100]">
                   <SheetHeader>
                     <SheetTitle>Filter Analytics</SheetTitle>
                   </SheetHeader>
@@ -100,7 +100,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Platform" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="z-[110]">
                           <SelectItem value="all">All Platforms</SelectItem>
                           <SelectItem value="uber-eats">Uber Eats</SelectItem>
                           <SelectItem value="doordash">DoorDash</SelectItem>
@@ -114,7 +114,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select Period" />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent className="z-[110]">
                           <SelectItem value="today">Today</SelectItem>
                           <SelectItem value="7days">Last 7 Days</SelectItem>
                           <SelectItem value="30days">Last 30 Days</SelectItem>
