@@ -60,16 +60,16 @@ const ItemBreakdownTable = () => {
       <CardContent className="p-0">
         <div className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b">
           <div className="space-y-1">
-            <h3 className="text-lg font-bold tracking-tight">Order Breakdown</h3>
-            <p className="text-xs text-muted-foreground">Detailed analysis of individual platform transactions</p>
+            <h3 className="text-xl font-bold tracking-tight">Order Breakdown</h3>
+            <p className="text-sm text-muted-foreground font-medium">Detailed analysis of individual platform transactions</p>
           </div>
           
-          <div className="flex items-center gap-2 p-1 bg-muted rounded-lg border">
+          <div className="flex items-center gap-2 p-1.5 bg-muted rounded-lg border">
             {filterButtons.map(btn => (
               <button
                 key={btn.value}
                 onClick={() => setFilter(btn.value)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-all ${
+                className={`px-4 py-2 text-sm font-bold rounded-md transition-all ${
                   filter === btn.value
                     ? 'bg-background shadow-sm text-foreground border'
                     : 'text-muted-foreground hover:text-foreground'
@@ -83,7 +83,7 @@ const ItemBreakdownTable = () => {
 
         {/* Table - Desktop */}
         <div className="hidden md:block">
-          <div className="grid grid-cols-7 gap-4 px-6 py-3 bg-muted/30 text-[10px] font-bold text-muted-foreground uppercase tracking-wider border-b">
+          <div className="grid grid-cols-7 gap-4 px-6 py-4 bg-muted/30 text-xs font-bold text-muted-foreground uppercase tracking-wider border-b">
             <span>Order ID</span>
             <span>Item Name</span>
             <span>Platform</span>
@@ -97,25 +97,25 @@ const ItemBreakdownTable = () => {
             {displayItems.map((item) => (
               <div
                 key={item.orderId}
-                className={`grid grid-cols-7 gap-4 px-6 py-4 text-sm items-center transition-colors ${
+                className={`grid grid-cols-7 gap-4 px-6 py-5 text-base items-center transition-colors ${
                   !item.profitable
                     ? "bg-red-500/[0.03]"
                     : "hover:bg-muted/30"
                 }`}
               >
-                <span className="font-mono text-xs text-muted-foreground">{item.orderId}</span>
-                <span className="font-semibold">{item.name}</span>
+                <span className="font-mono text-xs font-bold text-muted-foreground">{item.orderId}</span>
+                <span className="font-bold">{item.name}</span>
                 <span>
-                  <Badge variant="outline" className={`text-[10px] uppercase font-bold border-0 ${getPlatformColor(item.platform)}`}>
+                  <Badge variant="outline" className={`text-xs uppercase font-bold border-0 ${getPlatformColor(item.platform)} px-2 py-1`}>
                     {item.platform}
                   </Badge>
                 </span>
-                <span className="text-right font-medium">{item.price}</span>
-                <span className="text-right text-red-600 font-medium">{item.fees}</span>
-                <span className={`text-right font-medium ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>
+                <span className="text-right font-semibold">{item.price}</span>
+                <span className="text-right text-red-600 font-bold">{item.fees}</span>
+                <span className={`text-right font-bold ${item.promo === "$0.00" ? "text-muted-foreground" : "text-red-600"}`}>
                   {item.promo}
                 </span>
-                <span className={`text-right font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
+                <span className={`text-right font-black ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
                   {item.profit}
                 </span>
               </div>

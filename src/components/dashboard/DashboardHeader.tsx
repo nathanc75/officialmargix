@@ -27,13 +27,13 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
             </Link>
             <div className="flex items-center gap-3">
               <div 
-                className="w-8 h-8 rounded-lg flex items-center justify-center bg-primary shadow-sm"
+                className="w-10 h-10 rounded-lg flex items-center justify-center bg-primary shadow-sm"
               >
-                <span className="text-primary-foreground font-bold text-sm">M</span>
+                <span className="text-primary-foreground font-bold text-lg">M</span>
               </div>
               <div>
-                <h1 className="text-sm font-semibold text-foreground leading-none">Restaurant</h1>
-                <p className="text-[10px] text-muted-foreground mt-1">Analytics Dashboard</p>
+                <h1 className="text-base font-bold text-foreground leading-none">Restaurant</h1>
+                <p className="text-xs text-muted-foreground mt-1">Analytics Dashboard</p>
               </div>
             </div>
             
@@ -51,10 +51,9 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
           </div>
 
           {/* Right side - Controls */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 bg-muted/50 p-1 rounded-lg border">
+            <div className="flex items-center gap-2 bg-muted/50 p-1.5 rounded-lg border">
               <Select value={platform} onValueChange={setPlatform}>
-                <SelectTrigger className="w-[120px] h-8 text-xs border-0 bg-transparent focus:ring-0">
+                <SelectTrigger className="w-[140px] h-9 text-sm border-0 bg-transparent focus:ring-0">
                   <SelectValue placeholder="Platform" />
                 </SelectTrigger>
                 <SelectContent>
@@ -64,9 +63,9 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
                   <SelectItem value="grubhub">Grubhub</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="w-px h-4 bg-border" />
+              <div className="w-px h-5 bg-border" />
               <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger className="w-[120px] h-8 text-xs border-0 bg-transparent focus:ring-0">
+                <SelectTrigger className="w-[140px] h-9 text-sm border-0 bg-transparent focus:ring-0">
                   <SelectValue placeholder="Period" />
                 </SelectTrigger>
                 <SelectContent>
