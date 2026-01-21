@@ -87,14 +87,14 @@ const SignIn = () => {
             className="p-8 sm:p-10 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
             style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}
           >
-            <div className="mb-8">
-              <h2 className="text-3xl font-bold text-foreground mb-3">Sign in</h2>
+            <div className="mb-5">
+              <h2 className="text-3xl font-bold text-foreground mb-2">Sign in</h2>
               <p className="text-muted-foreground text-base">
                 Enter your credentials to access your dashboard
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-foreground text-base">Email</Label>
                 <div className="relative">
@@ -148,7 +148,7 @@ const SignIn = () => {
               </Button>
             </form>
 
-            <div className="mt-8 text-center">
+            <div className="mt-5 text-center">
               <p className="text-base text-muted-foreground">
                 Don't have an account?{" "}
                 <Link to="/signup" className="text-primary hover:underline font-medium">
