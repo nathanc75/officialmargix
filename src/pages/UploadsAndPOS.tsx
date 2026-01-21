@@ -3,12 +3,28 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
+interface PromoData {
+  name: string;
+  ordersUsed: number;
+  totalDiscount: number;
+  revenueGenerated: number;
+  roi: number;
+}
+
+interface LossItem {
+  name: string;
+  lossAmount: number;
+  reason: string;
+}
 
 interface UploadData {
   name: string;
   date: string;
   status: string;
+  platform: string;
   summary: {
     totalOrders: number;
     totalRevenue: number;
@@ -16,7 +32,13 @@ interface UploadData {
     netProfit: number;
     topItem: string;
     avgOrderValue: number;
+    deliveryFees: number;
+    serviceFees: number;
+    refunds: number;
+    peakHours: string;
   };
+  promos: PromoData[];
+  lossItems: LossItem[];
 }
 
 const UploadsAndPOS = () => {
@@ -36,40 +58,82 @@ const UploadsAndPOS = () => {
       name: "UberEats_Report_Jan2024.csv", 
       date: "2 hours ago", 
       status: "processed",
+      platform: "UberEats",
       summary: {
         totalOrders: 847,
         totalRevenue: 12450.80,
         totalFees: 3112.70,
         netProfit: 9338.10,
         topItem: "Chicken Burrito Bowl",
-        avgOrderValue: 14.70
-      }
+        avgOrderValue: 14.70,
+        deliveryFees: 1890.50,
+        serviceFees: 1222.20,
+        refunds: 245.30,
+        peakHours: "6PM - 9PM"
+      },
+      promos: [
+        { name: "20% Off First Order", ordersUsed: 156, totalDiscount: 892.40, revenueGenerated: 2890.50, roi: 2.24 },
+        { name: "Free Delivery Weekend", ordersUsed: 89, totalDiscount: 445.00, revenueGenerated: 1456.80, roi: 2.27 },
+        { name: "$5 Off $25+", ordersUsed: 45, totalDiscount: 225.00, revenueGenerated: 1245.00, roi: 4.53 }
+      ],
+      lossItems: [
+        { name: "Large Loaded Nachos", lossAmount: 156.80, reason: "High ingredient cost + 30% discount" },
+        { name: "Family Meal Deal", lossAmount: 89.50, reason: "Bundle pricing too aggressive" }
+      ]
     },
     { 
       name: "DoorDash_Weekly_W3.xlsx", 
       date: "1 day ago", 
       status: "processed",
+      platform: "DoorDash",
       summary: {
         totalOrders: 312,
         totalRevenue: 4890.25,
         totalFees: 1467.08,
         netProfit: 3423.17,
         topItem: "BBQ Pulled Pork Sandwich",
-        avgOrderValue: 15.67
-      }
+        avgOrderValue: 15.67,
+        deliveryFees: 780.25,
+        serviceFees: 686.83,
+        refunds: 112.40,
+        peakHours: "12PM - 2PM"
+      },
+      promos: [
+        { name: "BOGO Tuesdays", ordersUsed: 67, totalDiscount: 534.60, revenueGenerated: 1245.80, roi: 1.33 },
+        { name: "15% DashPass Discount", ordersUsed: 124, totalDiscount: 367.20, revenueGenerated: 2089.45, roi: 4.69 }
+      ],
+      lossItems: [
+        { name: "Kids Meal Combo", lossAmount: 67.20, reason: "Low margin + free drink included" },
+        { name: "Appetizer Sampler", lossAmount: 45.80, reason: "Portion size vs. price mismatch" },
+        { name: "Happy Hour Wings", lossAmount: 34.10, reason: "Below-cost pricing during promo" }
+      ]
     },
     { 
       name: "Grubhub_December.csv", 
       date: "3 days ago", 
       status: "processed",
+      platform: "Grubhub",
       summary: {
         totalOrders: 1245,
         totalRevenue: 18920.50,
         totalFees: 5676.15,
         netProfit: 13244.35,
         topItem: "Margherita Pizza",
-        avgOrderValue: 15.20
-      }
+        avgOrderValue: 15.20,
+        deliveryFees: 2890.30,
+        serviceFees: 2785.85,
+        refunds: 456.20,
+        peakHours: "5PM - 8PM"
+      },
+      promos: [
+        { name: "Holiday Special 25% Off", ordersUsed: 234, totalDiscount: 1456.80, revenueGenerated: 4567.90, roi: 2.14 },
+        { name: "Free Appetizer $30+", ordersUsed: 178, totalDiscount: 890.00, revenueGenerated: 5890.50, roi: 5.62 },
+        { name: "Loyalty Reward $10", ordersUsed: 89, totalDiscount: 890.00, revenueGenerated: 1678.90, roi: 0.89 }
+      ],
+      lossItems: [
+        { name: "Truffle Fries", lossAmount: 234.50, reason: "Truffle oil cost spike + promo stacking" },
+        { name: "Seafood Pasta", lossAmount: 178.90, reason: "Ingredient waste from low orders" }
+      ]
     },
   ];
 
@@ -216,37 +280,40 @@ const UploadsAndPOS = () => {
 
       {/* Upload Summary Dialog */}
       <Dialog open={!!selectedUpload} onOpenChange={() => setSelectedUpload(null)}>
-        <DialogContent className="sm:max-w-lg">
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-primary" />
               Report Summary
             </DialogTitle>
-            <DialogDescription>{selectedUpload?.name}</DialogDescription>
+            <DialogDescription className="flex items-center gap-2">
+              {selectedUpload?.name}
+              <Badge variant="outline" className="ml-2">{selectedUpload?.platform}</Badge>
+            </DialogDescription>
           </DialogHeader>
           
           {selectedUpload && (
-            <div className="space-y-4">
+            <div className="space-y-5">
               {/* Key Metrics Grid */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
                     <ShoppingBag className="h-3 w-3" />
-                    Total Orders
+                    Orders
                   </div>
                   <p className="text-lg font-bold text-foreground">{selectedUpload.summary.totalOrders.toLocaleString()}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-secondary/50">
                   <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
                     <DollarSign className="h-3 w-3" />
-                    Total Revenue
+                    Revenue
                   </div>
                   <p className="text-lg font-bold text-foreground">${selectedUpload.summary.totalRevenue.toLocaleString()}</p>
                 </div>
                 <div className="p-3 rounded-lg bg-red-50">
                   <div className="flex items-center gap-2 text-red-600 text-xs mb-1">
                     <TrendingDown className="h-3 w-3" />
-                    Platform Fees
+                    Total Fees
                   </div>
                   <p className="text-lg font-bold text-red-600">-${selectedUpload.summary.totalFees.toLocaleString()}</p>
                 </div>
@@ -259,21 +326,94 @@ const UploadsAndPOS = () => {
                 </div>
               </div>
 
-              {/* Additional Insights */}
+              {/* Fee Breakdown */}
+              <div className="p-4 rounded-lg border border-border/50 bg-muted/30 space-y-3">
+                <h4 className="font-medium text-foreground text-sm flex items-center gap-2">
+                  <Percent className="h-4 w-4" />
+                  Fee Breakdown
+                </h4>
+                <div className="grid grid-cols-3 gap-3 text-sm">
+                  <div className="text-center p-2 rounded bg-white/50">
+                    <p className="text-muted-foreground text-xs">Delivery</p>
+                    <p className="font-semibold text-red-600">-${selectedUpload.summary.deliveryFees.toLocaleString()}</p>
+                  </div>
+                  <div className="text-center p-2 rounded bg-white/50">
+                    <p className="text-muted-foreground text-xs">Service</p>
+                    <p className="font-semibold text-red-600">-${selectedUpload.summary.serviceFees.toLocaleString()}</p>
+                  </div>
+                  <div className="text-center p-2 rounded bg-white/50">
+                    <p className="text-muted-foreground text-xs">Refunds</p>
+                    <p className="font-semibold text-red-600">-${selectedUpload.summary.refunds.toLocaleString()}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Promos Section */}
+              <div className="p-4 rounded-lg border border-border/50 bg-muted/30 space-y-3">
+                <h4 className="font-medium text-foreground text-sm flex items-center gap-2">
+                  <Tag className="h-4 w-4" />
+                  Promo Performance
+                </h4>
+                <div className="space-y-2">
+                  {selectedUpload.promos.map((promo, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 rounded bg-white/50 text-sm">
+                      <div className="flex-1">
+                        <p className="font-medium text-foreground">{promo.name}</p>
+                        <p className="text-xs text-muted-foreground">{promo.ordersUsed} orders used</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-red-600 text-xs">-${promo.totalDiscount.toLocaleString()} discount</p>
+                        <p className="text-emerald-600 text-xs">+${promo.revenueGenerated.toLocaleString()} revenue</p>
+                      </div>
+                      <Badge 
+                        variant={promo.roi >= 2 ? "default" : promo.roi >= 1 ? "secondary" : "destructive"}
+                        className="ml-3"
+                      >
+                        {promo.roi.toFixed(1)}x ROI
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Loss Items Section */}
+              <div className="p-4 rounded-lg border border-red-200 bg-red-50/50 space-y-3">
+                <h4 className="font-medium text-red-700 text-sm flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  Items Losing Money
+                </h4>
+                <div className="space-y-2">
+                  {selectedUpload.lossItems.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 rounded bg-white/70 text-sm">
+                      <div>
+                        <p className="font-medium text-foreground">{item.name}</p>
+                        <p className="text-xs text-muted-foreground">{item.reason}</p>
+                      </div>
+                      <p className="font-bold text-red-600">-${item.lossAmount.toFixed(2)}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick Insights */}
               <div className="p-4 rounded-lg border border-border/50 bg-muted/30 space-y-3">
                 <h4 className="font-medium text-foreground text-sm">Quick Insights</h4>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Top Selling Item</span>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="flex justify-between p-2 rounded bg-white/50">
+                    <span className="text-muted-foreground">Top Seller</span>
                     <span className="font-medium text-foreground">{selectedUpload.summary.topItem}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Avg Order Value</span>
+                  <div className="flex justify-between p-2 rounded bg-white/50">
+                    <span className="text-muted-foreground">Avg Order</span>
                     <span className="font-medium text-foreground">${selectedUpload.summary.avgOrderValue.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Fee Percentage</span>
+                  <div className="flex justify-between p-2 rounded bg-white/50">
+                    <span className="text-muted-foreground">Fee %</span>
                     <span className="font-medium text-red-600">{((selectedUpload.summary.totalFees / selectedUpload.summary.totalRevenue) * 100).toFixed(1)}%</span>
+                  </div>
+                  <div className="flex justify-between p-2 rounded bg-white/50">
+                    <span className="text-muted-foreground flex items-center gap-1"><Clock className="h-3 w-3" /> Peak</span>
+                    <span className="font-medium text-foreground">{selectedUpload.summary.peakHours}</span>
                   </div>
                 </div>
               </div>
