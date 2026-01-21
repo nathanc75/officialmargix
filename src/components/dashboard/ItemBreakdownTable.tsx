@@ -27,13 +27,9 @@ const ItemBreakdownTable = () => {
         <div className="relative p-6 sm:p-8 flex flex-col">
           {/* Header bar */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-border/30">
-            <div className="flex items-center gap-2.5">
-              <div className="w-3.5 h-3.5 rounded-full bg-destructive/70 shadow-sm shadow-destructive/30" />
-              <div className="w-3.5 h-3.5 rounded-full bg-yellow-500/70 shadow-sm shadow-yellow-500/30" />
-              <div className="w-3.5 h-3.5 rounded-full bg-green-500/70 shadow-sm shadow-green-500/30" />
-            </div>
-            <div className="text-base font-semibold text-foreground px-4 py-2 rounded-full bg-secondary/50 backdrop-blur-sm border border-border/30">
-              Item-Level Profit Breakdown
+            <h3 className="text-lg font-semibold text-foreground">Item-Level Profit Breakdown</h3>
+            <div className="text-sm text-muted-foreground">
+              {items.length} items
             </div>
           </div>
 
