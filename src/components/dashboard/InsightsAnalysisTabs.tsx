@@ -139,6 +139,3 @@ const InsightsAnalysisTabs = () => {
 };
 
 export default InsightsAnalysisTabs;
-};
-
-export default InsightsAnalysisTabs;
