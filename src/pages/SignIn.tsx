@@ -33,7 +33,7 @@ const SignIn = () => {
       </div>
 
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12">
+      <div className="hidden lg:flex lg:w-[45%] relative items-center justify-end pr-8 xl:pr-16">
         <div className="max-w-md">
           <Link to="/" className="flex items-center gap-3 mb-8">
             <div 
@@ -61,7 +61,7 @@ const SignIn = () => {
       </div>
 
       {/* Right Side - Sign In Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-4 py-8 sm:p-12 relative z-10">
+      <div className="w-full lg:w-[55%] flex items-center justify-start px-4 py-8 lg:pl-8 xl:pl-16 sm:p-12 lg:pr-12 relative z-10">
         <div className="w-full max-w-lg">
           {/* Mobile Logo */}
           <div className="lg:hidden mb-10">
