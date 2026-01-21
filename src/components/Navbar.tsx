@@ -59,7 +59,7 @@ const Navbar = () => {
           </div>
 
           <div className="hidden lg:flex items-center gap-2 xl:gap-4">
-            <Link to="/dashboard">
+            <Link to="/signin">
               <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
                 Sign in
               </Button>
@@ -98,7 +98,7 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <Link to="/dashboard" className="flex-1">
+                <Link to="/signin" className="flex-1">
                   <Button variant="outline" size="default" className="w-full justify-center">
                     Sign in
                   </Button>
