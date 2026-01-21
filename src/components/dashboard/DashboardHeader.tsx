@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, CheckCircle2, Clock } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Upload } from "lucide-react";
 
 interface DashboardHeaderProps {
   dateRange: string;
@@ -19,7 +19,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
     >
       <div className="px-3 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-3 sm:py-0 sm:h-16 gap-3 sm:gap-0">
-          {/* Top row on mobile - Logo and back */}
+          {/* Left side - Logo and back */}
           <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-4">
             <div className="flex items-center gap-2 sm:gap-4">
               <Link to="/">
@@ -47,7 +47,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
               </div>
             </div>
             
-            {/* Platform badges - show on sm only, hide on mobile and md+ */}
+            {/* Platform badges - show on lg only */}
             <div className="hidden lg:flex items-center gap-2">
               <Badge variant="outline" className="gap-1 py-0.5 px-2 text-xs bg-emerald-50/80 text-emerald-700 border-emerald-200/50 backdrop-blur-sm">
                 <CheckCircle2 className="h-2.5 w-2.5" />
@@ -64,10 +64,10 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
             </div>
           </div>
 
-          {/* Bottom row on mobile - Platform & Date Range */}
+          {/* Right side - Controls */}
           <div className="flex items-center gap-2 sm:gap-3">
             <Select value={platform} onValueChange={setPlatform}>
-              <SelectTrigger className="flex-1 sm:flex-none sm:w-[140px] md:w-[160px] h-9 text-xs sm:text-sm bg-white/50 border-white/30 backdrop-blur-sm">
+              <SelectTrigger className="w-[110px] sm:w-[130px] h-9 text-xs sm:text-sm bg-white/50 border-white/30 backdrop-blur-sm">
                 <SelectValue placeholder="Platform" />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
@@ -78,7 +78,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
               </SelectContent>
             </Select>
             <Select value={dateRange} onValueChange={setDateRange}>
-              <SelectTrigger className="flex-1 sm:flex-none sm:w-[140px] md:w-[160px] h-9 text-xs sm:text-sm bg-white/50 border-white/30 backdrop-blur-sm">
+              <SelectTrigger className="w-[100px] sm:w-[120px] h-9 text-xs sm:text-sm bg-white/50 border-white/30 backdrop-blur-sm">
                 <SelectValue placeholder="Period" />
               </SelectTrigger>
               <SelectContent className="bg-background border border-border shadow-lg z-50">
@@ -88,6 +88,16 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
                 <SelectItem value="custom">Custom Range</SelectItem>
               </SelectContent>
             </Select>
+            <Link to="/uploads-pos">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="h-9 px-3 bg-white/50 border-white/30 backdrop-blur-sm hover:bg-white/80 gap-1.5"
+              >
+                <Upload className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline text-xs">Uploads</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
