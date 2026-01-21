@@ -44,22 +44,22 @@ const ProfitOverview = () => {
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <h2 className="text-lg font-semibold text-foreground">Profit Overview</h2>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="h-11 p-1 bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 shadow-md backdrop-blur-sm rounded-xl">
+          <TabsList className="h-10 sm:h-11 p-1 bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 shadow-md backdrop-blur-sm rounded-xl">
             <TabsTrigger 
               value="overview" 
-              className="px-5 py-2 text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary"
+              className="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary"
             >
               Overview
             </TabsTrigger>
             <TabsTrigger 
               value="uploads" 
-              className="px-5 py-2 text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary flex items-center gap-2"
+              className="px-3 sm:px-5 py-1.5 sm:py-2 text-xs sm:text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary flex items-center gap-1.5 sm:gap-2"
             >
-              <Upload className="h-4 w-4" />
-              Uploads & POS
+              <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden xs:inline">Uploads &</span> POS
             </TabsTrigger>
           </TabsList>
         </Tabs>
