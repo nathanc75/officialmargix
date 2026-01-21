@@ -39,24 +39,24 @@ const PromoAnalysis = () => {
   ];
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="backdrop-blur-xl bg-white/70 border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+      <CardHeader className="pb-3 bg-gradient-to-r from-secondary/50 to-transparent">
         <CardTitle className="text-base font-semibold">Promo Impact Analysis</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {promos.map((promo) => (
           <div 
             key={promo.name} 
-            className={`p-4 rounded-lg border ${
+            className={`p-4 rounded-xl border backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md ${
               promo.profitable 
-                ? 'bg-emerald-50/50 border-emerald-200' 
-                : 'bg-red-50/50 border-red-200'
+                ? 'bg-gradient-to-r from-emerald-50/80 to-white/60 border-emerald-200/50' 
+                : 'bg-gradient-to-r from-red-50/80 to-white/60 border-red-200/50'
             }`}
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-sm text-foreground">{promo.name}</span>
-                <Badge variant="outline" className="text-xs py-0">
+                <Badge variant="outline" className="text-xs py-0 bg-white/50 backdrop-blur-sm">
                   {promo.platform}
                 </Badge>
               </div>
@@ -78,7 +78,7 @@ const PromoAnalysis = () => {
           </div>
         ))}
         
-        <div className="mt-4 p-3 rounded-lg bg-amber-50 border border-amber-200">
+        <div className="mt-4 p-3 rounded-xl bg-gradient-to-r from-amber-50/80 to-white/60 border border-amber-200/50 backdrop-blur-sm">
           <p className="text-xs text-amber-800">
             <strong>Insight:</strong> BOGO Friday promo cost $420 and generated only $310 in additional revenue — not profitable.
           </p>

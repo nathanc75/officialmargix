@@ -22,27 +22,31 @@ const ItemBreakdownTable = () => {
   ];
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="backdrop-blur-xl bg-white/70 border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)] overflow-hidden">
+      <CardHeader className="pb-3 bg-gradient-to-r from-secondary/50 to-transparent">
         <CardTitle className="text-base font-semibold">Item-Level Profit Breakdown</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="text-xs font-medium">Item</TableHead>
-                <TableHead className="text-xs font-medium text-right">Price</TableHead>
-                <TableHead className="text-xs font-medium text-right">Fees</TableHead>
-                <TableHead className="text-xs font-medium text-right">Promo</TableHead>
-                <TableHead className="text-xs font-medium text-right">Profit</TableHead>
+              <TableRow className="hover:bg-transparent border-b border-border/50">
+                <TableHead className="text-xs font-medium text-muted-foreground">Item</TableHead>
+                <TableHead className="text-xs font-medium text-muted-foreground text-right">Price</TableHead>
+                <TableHead className="text-xs font-medium text-muted-foreground text-right">Fees</TableHead>
+                <TableHead className="text-xs font-medium text-muted-foreground text-right">Promo</TableHead>
+                <TableHead className="text-xs font-medium text-muted-foreground text-right">Profit</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {items.map((item) => (
                 <TableRow 
                   key={item.name} 
-                  className={item.profitable ? '' : 'bg-red-50/50'}
+                  className={`transition-colors border-b border-border/30 ${
+                    item.profitable 
+                      ? 'hover:bg-secondary/30' 
+                      : 'bg-red-50/50 hover:bg-red-50/70'
+                  }`}
                 >
                   <TableCell className="font-medium text-sm">{item.name}</TableCell>
                   <TableCell className="text-right text-sm">{item.price}</TableCell>

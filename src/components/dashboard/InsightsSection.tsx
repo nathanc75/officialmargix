@@ -27,14 +27,14 @@ const InsightsSection = () => {
         {insights.map((insight, index) => (
           <Card 
             key={index} 
-            className={`border-l-4 ${
+            className={`border-l-4 backdrop-blur-xl border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 ${
               insight.severity === 'high' 
-                ? 'border-l-red-500 bg-red-50/50' 
-                : 'border-l-amber-500 bg-amber-50/50'
+                ? 'border-l-red-500 bg-gradient-to-br from-red-50/80 to-white/80' 
+                : 'border-l-amber-500 bg-gradient-to-br from-amber-50/80 to-white/80'
             }`}
           >
             <CardContent className="p-4 flex items-start gap-3">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm ${
                 insight.severity === 'high' ? 'bg-red-100' : 'bg-amber-100'
               }`}>
                 <insight.icon className={`h-4 w-4 ${
