@@ -7,9 +7,11 @@ import { ArrowLeft, CheckCircle2, Clock } from "lucide-react";
 interface DashboardHeaderProps {
   dateRange: string;
   setDateRange: (value: string) => void;
+  platform: string;
+  setPlatform: (value: string) => void;
 }
 
-const DashboardHeader = ({ dateRange, setDateRange }: DashboardHeaderProps) => {
+const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: DashboardHeaderProps) => {
   return (
     <header 
       className="sticky top-4 left-4 right-4 z-50 mx-4 lg:mx-auto max-w-7xl backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08),0_0_60px_-15px_hsl(221,83%,53%,0.3)] border border-white/20"
@@ -44,13 +46,24 @@ const DashboardHeader = ({ dateRange, setDateRange }: DashboardHeaderProps) => {
             </div>
           </div>
 
-          {/* Center - Date Range */}
-          <div className="hidden md:block">
+          {/* Center - Platform & Date Range */}
+          <div className="hidden md:flex items-center gap-3">
+            <Select value={platform} onValueChange={setPlatform}>
+              <SelectTrigger className="w-[160px] bg-white/50 border-white/30 backdrop-blur-sm">
+                <SelectValue placeholder="Select platform" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
+                <SelectItem value="all">All Platforms</SelectItem>
+                <SelectItem value="uber-eats">Uber Eats</SelectItem>
+                <SelectItem value="doordash">DoorDash</SelectItem>
+                <SelectItem value="grubhub">Grubhub</SelectItem>
+              </SelectContent>
+            </Select>
             <Select value={dateRange} onValueChange={setDateRange}>
               <SelectTrigger className="w-[180px] bg-white/50 border-white/30 backdrop-blur-sm">
                 <SelectValue placeholder="Select period" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-background border border-border shadow-lg z-50">
                 <SelectItem value="today">Today</SelectItem>
                 <SelectItem value="7days">Last 7 Days</SelectItem>
                 <SelectItem value="30days">Last 30 Days</SelectItem>
