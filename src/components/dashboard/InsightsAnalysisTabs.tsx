@@ -19,101 +19,102 @@ const InsightsAnalysisTabs = () => {
   ];
 
   return (
-    <Card className="border shadow-md bg-card overflow-hidden">
+    <Card className="border-2 shadow-xl bg-card overflow-hidden">
       <Tabs defaultValue="promos" className="w-full">
-        <CardHeader className="p-0 border-b bg-muted/30">
-          <TabsList className="w-full justify-start h-16 bg-transparent p-0 rounded-none">
+        <CardHeader className="p-0 border-b-2 bg-muted/30">
+          <TabsList className="w-full justify-start h-20 bg-transparent p-0 rounded-none">
             <TabsTrigger 
               value="promos" 
-              className="rounded-none border-b-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-16 px-10 text-sm font-black uppercase tracking-widest"
+              className="rounded-none border-b-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-20 px-12 text-base font-black uppercase tracking-[0.2em]"
             >
               Promo Performance
             </TabsTrigger>
             <TabsTrigger 
               value="ai" 
-              className="rounded-none border-b-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-16 px-10 text-sm font-black uppercase tracking-widest gap-3"
+              className="rounded-none border-b-4 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none h-20 px-12 text-base font-black uppercase tracking-[0.2em] gap-4"
             >
-              <Lightbulb className="h-5 w-5" />
-              AI Suggestions
+              <Lightbulb className="h-6 w-6" />
+              AI Strategy
             </TabsTrigger>
           </TabsList>
         </CardHeader>
         
-        <CardContent className="p-8">
-          <TabsContent value="promos" className="mt-0 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <CardContent className="p-10">
+          <TabsContent value="promos" className="mt-0 space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {promos.map((promo) => (
                 <div 
                   key={promo.name} 
-                  className={`p-6 rounded-2xl border-2 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
+                  className={`p-8 rounded-3xl border-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${
                     promo.profitable 
                       ? 'bg-emerald-500/[0.04] border-emerald-500/10' 
                       : 'bg-red-500/[0.04] border-red-500/10'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="space-y-1.5">
-                      <p className="font-black text-lg">{promo.name}</p>
-                      <Badge variant="outline" className="text-xs font-black uppercase border-2 bg-muted px-2.5 py-0.5 tracking-wider">
+                  <div className="flex items-center justify-between mb-8">
+                    <div className="space-y-2">
+                      <p className="font-black text-2xl tracking-tight">{promo.name}</p>
+                      <Badge variant="outline" className="text-xs font-black uppercase border-2 bg-muted px-3 py-1 tracking-widest">
                         {promo.platform}
                       </Badge>
                     </div>
-                    <div className={`flex items-center gap-2 font-black text-lg ${
+                    <div className={`flex items-center gap-3 font-black text-2xl tracking-tighter ${
                       promo.profitable ? 'text-emerald-600' : 'text-red-600'
                     }`}>
-                      {promo.profitable ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
+                      {promo.profitable ? <TrendingUp className="h-6 w-6" /> : <TrendingDown className="h-6 w-6" />}
                       {promo.impact}
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-8 pt-5 border-t-2 border-dashed">
+                  <div className="grid grid-cols-2 gap-10 pt-8 border-t-2 border-dashed">
                     <div>
-                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1">Promo Cost</p>
-                      <p className="text-base font-black text-foreground">{promo.cost}</p>
+                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2">Campaign Cost</p>
+                      <p className="text-xl font-black text-foreground tracking-tight">{promo.cost}</p>
                     </div>
                     <div>
-                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-1">Direct Revenue</p>
-                      <p className="text-base font-black text-foreground">{promo.revenue}</p>
+                      <p className="text-xs font-black text-muted-foreground uppercase tracking-widest mb-2">Gross Attribution</p>
+                      <p className="text-xl font-black text-foreground tracking-tight">{promo.revenue}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             
-            <div className="p-6 rounded-2xl bg-amber-500/5 border-2 border-amber-500/10 shadow-inner">
-              <div className="flex items-center gap-5">
-                <div className="p-3 rounded-xl bg-amber-500/10 border shadow-sm">
-                  <Lightbulb className="h-6 w-6 text-amber-600" />
+            <div className="p-8 rounded-3xl bg-amber-500/5 border-2 border-amber-500/10 shadow-inner">
+              <div className="flex items-center gap-6">
+                <div className="p-4 rounded-2xl bg-amber-500/10 border-2 shadow-sm">
+                  <Lightbulb className="h-8 w-8 text-amber-600" />
                 </div>
-                <p className="text-base font-bold text-amber-900 dark:text-amber-100 leading-relaxed">
-                  <strong className="uppercase tracking-wide">Optimization Opportunity:</strong> 2 promos are underperforming, resulting in <span className="font-black text-red-600 text-lg">$250/week</span> in addressable revenue losses.
+                <p className="text-lg font-bold text-amber-900 dark:text-amber-100 leading-relaxed">
+                  <strong className="uppercase tracking-widest block text-xs mb-1 opacity-70">Optimization Alert</strong>
+                  2 promotions are negatively impacting margins, leaking <span className="font-black text-red-600 text-2xl tracking-tighter">$250/week</span> in addressable profit.
                 </p>
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="ai" className="mt-0 space-y-5">
-            <div className="space-y-4">
+          <TabsContent value="ai" className="mt-0 space-y-6">
+            <div className="space-y-6">
               {recommendations.map((rec, index) => (
                 <div 
                   key={index} 
-                  className="p-6 rounded-2xl bg-card border-2 shadow-sm hover:shadow-lg transition-all duration-300 group hover:-translate-y-1"
+                  className="p-8 rounded-3xl bg-card border-2 shadow-sm hover:shadow-2xl transition-all duration-300 group hover:-translate-y-2"
                 >
-                  <div className="flex items-start justify-between gap-8">
-                    <div className="flex items-start gap-6">
-                      <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center flex-shrink-0 border-2 shadow-inner">
-                        <rec.icon className="h-7 w-7 text-primary" />
+                  <div className="flex items-start justify-between gap-10">
+                    <div className="flex items-start gap-8">
+                      <div className="w-16 h-16 rounded-3xl bg-muted flex items-center justify-center flex-shrink-0 border-2 shadow-inner">
+                        <rec.icon className="h-8 w-8 text-primary" />
                       </div>
-                      <div className="space-y-2">
-                        <p className="font-black text-lg leading-tight">{rec.action}</p>
-                        <p className="text-base text-muted-foreground font-semibold leading-relaxed">{rec.reason}</p>
+                      <div className="space-y-3">
+                        <p className="font-black text-2xl leading-tight tracking-tight">{rec.action}</p>
+                        <p className="text-lg text-muted-foreground font-bold leading-relaxed">{rec.reason}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-5">
-                      <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-2 border-emerald-500/20 font-black text-sm uppercase h-10 px-4 tracking-widest">
+                    <div className="flex items-center gap-6">
+                      <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-2 border-emerald-500/20 font-black text-base uppercase h-12 px-6 tracking-widest shadow-sm">
                         {rec.impact}
                       </Badge>
-                      <Button variant="ghost" size="icon" className="h-12 w-12 rounded-xl group-hover:bg-primary group-hover:text-primary-foreground transition-all border-2 shadow-sm">
-                        <ChevronRight className="h-6 w-6" />
+                      <Button variant="ghost" size="icon" className="h-14 w-14 rounded-2xl group-hover:bg-primary group-hover:text-primary-foreground transition-all border-2 shadow-md">
+                        <ChevronRight className="h-8 w-8" />
                       </Button>
                     </div>
                   </div>
@@ -121,13 +122,14 @@ const InsightsAnalysisTabs = () => {
               ))}
             </div>
             
-            <div className="p-6 rounded-2xl bg-primary/5 border-2 border-primary/10 shadow-inner">
-              <div className="flex items-center gap-5">
-                <div className="p-3 rounded-xl bg-primary/10 border shadow-sm">
-                  <TrendingUp className="h-6 w-6 text-primary" />
+            <div className="p-8 rounded-3xl bg-primary/5 border-2 border-primary/10 shadow-inner mt-8">
+              <div className="flex items-center gap-6">
+                <div className="p-4 rounded-2xl bg-primary/10 border-2 shadow-sm">
+                  <TrendingUp className="h-8 w-8 text-primary" />
                 </div>
-                <p className="text-base font-bold text-foreground leading-relaxed">
-                  <strong className="uppercase tracking-wide">Recovery Potential:</strong> Implementing these AI suggestions could recover an estimated <span className="font-black text-primary text-xl">+$375/week</span> in pure margin.
+                <p className="text-lg font-bold text-foreground leading-relaxed">
+                  <strong className="uppercase tracking-widest block text-xs mb-1 opacity-70">Recovery Target</strong>
+                  Implementing these AI-driven strategies could recover an estimated <span className="font-black text-primary text-3xl tracking-tighter">+$375/week</span> in net profit margin.
                 </p>
               </div>
             </div>
