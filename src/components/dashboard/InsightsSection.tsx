@@ -32,22 +32,22 @@ const InsightsSection = () => {
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <Card className="border-red-500/20 bg-red-500/5 overflow-hidden">
         <CollapsibleTrigger asChild>
-          <button className="w-full px-4 py-4 flex items-center justify-between hover:bg-red-500/10 transition-colors">
-            <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20">
+          <button className="w-full px-4 py-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-red-500/10 transition-colors text-left">
+            <div className="flex items-start sm:items-center gap-3 sm:gap-4 mb-3 sm:mb-0">
+              <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shrink-0">
                 <AlertTriangle className="h-5 w-5 text-red-600" />
               </div>
-              <div className="text-left">
-                <h3 className="text-sm font-bold text-red-900 dark:text-red-100 flex items-center gap-2">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-bold text-red-900 dark:text-red-100 flex flex-wrap items-center gap-2">
                   {criticalCount} Critical Revenue Insights
-                  <Badge variant="destructive" className="h-4 px-1.5 text-[10px] uppercase font-bold">Action Required</Badge>
+                  <Badge variant="destructive" className="h-4 px-1.5 text-[9px] uppercase font-bold shrink-0">Action Required</Badge>
                 </h3>
                 <p className="text-xs text-red-700/70 dark:text-red-300/70">
                   Potential revenue recovery: <span className="font-bold">$2,145.00</span>
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-end gap-2 border-t sm:border-t-0 pt-2 sm:pt-0">
               <span className="text-xs font-medium text-red-700 dark:text-red-300">
                 {isOpen ? 'View Less' : 'View All'}
               </span>
@@ -65,23 +65,23 @@ const InsightsSection = () => {
             {insights.map((insight, index) => (
               <div 
                 key={index}
-                className={`flex items-center justify-between p-3 rounded-lg border ${
+                className={`flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border gap-3 ${
                   insight.severity === 'high' 
                     ? 'bg-red-500/10 border-red-500/20' 
                     : 'bg-amber-500/10 border-amber-500/20'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`p-1.5 rounded-md ${
+                  <div className={`p-1.5 rounded-md shrink-0 ${
                     insight.severity === 'high' ? 'bg-red-500/20' : 'bg-amber-500/20'
                   }`}>
                     <insight.icon className={`h-4 w-4 ${
                       insight.severity === 'high' ? 'text-red-600' : 'text-amber-600'
                     }`} />
                   </div>
-                  <p className="text-sm font-medium text-foreground">{insight.title}</p>
+                  <p className="text-sm font-medium text-foreground leading-tight">{insight.title}</p>
                 </div>
-                <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold text-muted-foreground hover:text-foreground">
+                <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold text-muted-foreground hover:text-foreground self-end sm:self-auto">
                   View details
                 </Button>
               </div>
