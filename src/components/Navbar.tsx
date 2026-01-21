@@ -59,11 +59,9 @@ const Navbar = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
-            <a href="#book-demo" onClick={(e) => { e.preventDefault(); document.querySelector('#book-demo')?.scrollIntoView({ behavior: 'smooth' }); }}>
-              <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
-                Book Demo
-              </Button>
-            </a>
+            <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
+              Login
+            </Button>
             <Button size="default" onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}>Get Started</Button>
           </div>
 
