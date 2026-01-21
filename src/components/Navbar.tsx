@@ -45,31 +45,31 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-10">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-base font-medium text-foreground hover:text-primary transition-colors"
+                className="text-sm xl:text-base font-medium text-foreground hover:text-primary transition-colors whitespace-nowrap"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-4">
             <Link to="/dashboard">
               <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
                 Sign in
               </Button>
             </Link>
-            <Button size="default" onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}>Get Started</Button>
+            <Button size="sm" className="xl:text-base xl:px-4 xl:py-2" onClick={() => document.querySelector('#pricing')?.scrollIntoView({ behavior: 'smooth' })}>Get Started</Button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2"
+            className="lg:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -83,7 +83,7 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border">
+          <div className="lg:hidden py-4 border-t border-border">
             <div className="flex flex-col gap-4">
               {navLinks.map((link) => (
                 <a
