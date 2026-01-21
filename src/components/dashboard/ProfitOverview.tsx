@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DollarSign, Percent, Tag, TrendingUp } from "lucide-react";
+import { DollarSign, Percent, Tag, TrendingUp, Upload } from "lucide-react";
 import { useState } from "react";
 
 const ProfitOverview = () => {
@@ -47,11 +47,18 @@ const ProfitOverview = () => {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-foreground">Profit Overview</h2>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="bg-white/50 border border-white/30 backdrop-blur-sm">
-            <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsList className="h-11 p-1 bg-gradient-to-r from-slate-100 to-slate-50 border border-slate-200 shadow-md backdrop-blur-sm rounded-xl">
+            <TabsTrigger 
+              value="overview" 
+              className="px-5 py-2 text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary"
+            >
               Overview
             </TabsTrigger>
-            <TabsTrigger value="uploads" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <TabsTrigger 
+              value="uploads" 
+              className="px-5 py-2 text-sm font-medium rounded-lg transition-all data-[state=active]:bg-white data-[state=active]:shadow-md data-[state=active]:text-primary flex items-center gap-2"
+            >
+              <Upload className="h-4 w-4" />
               Uploads & POS
             </TabsTrigger>
           </TabsList>
