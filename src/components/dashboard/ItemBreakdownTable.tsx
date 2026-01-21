@@ -1,14 +1,14 @@
 const ItemBreakdownTable = () => {
   const items = [
-    { name: "Chicken Bowl", platform: "Uber Eats", price: "$14.99", fees: "-$3.75", promo: "-$1.50", profit: "$9.74", profitable: true },
-    { name: "Beef Bulgogi", platform: "DoorDash", price: "$16.99", fees: "-$4.25", promo: "$0.00", profit: "$12.74", profitable: true },
-    { name: "Veggie Bibimbap", platform: "Uber Eats", price: "$12.99", fees: "-$3.25", promo: "-$2.60", profit: "$7.14", profitable: true },
-    { name: "Korean Fried Chicken", platform: "Grubhub", price: "$11.99", fees: "-$3.00", promo: "-$6.00", profit: "$2.99", profitable: true },
-    { name: "Kimchi Fries", platform: "DoorDash", price: "$8.99", fees: "-$2.25", promo: "-$4.50", profit: "$2.24", profitable: true },
-    { name: "Bubble Tea", platform: "Uber Eats", price: "$5.99", fees: "-$1.50", promo: "-$3.00", profit: "$1.49", profitable: true },
-    { name: "Mochi Ice Cream", platform: "Grubhub", price: "$4.99", fees: "-$1.25", promo: "-$2.50", profit: "$1.24", profitable: true },
-    { name: "Spring Rolls", platform: "DoorDash", price: "$6.99", fees: "-$1.75", promo: "-$5.60", profit: "-$0.36", profitable: false },
-    { name: "Edamame", platform: "Uber Eats", price: "$4.99", fees: "-$1.25", promo: "-$4.00", profit: "-$0.26", profitable: false },
+    { orderId: "#UE-4821", name: "Chicken Bowl", platform: "Uber Eats", price: "$14.99", fees: "-$3.75", promo: "-$1.50", profit: "$9.74", profitable: true },
+    { orderId: "#DD-7392", name: "Beef Bulgogi", platform: "DoorDash", price: "$16.99", fees: "-$4.25", promo: "$0.00", profit: "$12.74", profitable: true },
+    { orderId: "#UE-4823", name: "Veggie Bibimbap", platform: "Uber Eats", price: "$12.99", fees: "-$3.25", promo: "-$2.60", profit: "$7.14", profitable: true },
+    { orderId: "#GH-1056", name: "Korean Fried Chicken", platform: "Grubhub", price: "$11.99", fees: "-$3.00", promo: "-$6.00", profit: "$2.99", profitable: true },
+    { orderId: "#DD-7395", name: "Kimchi Fries", platform: "DoorDash", price: "$8.99", fees: "-$2.25", promo: "-$4.50", profit: "$2.24", profitable: true },
+    { orderId: "#UE-4827", name: "Bubble Tea", platform: "Uber Eats", price: "$5.99", fees: "-$1.50", promo: "-$3.00", profit: "$1.49", profitable: true },
+    { orderId: "#GH-1058", name: "Mochi Ice Cream", platform: "Grubhub", price: "$4.99", fees: "-$1.25", promo: "-$2.50", profit: "$1.24", profitable: true },
+    { orderId: "#DD-7401", name: "Spring Rolls", platform: "DoorDash", price: "$6.99", fees: "-$1.75", promo: "-$5.60", profit: "-$0.36", profitable: false },
+    { orderId: "#UE-4832", name: "Edamame", platform: "Uber Eats", price: "$4.99", fees: "-$1.25", promo: "-$4.00", profit: "-$0.26", profitable: false },
   ];
 
   const totalProfit = items.reduce((sum, item) => sum + parseFloat(item.profit.replace('$', '')), 0);
@@ -45,7 +45,8 @@ const ItemBreakdownTable = () => {
           {/* Table */}
           <div className="flex-1 rounded-xl bg-secondary/20 overflow-hidden border border-border/20 shadow-inner">
             {/* Table Header */}
-            <div className="grid grid-cols-6 gap-4 px-6 py-4 bg-gradient-to-r from-secondary/60 to-secondary/40 text-sm font-semibold text-muted-foreground border-b border-border/30 uppercase tracking-wide">
+            <div className="grid grid-cols-7 gap-4 px-6 py-4 bg-gradient-to-r from-secondary/60 to-secondary/40 text-sm font-semibold text-muted-foreground border-b border-border/30 uppercase tracking-wide">
+              <span>Order ID</span>
               <span>Item</span>
               <span>Platform</span>
               <span className="text-right">Price</span>
@@ -58,13 +59,14 @@ const ItemBreakdownTable = () => {
             <div className="divide-y divide-border/20">
               {items.map((item) => (
                 <div
-                  key={item.name}
-                  className={`grid grid-cols-6 gap-4 px-6 py-4 text-sm transition-all duration-300 ${
+                  key={item.orderId}
+                  className={`grid grid-cols-7 gap-4 px-6 py-4 text-sm transition-all duration-300 ${
                     !item.profitable
                       ? "bg-gradient-to-r from-red-500/10 via-red-500/5 to-transparent"
                       : "bg-transparent hover:bg-secondary/30"
                   }`}
                 >
+                  <span className="font-mono text-muted-foreground">{item.orderId}</span>
                   <span className="font-medium text-foreground">{item.name}</span>
                   <span>
                     <span className={`inline-flex px-2 py-0.5 rounded-md text-xs font-medium ${getPlatformColor(item.platform)}`}>
