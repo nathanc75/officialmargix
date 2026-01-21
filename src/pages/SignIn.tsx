@@ -61,8 +61,8 @@ const SignIn = () => {
       </div>
 
       {/* Right Side - Sign In Form */}
-      <div className="w-full lg:w-[55%] flex items-center justify-start px-4 py-8 lg:pl-8 xl:pl-16 sm:p-12 lg:pr-12 relative z-10">
-        <div className="w-full max-w-lg">
+      <div className="w-full lg:w-[55%] flex items-center justify-center lg:justify-start px-4 py-8 lg:pl-8 xl:pl-16 sm:px-12 lg:pr-12 relative z-10">
+        <div className="w-full max-w-lg mx-auto lg:mx-0">
           {/* Mobile Logo */}
           <div className="lg:hidden mb-10">
             <Link to="/" className="flex items-center gap-3 justify-center">
