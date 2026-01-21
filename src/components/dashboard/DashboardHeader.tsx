@@ -22,7 +22,7 @@ const DashboardHeader = ({ dateRange, setDateRange }: DashboardHeaderProps) => {
               </Button>
             </Link>
             <div>
-              <h1 className="text-xl font-semibold text-foreground">Cafe Seoul</h1>
+              <h1 className="text-xl font-semibold text-foreground">Restaurant</h1>
               <p className="text-sm text-muted-foreground">Dashboard</p>
             </div>
           </div>
