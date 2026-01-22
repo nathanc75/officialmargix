@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import AnalysisBanner from "@/components/dashboard/AnalysisBanner";
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
 import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
@@ -29,6 +30,9 @@ const Dashboard = () => {
         <DashboardHeader dateRange={dateRange} setDateRange={setDateRange} platform={platform} setPlatform={setPlatform} />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+          {/* Analysis mode banner */}
+          <AnalysisBanner />
+          
           {/* Critical alerts - collapsible */}
           <InsightsSection />
           

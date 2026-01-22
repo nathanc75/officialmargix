@@ -1,22 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2 } from "lucide-react";
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo-download_1769064802176.png";
-
-const plans = [
-  { value: "Starter", label: "Starter — $39/month", description: "Single-Location Coverage" },
-  { value: "Pro", label: "Pro — $99/month", description: "Multi-Location Coverage" },
-];
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,12 +13,6 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [restaurantName, setRestaurantName] = useState("");
   const navigate = useNavigate();
-  const location = useLocation();
-  
-  // Get plan from URL search params if it exists
-  const queryParams = new URLSearchParams(location.search);
-  const initialPlan = queryParams.get("plan") || "Starter";
-  const [selectedPlan, setSelectedPlan] = useState(initialPlan);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,20 +50,33 @@ const Signup = () => {
             <span className="text-3xl font-bold text-foreground tracking-tight">MARGIX</span>
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Start your{" "}
-            <span className="text-gradient">AI-powered</span> revenue recovery
+            Get your{" "}
+            <span className="text-gradient">free revenue analysis</span>
           </h1>
           <p className="text-muted-foreground text-lg">
-            Join thousands of restaurants using MARGIX to monitor delivery platforms and recover lost revenue.
+            See exactly how much revenue you're losing on delivery platforms. No credit card required.
           </p>
           
           <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
-              <p className="text-sm font-medium text-primary">Selected Plan</p>
-              <p className="text-xl font-bold text-foreground">{selectedPlan}</p>
-              <p className="text-sm text-muted-foreground">
-                {plans.find(p => p.value === selectedPlan)?.description}
-              </p>
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              <p className="text-sm font-medium text-primary">What you'll get</p>
             </div>
+            <ul className="space-y-2 text-sm text-foreground">
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                Connect your delivery platforms (read-only)
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                30-day revenue analysis
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                See missed refunds & pricing errors
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -108,33 +103,13 @@ const Signup = () => {
             style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}
           >
             <div className="mb-6">
-              <h2 className="text-3xl font-bold text-foreground mb-1">Create account</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-1">Create your account</h2>
               <p className="text-muted-foreground text-base">
-                Start your 14-day free trial today
+                Get a free analysis of your delivery revenue — no payment required
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Plan Selector */}
-              <div className="space-y-1">
-                <Label htmlFor="plan" className="text-foreground text-base">Select Plan</Label>
-                <Select value={selectedPlan} onValueChange={setSelectedPlan}>
-                  <SelectTrigger className="h-12 text-base bg-background/50 border-border" data-testid="select-plan">
-                    <SelectValue placeholder="Choose your plan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {plans.map((plan) => (
-                      <SelectItem key={plan.value} value={plan.value} data-testid={`plan-option-${plan.value.toLowerCase()}`}>
-                        <div className="flex flex-col items-start">
-                          <span className="font-medium">{plan.label}</span>
-                          <span className="text-xs text-muted-foreground">{plan.description}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="fullName" className="text-foreground text-base">Full Name</Label>
@@ -212,8 +187,9 @@ const Signup = () => {
                 </p>
               </div>
 
-              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white mt-2">
-                Create account
+              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white mt-2" data-testid="button-run-analysis">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Run free analysis
               </Button>
             </form>
 

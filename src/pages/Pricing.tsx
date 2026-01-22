@@ -1,14 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Check } from "lucide-react";
+import { Check, ArrowLeft, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import margixLogo from "@/assets/margix-logo-download_1769064802176.png";
 
 const plans = [
   {
     name: "Starter",
     subtitle: "Single-Location Coverage",
     price: { monthly: 39, yearly: 27 },
-    cta: "Get Started",
+    cta: "Start with Starter",
     positioning: "Same dashboard. Same intelligence. Scoped to one location.",
     description: "Full revenue intelligence for one restaurant location.",
     features: [
@@ -24,7 +26,7 @@ const plans = [
     name: "Pro",
     subtitle: "Multi-Location Coverage",
     price: { monthly: 99, yearly: 69 },
-    cta: "Get Started",
+    cta: "Start with Pro",
     popular: true,
     positioning: "Same tools — dramatically more operational leverage.",
     description: "Operate and optimize multiple locations from one dashboard.",
@@ -38,59 +40,57 @@ const plans = [
       "Priority support",
     ],
   },
-  {
-    name: "Custom",
-    subtitle: "Enterprise Scale",
-    price: { monthly: "Custom", yearly: "Custom" },
-    cta: "Contact Sales",
-    positioning: "Advanced coverage for restaurant groups and franchises.",
-    description: "",
-    features: [
-      "Unlimited locations",
-      "Custom data volumes & refresh rates",
-      "Dedicated onboarding & support",
-      "POS & custom integrations",
-      "SLA guarantees",
-    ],
-  },
 ];
 
-const PricingSection = () => {
+const Pricing = () => {
   const [isYearly, setIsYearly] = useState(false);
-  const navigate = useNavigate();
+  const { toast } = useToast();
 
-  const handlePlanSelect = (planName: string) => {
-    if (planName === "Custom") {
-      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      navigate('/signup');
-    }
+  const handleSelectPlan = (planName: string) => {
+    toast({
+      title: `${planName} plan selected`,
+      description: "Payment integration coming soon. We'll notify you when checkout is available.",
+    });
   };
 
   return (
-    <section id="pricing" className="relative py-24 bg-background overflow-hidden">
-      {/* Background gradient */}
+    <div className="min-h-screen bg-background relative overflow-hidden">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-primary/3 blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+      <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-8">
+          <Link to="/dashboard">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
+              <ArrowLeft className="w-4 h-4" />
+              Back to Analysis
+            </Button>
+          </Link>
+        </div>
+
         <div className="text-center mb-12">
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
-            <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Restaurant Pricing Plans
-            </span>
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <div className="w-12 h-12">
+              <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
+            </div>
+            <span className="text-2xl font-bold text-foreground">MARGIX</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Start with a Free Analysis
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Get a one-time 30-day snapshot of your revenue leaks. Upgrade when you're ready for live monitoring.
+
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6">
+            <Sparkles className="w-4 h-4 text-emerald-500" />
+            <span className="text-sm font-medium text-emerald-600">Your free analysis is ready!</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+            Upgrade to Live Monitoring
+          </h1>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            You've seen what MARGIX can find. Now unlock continuous monitoring to catch every pricing error and missed refund in real-time.
           </p>
 
-          {/* Toggle */}
-          <div className="inline-flex items-center gap-2 p-1.5 rounded-full backdrop-blur-xl border border-white/20 dark:border-white/10" style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}>
+          <div className="inline-flex items-center gap-2 p-1.5 rounded-full backdrop-blur-xl border border-white/20 dark:border-white/10 mt-8" style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}>
             <button
               onClick={() => setIsYearly(false)}
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
@@ -117,73 +117,55 @@ const PricingSection = () => {
           </div>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mt-12">
+        <div className="grid md:grid-cols-2 gap-6">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`relative p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.12),0_0_30px_-10px_hsl(221,83%,53%,0.2)] dark:hover:shadow-[0_8px_40px_rgba(0,0,0,0.4),0_0_30px_-10px_hsl(221,83%,53%,0.25)] hover:-translate-y-1 ${
+              className={`relative p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] ${
                 plan.popular
                   ? "border-primary/50 shadow-[0_0_30px_-10px_hsl(221,83%,53%,0.3)]"
                   : "border-white/20 dark:border-white/10"
               }`}
               style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}
             >
-              {/* Popular badge */}
               {plan.popular && (
                 <div className="absolute -top-3 left-6">
                   <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary text-primary-foreground">
-                    Popular
+                    Recommended
                   </span>
                 </div>
               )}
 
-              {/* Plan name & subtitle */}
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {plan.name}
-                </h3>
-                <p className="text-sm text-primary font-medium">
-                  {plan.subtitle}
-                </p>
+                <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
+                <p className="text-sm text-primary font-medium">{plan.subtitle}</p>
                 {plan.description && (
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {plan.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
                 )}
               </div>
 
-              {/* Price */}
               <div className="mb-6">
-                {typeof plan.price.monthly === "number" ? (
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-foreground">
-                      ${isYearly ? plan.price.yearly : plan.price.monthly}
-                    </span>
-                    <span className="text-muted-foreground">/ month</span>
-                  </div>
-                ) : (
-                  <span className="text-4xl font-bold text-foreground">Custom</span>
-                )}
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-bold text-foreground">
+                    ${isYearly ? plan.price.yearly : plan.price.monthly}
+                  </span>
+                  <span className="text-muted-foreground">/ month</span>
+                </div>
               </div>
 
-              {/* CTA Button */}
               <Button
-                className={`w-full mb-6 ${
-                  plan.popular ? "brand-gradient border-0 text-white" : ""
-                }`}
+                className={`w-full mb-6 ${plan.popular ? "brand-gradient border-0 text-white" : ""}`}
                 variant={plan.popular ? "default" : "outline"}
-                onClick={() => handlePlanSelect(plan.name)}
+                onClick={() => handleSelectPlan(plan.name)}
+                data-testid={`button-select-${plan.name.toLowerCase()}`}
               >
                 {plan.cta}
               </Button>
 
-              {/* Positioning */}
               <p className="text-xs text-muted-foreground italic mb-4 pb-4 border-b border-border">
                 "{plan.positioning}"
               </p>
 
-              {/* Features */}
               <div className="space-y-3">
                 <p className="text-sm font-medium text-foreground">Includes:</p>
                 {plan.features.map((feature) => (
@@ -196,9 +178,18 @@ const PricingSection = () => {
             </div>
           ))}
         </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-sm text-muted-foreground">
+            Need more than 10 locations?{" "}
+            <a href="/#contact" className="text-primary hover:underline font-medium">
+              Contact us for custom pricing
+            </a>
+          </p>
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default PricingSection;
+export default Pricing;
