@@ -6,53 +6,51 @@ import { useNavigate } from "react-router-dom";
 const plans = [
   {
     name: "Starter",
-    subtitle: "Single Location Essentials",
+    subtitle: "Single-Location Coverage",
     price: { monthly: 39, yearly: 27 },
-    cta: "Start Recovering Revenue",
-    positioning: "Perfect for single-location restaurants tracking delivery performance",
+    cta: "Get Started",
+    positioning: "Same dashboard. Same intelligence. Scoped to one location.",
+    description: "Full revenue intelligence for one restaurant location.",
     features: [
+      "Full Margix dashboard",
       "1 restaurant location",
       "Up to 3 delivery platforms",
-      "Unlimited order tracking",
-      "Daily revenue reports",
-      "Promo & fee monitoring",
-      "Basic delivery alerts",
+      "Standard analytics refresh",
+      "Daily revenue & promo insights",
       "Email support",
     ],
   },
   {
     name: "Pro",
-    subtitle: "Multi-Location Management",
+    subtitle: "Multi-Location Coverage",
     price: { monthly: 99, yearly: 69 },
-    cta: "Maximize Recovery",
+    cta: "Get Started",
     popular: true,
-    positioning: "Most restaurants recover 3–10× the monthly subscription",
+    positioning: "Same tools — dramatically more operational leverage.",
+    description: "Operate and optimize multiple locations from one dashboard.",
     features: [
-      "Everything in Starter",
+      "Full Margix dashboard",
       "Up to 10 restaurant locations",
       "Unlimited delivery platforms",
-      "AI-powered revenue analysis",
-      "Real-time pricing alerts",
-      "Item-level profit tracking",
-      "Cross-location comparison",
-      "Advanced analytics dashboard",
+      "Higher-volume data processing",
+      "Real-time alerts & pricing signals",
+      "Cross-location performance comparison",
       "Priority support",
     ],
   },
   {
     name: "Custom",
-    subtitle: "Enterprise Restaurant Groups",
+    subtitle: "Enterprise Scale",
     price: { monthly: "Custom", yearly: "Custom" },
     cta: "Contact Sales",
-    positioning: "For restaurant chains and franchise operators",
+    positioning: "Advanced coverage for restaurant groups and franchises.",
+    description: "",
     features: [
       "Unlimited locations",
-      "Custom platform integrations",
-      "POS system integration",
-      "Dedicated account manager",
-      "Custom revenue reports",
+      "Custom data volumes & refresh rates",
+      "Dedicated onboarding & support",
+      "POS & custom integrations",
       "SLA guarantees",
-      "24/7 priority support",
     ],
   },
 ];
@@ -148,6 +146,11 @@ const PricingSection = () => {
                 <p className="text-sm text-primary font-medium">
                   {plan.subtitle}
                 </p>
+                {plan.description && (
+                  <p className="text-sm text-muted-foreground mt-2">
+                    {plan.description}
+                  </p>
+                )}
               </div>
 
               {/* Price */}
