@@ -6,11 +6,12 @@ import { useNavigate } from "react-router-dom";
 const plans = [
   {
     name: "Starter",
-    subtitle: "Restaurant Owner Essentials",
-    price: { monthly: 29, yearly: 20 },
+    subtitle: "Single Location Essentials",
+    price: { monthly: 39, yearly: 27 },
     cta: "Start Recovering Revenue",
-    positioning: "Track delivery platform performance without spreadsheets",
+    positioning: "Perfect for single-location restaurants tracking delivery performance",
     features: [
+      "1 restaurant location",
       "Up to 3 delivery platforms",
       "Unlimited order tracking",
       "Daily revenue reports",
@@ -21,25 +22,26 @@ const plans = [
   },
   {
     name: "Pro",
-    subtitle: "Full Revenue Recovery",
-    price: { monthly: 79, yearly: 55 },
+    subtitle: "Multi-Location Management",
+    price: { monthly: 99, yearly: 69 },
     cta: "Maximize Recovery",
     popular: true,
     positioning: "Most restaurants recover 3–10× the monthly subscription",
     features: [
       "Everything in Starter",
+      "Up to 10 restaurant locations",
       "Unlimited delivery platforms",
       "AI-powered revenue analysis",
       "Real-time pricing alerts",
       "Item-level profit tracking",
-      "Uber Eats vs DoorDash vs Grubhub comparison",
+      "Cross-location comparison",
       "Advanced analytics dashboard",
       "Priority support",
     ],
   },
   {
-    name: "Enterprise",
-    subtitle: "Multi-Location Restaurant Groups",
+    name: "Custom",
+    subtitle: "Enterprise Restaurant Groups",
     price: { monthly: "Custom", yearly: "Custom" },
     cta: "Contact Sales",
     positioning: "For restaurant chains and franchise operators",
@@ -60,7 +62,7 @@ const PricingSection = () => {
   const navigate = useNavigate();
 
   const handlePlanSelect = (planName: string) => {
-    if (planName === "Enterprise") {
+    if (planName === "Custom") {
       document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
     } else {
       navigate(`/signup?plan=${encodeURIComponent(planName)}`);
