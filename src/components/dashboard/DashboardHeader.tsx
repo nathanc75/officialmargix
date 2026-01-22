@@ -31,15 +31,15 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 group">
               <div 
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-primary shadow-sm"
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-primary shadow-sm transition-transform group-hover:scale-105"
               >
-                <span className="text-primary-foreground font-bold text-xs sm:text-sm">M</span>
+                <span className="text-primary-foreground font-bold text-xs sm:text-sm" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xs sm:text-sm font-semibold text-foreground leading-none">Restaurant</h1>
-                <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 sm:mt-1">Analytics Dashboard</p>
+                <h1 className="text-xs sm:text-sm font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
+                <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 sm:mt-1 font-medium">Analytics Dashboard</p>
               </div>
             </div>
             

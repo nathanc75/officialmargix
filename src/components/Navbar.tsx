@@ -28,9 +28,9 @@ const Navbar = () => {
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3">
+          <a href="/" className="flex items-center gap-3 group">
             <div 
-              className="w-9 h-9 rounded-[12px] flex items-center justify-center"
+              className="w-9 h-9 rounded-[12px] flex items-center justify-center transition-transform group-hover:scale-105"
               style={{
                 background: `
                   radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
@@ -41,7 +41,7 @@ const Navbar = () => {
             >
               <span className="text-white font-semibold text-base" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
             </div>
-            <span className="text-2xl font-bold text-foreground">MARGIX</span>
+            <span className="text-2xl font-bold text-foreground tracking-tight">MARGIX</span>
           </a>
 
           {/* Desktop Navigation */}

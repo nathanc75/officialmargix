@@ -36,9 +36,9 @@ const SignIn = () => {
       {/* Left Side - Branding */}
       <div className="hidden lg:flex lg:w-[45%] relative items-center justify-end pr-8 xl:pr-16">
         <div className="max-w-md">
-          <Link to="/" className="flex items-center gap-3 mb-8">
+          <Link to="/" className="flex items-center gap-3 mb-8 group">
             <div 
-              className="w-12 h-12 rounded-[16px] flex items-center justify-center"
+              className="w-12 h-12 rounded-[16px] flex items-center justify-center transition-transform group-hover:scale-105"
               style={{
                 background: `
                   radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
@@ -49,7 +49,7 @@ const SignIn = () => {
             >
               <span className="text-white font-semibold text-xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
             </div>
-            <span className="text-3xl font-bold text-foreground">MARGIX</span>
+            <span className="text-3xl font-bold text-foreground tracking-tight">MARGIX</span>
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-4">
             Welcome back to your{" "}
@@ -66,9 +66,9 @@ const SignIn = () => {
         <div className="w-full max-w-lg mx-auto lg:mx-0">
           {/* Mobile Logo */}
           <div className="lg:hidden mb-10">
-            <Link to="/" className="flex items-center gap-3 justify-center">
+            <Link to="/" className="flex items-center gap-3 justify-center group">
               <div 
-                className="w-10 h-10 rounded-[12px] flex items-center justify-center"
+                className="w-10 h-10 rounded-[12px] flex items-center justify-center transition-transform group-hover:scale-105"
                 style={{
                   background: `
                     radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
@@ -79,7 +79,7 @@ const SignIn = () => {
               >
                 <span className="text-white font-semibold text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
               </div>
-              <span className="text-3xl font-bold text-foreground">MARGIX</span>
+              <span className="text-3xl font-bold text-foreground tracking-tight">MARGIX</span>
             </Link>
           </div>
 
