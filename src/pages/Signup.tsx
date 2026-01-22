@@ -17,7 +17,7 @@ const Signup = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement registration
-    navigate("/dashboard");
+    navigate("/uploads-pos");
   };
 
   return (
