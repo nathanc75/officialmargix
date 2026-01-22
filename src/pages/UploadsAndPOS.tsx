@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock, Lock, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import margixLogo from "@/assets/margix-logo.png";
 
 interface PromoData {
   name: string;
@@ -43,6 +44,12 @@ interface UploadData {
 
 const UploadsAndPOS = () => {
   const [selectedUpload, setSelectedUpload] = useState<UploadData | null>(null);
+  const [hasUploaded, setHasUploaded] = useState(false);
+  const navigate = useNavigate();
+
+  const handleAnalyze = () => {
+    navigate("/dashboard");
+  };
 
   const platforms = [
     { name: "UberEats", icon: "🚗", connected: true, color: "bg-green-500" },
@@ -155,20 +162,31 @@ const UploadsAndPOS = () => {
 
       <div className="relative">
         {/* Header */}
-        <header className="border-b border-border/50 bg-white/80 backdrop-blur-xl sticky top-0 z-50">
+        <header className="border-b border-border/50 bg-white/80 dark:bg-background/80 backdrop-blur-xl sticky top-0 z-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center gap-4">
-              <Link to="/dashboard">
-                <Button variant="ghost" size="sm" className="gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline">Back to Dashboard</span>
-                </Button>
-              </Link>
-              <div className="h-6 w-px bg-border" />
-              <div>
-                <h1 className="text-lg sm:text-xl font-bold text-foreground">Uploads & POS</h1>
-                <p className="text-xs sm:text-sm text-muted-foreground">Manage your data sources and integrations</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <Link to="/">
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <ArrowLeft className="h-4 w-4" />
+                    <span className="hidden sm:inline">Back</span>
+                  </Button>
+                </Link>
+                <div className="h-6 w-px bg-border" />
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8">
+                    <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
+                  </div>
+                  <div>
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Free Analysis</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Upload your delivery report to get started</p>
+                  </div>
+                </div>
               </div>
+              <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-primary/20">
+                <Sparkles className="h-3 w-3" />
+                Free Trial
+              </Badge>
             </div>
           </div>
         </header>
@@ -176,99 +194,96 @@ const UploadsAndPOS = () => {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           {/* Upload Section */}
           <section>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Upload Reports</h2>
-            <Card className="backdrop-blur-xl bg-white/70 border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+            <h2 className="text-lg font-semibold text-foreground mb-4">Upload Your Delivery Report</h2>
+            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
               <CardContent className="p-6 sm:p-8">
-                <div className="border-2 border-dashed border-border rounded-xl p-8 sm:p-12 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer">
-                  <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
-                    <Upload className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2">Drop your files here</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Support for CSV, Excel, and PDF reports from any delivery platform
-                  </p>
-                  <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    Browse Files
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </section>
-
-          {/* Recent Uploads */}
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Recent Uploads</h2>
-            <Card className="backdrop-blur-xl bg-white/70 border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-              <CardContent className="p-4 sm:p-6">
-                <div className="space-y-3">
-                  {recentUploads.map((file, index) => (
-                    <div 
-                      key={index}
-                      onClick={() => setSelectedUpload(file)}
-                      className="flex items-center justify-between p-3 sm:p-4 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors cursor-pointer"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-sm">
-                          <FileText className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground text-sm sm:text-base">{file.name}</p>
-                          <p className="text-xs sm:text-sm text-muted-foreground">{file.date}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2 text-emerald-600">
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span className="text-xs sm:text-sm font-medium capitalize hidden sm:inline">{file.status}</span>
-                      </div>
+                {!hasUploaded ? (
+                  <div 
+                    className="border-2 border-dashed border-border rounded-xl p-8 sm:p-12 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                    onClick={() => setHasUploaded(true)}
+                  >
+                    <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                      <Upload className="h-8 w-8 text-muted-foreground" />
                     </div>
-                  ))}
-                </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">Drop your files here</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Support for CSV, Excel, and PDF reports from Uber Eats, DoorDash, Grubhub, etc.
+                    </p>
+                    <Button className="gap-2" onClick={(e) => { e.stopPropagation(); setHasUploaded(true); }}>
+                      <Plus className="h-4 w-4" />
+                      Browse Files
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-center p-8">
+                    <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">Report uploaded successfully!</h3>
+                    <p className="text-sm text-muted-foreground mb-6">
+                      Your delivery data is ready to be analyzed. Click below to see your revenue insights.
+                    </p>
+                    <Button className="gap-2 brand-gradient border-0 text-white" onClick={handleAnalyze} data-testid="button-view-analysis">
+                      <Sparkles className="h-4 w-4" />
+                      View My Analysis
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </section>
 
-          {/* Connect Platforms */}
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Connect Delivery Platforms</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Connect Platforms - Locked for Free Trial */}
+          <section className="relative">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-foreground">Connect Delivery Platforms</h2>
+              <Badge variant="outline" className="gap-1 text-muted-foreground">
+                <Lock className="h-3 w-3" />
+                Upgrade Required
+              </Badge>
+            </div>
+            
+            {/* Locked overlay message */}
+            <div className="mb-4 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+              <div className="flex items-start gap-3">
+                <Lock className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                    Platform connections available on paid plans
+                  </p>
+                  <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                    Upgrade to Starter or Pro to connect your delivery platforms for automatic, real-time data syncing. For your free analysis, upload a report above.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 opacity-60 pointer-events-none">
               {platforms.map((platform) => (
                 <Card 
                   key={platform.name}
-                  className={`backdrop-blur-xl border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.08)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-1 ${
-                    platform.connected ? 'bg-emerald-50/50 ring-2 ring-emerald-500/30' : 'bg-white/70'
-                  }`}
+                  className="backdrop-blur-xl border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] bg-white/70 dark:bg-card/70"
                 >
                   <CardContent className="p-5">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl ${platform.color} flex items-center justify-center text-2xl shadow-sm`}>
+                        <div className={`w-12 h-12 rounded-xl ${platform.color} flex items-center justify-center text-2xl shadow-sm grayscale`}>
                           {platform.icon}
                         </div>
                         <div>
                           <h3 className="font-semibold text-foreground">{platform.name}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {platform.connected ? "Connected" : "Not connected"}
-                          </p>
+                          <p className="text-xs text-muted-foreground">Not connected</p>
                         </div>
                       </div>
                     </div>
                     <Button 
-                      variant={platform.connected ? "outline" : "default"}
+                      variant="outline"
                       className="w-full gap-2"
                       size="sm"
+                      disabled
                     >
-                      {platform.connected ? (
-                        <>
-                          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                          Manage
-                        </>
-                      ) : (
-                        <>
-                          <Link2 className="h-4 w-4" />
-                          Connect
-                        </>
-                      )}
+                      <Lock className="h-4 w-4" />
+                      Locked
                     </Button>
                   </CardContent>
                 </Card>
