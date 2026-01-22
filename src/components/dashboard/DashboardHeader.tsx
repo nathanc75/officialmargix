@@ -10,6 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import margixLogo from "@/assets/margix-logo-download_1769064802176.png";
 
 interface DashboardHeaderProps {
   dateRange: string;
@@ -32,10 +33,12 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
               </Button>
             </Link>
             <div className="flex items-center gap-2 sm:gap-3 group">
-              <div 
-                className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-primary shadow-sm transition-transform group-hover:scale-105"
-              >
-                <span className="text-primary-foreground font-bold text-xs sm:text-sm" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 transition-transform group-hover:scale-105">
+                <img 
+                  src={margixLogo} 
+                  alt="MARGIX" 
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-xs sm:text-sm font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
