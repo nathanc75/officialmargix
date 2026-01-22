@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const plans = [
   {
@@ -56,6 +57,15 @@ const plans = [
 
 const PricingSection = () => {
   const [isYearly, setIsYearly] = useState(false);
+  const navigate = useNavigate();
+
+  const handlePlanSelect = (planName: string) => {
+    if (planName === "Enterprise") {
+      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate(`/signup?plan=${encodeURIComponent(planName)}`);
+    }
+  };
 
   return (
     <section id="pricing" className="relative py-24 bg-background overflow-hidden">
@@ -158,6 +168,7 @@ const PricingSection = () => {
                   plan.popular ? "brand-gradient border-0 text-white" : ""
                 }`}
                 variant={plan.popular ? "default" : "outline"}
+                onClick={() => handlePlanSelect(plan.name)}
               >
                 {plan.cta}
               </Button>

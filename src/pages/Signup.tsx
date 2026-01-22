@@ -1,71 +1,31 @@
 import { Button } from "@/components/ui/button";
-import { Check, ArrowLeft } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-
-const plans = [
-  {
-    name: "Starter",
-    subtitle: "Restaurant Owner Essentials",
-    price: { monthly: 29, yearly: 20 },
-    cta: "Start Recovering Revenue",
-    positioning: "Track delivery platform performance without spreadsheets",
-    features: [
-      "Up to 3 delivery platforms",
-      "Unlimited order tracking",
-      "Daily revenue reports",
-      "Promo & fee monitoring",
-      "Basic delivery alerts",
-      "Email support",
-    ],
-  },
-  {
-    name: "Pro",
-    subtitle: "Full Revenue Recovery",
-    price: { monthly: 79, yearly: 55 },
-    cta: "Maximize Recovery",
-    popular: true,
-    positioning: "Most restaurants recover 3–10× the monthly subscription",
-    features: [
-      "Everything in Starter",
-      "Unlimited delivery platforms",
-      "AI-powered revenue analysis",
-      "Real-time pricing alerts",
-      "Item-level profit tracking",
-      "Uber Eats vs DoorDash vs Grubhub comparison",
-      "Advanced analytics dashboard",
-      "Priority support",
-    ],
-  },
-  {
-    name: "Enterprise",
-    subtitle: "Multi-Location Restaurant Groups",
-    price: { monthly: "Custom", yearly: "Custom" },
-    cta: "Contact Sales",
-    positioning: "For restaurant chains and franchise operators",
-    features: [
-      "Unlimited locations",
-      "Custom platform integrations",
-      "POS system integration",
-      "Dedicated account manager",
-      "Custom revenue reports",
-      "SLA guarantees",
-      "24/7 priority support",
-    ],
-  },
-];
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Signup = () => {
-  const [isYearly, setIsYearly] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [restaurantName, setRestaurantName] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Get plan from URL search params if it exists
+  const queryParams = new URLSearchParams(location.search);
+  const initialPlan = queryParams.get("plan");
 
-  const handleSelectPlan = (planName: string) => {
-    setSelectedPlan(planName);
-    // TODO: Integrate with payment provider
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // TODO: Implement registration
+    navigate("/dashboard");
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex">
       {/* Abstract Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
@@ -80,12 +40,12 @@ const Signup = () => {
         />
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
+      {/* Left Side - Branding */}
+      <div className="hidden lg:flex lg:w-[45%] relative items-center justify-end pr-8 xl:pr-16">
+        <div className="max-w-md">
+          <Link to="/" className="flex items-center gap-3 mb-8">
             <div 
-              className="w-9 h-9 rounded-[12px] flex items-center justify-center"
+              className="w-12 h-12 rounded-[16px] flex items-center justify-center"
               style={{
                 background: `
                   radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
@@ -94,153 +54,173 @@ const Signup = () => {
                 boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
               }}
             >
-              <span className="text-white font-semibold text-base" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
+              <span className="text-white font-semibold text-xl" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
             </div>
-            <span className="text-2xl font-bold text-foreground">MARGIX</span>
+            <span className="text-3xl font-bold text-foreground">MARGIX</span>
           </Link>
-          <Link to="/">
-            <Button variant="ghost" size="sm" className="gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Button>
-          </Link>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Get Started with{" "}
-            <span className="text-gradient">MARGIX</span>
+          <h1 className="text-4xl font-bold text-foreground mb-4">
+            Start your{" "}
+            <span className="text-gradient">AI-powered</span> revenue recovery
           </h1>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Choose the plan that fits your restaurant's delivery platform management needs
+          <p className="text-muted-foreground text-lg">
+            Join thousands of restaurants using MARGIX to monitor delivery platforms and recover lost revenue.
           </p>
-
-          {/* Toggle */}
-          <div className="inline-flex items-center gap-2 p-1.5 rounded-full backdrop-blur-xl border border-white/20 dark:border-white/10" style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}>
-            <button
-              onClick={() => setIsYearly(false)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
-                !isYearly
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setIsYearly(true)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all flex items-center gap-2 ${
-                isYearly
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              Yearly
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-primary text-primary-foreground">
-                30% off
-              </span>
-            </button>
-          </div>
+          
+          {initialPlan && (
+            <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
+              <p className="text-sm font-medium text-primary">Selected Plan</p>
+              <p className="text-xl font-bold text-foreground">{initialPlan}</p>
+            </div>
+          )}
         </div>
+      </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative p-6 rounded-2xl backdrop-blur-xl border transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_8px_40px_rgba(0,0,0,0.12),0_0_30px_-10px_hsl(221,83%,53%,0.2)] dark:hover:shadow-[0_8px_40px_rgba(0,0,0,0.4),0_0_30px_-10px_hsl(221,83%,53%,0.25)] hover:-translate-y-1 ${
-                plan.popular
-                  ? "border-primary/50 shadow-[0_0_30px_-10px_hsl(221,83%,53%,0.3)]"
-                  : "border-white/20 dark:border-white/10"
-              } ${
-                selectedPlan === plan.name
-                  ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                  : ""
-              }`}
-              style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}
-            >
-              {/* Popular badge */}
-              {plan.popular && (
-                <div className="absolute -top-3 left-6">
-                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-primary text-primary-foreground">
-                    Most Popular
-                  </span>
+      {/* Right Side - Sign Up Form */}
+      <div className="w-full lg:w-[55%] flex items-center justify-center lg:justify-start px-4 py-8 lg:pl-8 xl:pl-16 sm:px-12 lg:pr-12 relative z-10">
+        <div className="w-full max-w-lg mx-auto lg:mx-0">
+          {/* Mobile Logo */}
+          <div className="lg:hidden mb-10">
+            <Link to="/" className="flex items-center gap-3 justify-center">
+              <div 
+                className="w-10 h-10 rounded-[12px] flex items-center justify-center"
+                style={{
+                  background: `
+                    radial-gradient(12px 12px at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%),
+                    linear-gradient(135deg, rgba(60,120,255,0.95), rgba(130,80,255,0.80))
+                  `,
+                  boxShadow: '0 10px 25px rgba(46,108,255,0.22)'
+                }}
+              >
+                <span className="text-white font-semibold text-lg" style={{ fontFamily: "'Orbitron', sans-serif" }}>M</span>
+              </div>
+              <span className="text-3xl font-bold text-foreground">MARGIX</span>
+            </Link>
+          </div>
+
+          {/* Form Card */}
+          <div 
+            className="p-8 sm:p-10 rounded-2xl backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
+            style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}
+          >
+            <div className="mb-6">
+              <h2 className="text-3xl font-bold text-foreground mb-1">Create account</h2>
+              <p className="text-muted-foreground text-base">
+                Start your 14-day free trial today
+              </p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="fullName" className="text-foreground text-base">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      placeholder="John Doe"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
+                      required
+                    />
+                  </div>
                 </div>
-              )}
+                <div className="space-y-1">
+                  <Label htmlFor="restaurantName" className="text-foreground text-base">Restaurant Name</Label>
+                  <div className="relative">
+                    <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <Input
+                      id="restaurantName"
+                      placeholder="The Daily Bistro"
+                      value={restaurantName}
+                      onChange={(e) => setRestaurantName(e.target.value)}
+                      className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
 
-              {/* Plan name & subtitle */}
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold text-foreground">
-                  {plan.name}
-                </h3>
-                <p className="text-sm text-primary font-medium">
-                  {plan.subtitle}
+              <div className="space-y-1">
+                <Label htmlFor="email" className="text-foreground text-base">Work Email</Label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@restaurant.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <Label htmlFor="password" className="text-foreground text-base">Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pl-12 pr-12 h-12 text-base bg-background/50 border-border focus:border-primary"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="w-5 h-5" />
+                    ) : (
+                      <Eye className="w-5 h-5" />
+                    )}
+                  </button>
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1 px-1">
+                  Must be at least 8 characters with a number and symbol.
                 </p>
               </div>
 
-              {/* Price */}
-              <div className="mb-6">
-                {typeof plan.price.monthly === "number" ? (
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold text-foreground">
-                      ${isYearly ? plan.price.yearly : plan.price.monthly}
-                    </span>
-                    <span className="text-muted-foreground">/ month</span>
-                  </div>
-                ) : (
-                  <span className="text-4xl font-bold text-foreground">Custom</span>
-                )}
-                {isYearly && typeof plan.price.monthly === "number" && (
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Billed ${(plan.price.yearly as number) * 12}/year
-                  </p>
-                )}
-              </div>
-
-              {/* CTA Button */}
-              <Button
-                className={`w-full mb-6 ${
-                  plan.popular ? "brand-gradient border-0 text-white" : ""
-                }`}
-                variant={plan.popular ? "default" : "outline"}
-                onClick={() => handleSelectPlan(plan.name)}
-              >
-                {plan.cta}
+              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white mt-2">
+                Create account
               </Button>
+            </form>
 
-              {/* Positioning */}
-              <p className="text-xs text-muted-foreground italic mb-4 pb-4 border-b border-border">
-                "{plan.positioning}"
+            <div className="mt-6 text-center">
+              <p className="text-base text-muted-foreground">
+                Already have an account?{" "}
+                <Link to="/signin" className="text-primary hover:underline font-medium">
+                  Sign in
+                </Link>
               </p>
-
-              {/* Features */}
-              <div className="space-y-3">
-                <p className="text-sm font-medium text-foreground">Includes:</p>
-                {plan.features.map((feature) => (
-                  <div key={feature} className="flex items-start gap-2">
-                    <Check className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-muted-foreground">{feature}</span>
-                  </div>
-                ))}
-              </div>
             </div>
-          ))}
-        </div>
+            
+            <div className="mt-6 pt-6 border-t border-border/50 text-center">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                By signing up, you agree to our{" "}
+                <a href="#" className="underline">Terms of Service</a> and{" "}
+                <a href="#" className="underline">Privacy Policy</a>.
+              </p>
+            </div>
+          </div>
 
-        {/* Trust Section */}
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground mb-4">
-            30-day money-back guarantee • Cancel anytime
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Questions? <a href="/#contact" className="text-primary hover:underline">Contact our team</a>
-          </p>
+          {/* Back to Home */}
+          <div className="mt-3 text-center">
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
+                <ArrowLeft className="w-4 h-4" />
+                Back to Home
+              </Button>
+            </Link>
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 };
