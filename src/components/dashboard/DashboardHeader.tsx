@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import margixLogo from "@/assets/margix-logo-download_1769064802176.png";
+import margixLogo from "@/assets/margix-logo.png";
 
 interface DashboardHeaderProps {
   dateRange: string;

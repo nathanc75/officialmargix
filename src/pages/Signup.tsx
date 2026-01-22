@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import margixLogo from "@/assets/margix-logo-download_1769064802176.png";
+import margixLogo from "@/assets/margix-logo.png";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);

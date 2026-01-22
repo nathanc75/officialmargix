@@ -3,7 +3,7 @@ import { Check, ArrowLeft, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import margixLogo from "@/assets/margix-logo-download_1769064802176.png";
+import margixLogo from "@/assets/margix-logo.png";
 
 const plans = [
   {
