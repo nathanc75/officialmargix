@@ -43,7 +43,7 @@ const InsightsSection = () => {
                   <Badge variant="destructive" className="h-4 px-1.5 text-[9px] uppercase font-bold shrink-0">Action Required</Badge>
                 </h3>
                 <p className="text-xs text-red-700/70 dark:text-red-300/70">
-                  Potential revenue recovery: <span className="font-bold">$2,145.00</span>
+                  Found in your uploaded report — Potential recovery: <span className="font-bold">$1,247.00</span>
                 </p>
               </div>
             </div>
