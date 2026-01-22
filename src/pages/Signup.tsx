@@ -1,10 +1,22 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo-download_1769064802176.png";
+
+const plans = [
+  { value: "Starter", label: "Starter — $39/month", description: "Single-Location Coverage" },
+  { value: "Pro", label: "Pro — $99/month", description: "Multi-Location Coverage" },
+];
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +29,8 @@ const Signup = () => {
   
   // Get plan from URL search params if it exists
   const queryParams = new URLSearchParams(location.search);
-  const initialPlan = queryParams.get("plan");
+  const initialPlan = queryParams.get("plan") || "Starter";
+  const [selectedPlan, setSelectedPlan] = useState(initialPlan);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,12 +75,13 @@ const Signup = () => {
             Join thousands of restaurants using MARGIX to monitor delivery platforms and recover lost revenue.
           </p>
           
-          {initialPlan && (
-            <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
+          <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
               <p className="text-sm font-medium text-primary">Selected Plan</p>
-              <p className="text-xl font-bold text-foreground">{initialPlan}</p>
+              <p className="text-xl font-bold text-foreground">{selectedPlan}</p>
+              <p className="text-sm text-muted-foreground">
+                {plans.find(p => p.value === selectedPlan)?.description}
+              </p>
             </div>
-          )}
         </div>
       </div>
 
@@ -101,6 +115,26 @@ const Signup = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Plan Selector */}
+              <div className="space-y-1">
+                <Label htmlFor="plan" className="text-foreground text-base">Select Plan</Label>
+                <Select value={selectedPlan} onValueChange={setSelectedPlan}>
+                  <SelectTrigger className="h-12 text-base bg-background/50 border-border" data-testid="select-plan">
+                    <SelectValue placeholder="Choose your plan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {plans.map((plan) => (
+                      <SelectItem key={plan.value} value={plan.value} data-testid={`plan-option-${plan.value.toLowerCase()}`}>
+                        <div className="flex flex-col items-start">
+                          <span className="font-medium">{plan.label}</span>
+                          <span className="text-xs text-muted-foreground">{plan.description}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <Label htmlFor="fullName" className="text-foreground text-base">Full Name</Label>
