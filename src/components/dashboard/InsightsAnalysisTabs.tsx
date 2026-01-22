@@ -2,7 +2,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, TrendingDown, Lightbulb, ChevronRight, XCircle, Calendar } from "lucide-react";
+import { TrendingUp, TrendingDown, Lightbulb, ChevronRight, XCircle, Calendar, Lock, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const InsightsAnalysisTabs = () => {
   const promos = [
@@ -35,6 +36,7 @@ const InsightsAnalysisTabs = () => {
             >
               <Lightbulb className="h-3.5 w-3.5" />
               AI Suggestions
+              <Lock className="h-3 w-3 text-amber-500" />
             </TabsTrigger>
           </TabsList>
         </CardHeader>
@@ -91,44 +93,50 @@ const InsightsAnalysisTabs = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="ai" className="mt-0 space-y-3 sm:space-y-4">
-            <div className="space-y-3">
-              {recommendations.map((rec, index) => (
-                <div 
-                  key={index} 
-                  className="p-3 sm:p-4 rounded-xl bg-card border shadow-sm hover:shadow-md transition-all duration-200 group"
-                >
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-                    <div className="flex items-start gap-3 sm:gap-4">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-muted flex items-center justify-center flex-shrink-0 border">
-                        <rec.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+          <TabsContent value="ai" className="mt-0">
+            <div className="relative min-h-[280px]">
+              {/* Blurred preview content */}
+              <div className="blur-sm opacity-40 pointer-events-none select-none space-y-3">
+                {recommendations.map((rec, index) => (
+                  <div 
+                    key={index} 
+                    className="p-3 sm:p-4 rounded-xl bg-card border shadow-sm"
+                  >
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                      <div className="flex items-start gap-3 sm:gap-4">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-muted flex items-center justify-center flex-shrink-0 border">
+                          <rec.icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                        </div>
+                        <div className="space-y-0.5 sm:space-y-1">
+                          <p className="font-bold text-xs sm:text-sm leading-tight tracking-tight">{rec.action}</p>
+                          <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed font-medium">{rec.reason}</p>
+                        </div>
                       </div>
-                      <div className="space-y-0.5 sm:space-y-1">
-                        <p className="font-bold text-xs sm:text-sm leading-tight tracking-tight">{rec.action}</p>
-                        <p className="text-[10px] sm:text-xs text-muted-foreground leading-relaxed font-medium">{rec.reason}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between w-full sm:w-auto gap-3 mt-1 sm:mt-0">
-                      <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold text-[9px] sm:text-[10px] uppercase h-5 sm:h-6 font-medium">
+                      <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold text-[9px] sm:text-[10px] uppercase h-5 sm:h-6">
                         {rec.impact}
                       </Badge>
-                      <Button variant="ghost" size="icon" className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                        <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      </Button>
                     </div>
                   </div>
+                ))}
+              </div>
+
+              {/* Lock overlay */}
+              <div className="absolute inset-0 flex items-center justify-center bg-background/60 backdrop-blur-[1px] rounded-lg">
+                <div className="text-center p-6 max-w-sm">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center mx-auto mb-4 border border-primary/20">
+                    <Lock className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-bold text-foreground mb-2">AI Suggestions Locked</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Upgrade to unlock personalized AI recommendations that could save you <span className="font-semibold text-emerald-600">+$375/week</span>
+                  </p>
+                  <Link to="/pricing">
+                    <Button className="gap-2 brand-gradient border-0 text-white" data-testid="button-unlock-ai">
+                      <Sparkles className="w-4 h-4" />
+                      Unlock AI Suggestions
+                    </Button>
+                  </Link>
                 </div>
-              ))}
-            </div>
-            
-            <div className="p-3 sm:p-4 rounded-xl bg-primary/5 border border-primary/10">
-              <div className="flex items-start sm:items-center gap-3">
-                <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10 shrink-0">
-                  <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
-                </div>
-                <p className="text-[10px] sm:text-xs font-medium text-foreground font-medium leading-relaxed">
-                  <strong>Recovery Target:</strong> Implementing these suggestions could recover <span className="font-bold text-primary">+$375/week</span> in pure profit.
-                </p>
               </div>
             </div>
           </TabsContent>

@@ -5,6 +5,7 @@ import ProfitOverview from "@/components/dashboard/ProfitOverview";
 import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
+import LockedPremiumSection from "@/components/dashboard/LockedPremiumSection";
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("7days");
@@ -44,6 +45,9 @@ const Dashboard = () => {
           
           {/* Combined promo + AI section */}
           <InsightsAnalysisTabs />
+          
+          {/* Locked premium features */}
+          <LockedPremiumSection />
         </main>
       </div>
     </div>
