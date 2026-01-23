@@ -48,7 +48,7 @@ const UploadsAndPOS = () => {
   const navigate = useNavigate();
 
   const handleAnalyze = () => {
-    navigate("/dashboard");
+    navigate("/trial");
   };
 
   const platforms = [
