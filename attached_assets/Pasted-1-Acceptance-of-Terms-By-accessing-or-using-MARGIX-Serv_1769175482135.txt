@@ -1,0 +1,76 @@
+1. Acceptance of Terms
+
+By accessing or using MARGIX (“Service,” “we,” “us,” or “our”), you agree to be bound by these Terms of Service (“Terms”). If you do not agree, do not use the Service.
+
+2. Description of Service
+
+MARGIX provides analytics and monitoring tools that analyze data from third-party delivery platforms (including but not limited to Uber Eats, DoorDash, and Grubhub) to identify potential discrepancies such as pricing inconsistencies, missed refunds, or promotional losses.
+
+MARGIX provides analytics only and does not guarantee the recovery of funds, refunds, credits, or dispute outcomes.
+
+3. No Affiliation With Third Parties
+
+MARGIX is not affiliated with, endorsed by, sponsored by, or partnered with Uber Eats, DoorDash, Grubhub, or any other third-party platform.
+
+All trademarks and brand names belong to their respective owners.
+
+4. User Responsibilities
+
+You represent and warrant that:
+
+You are authorized to access and analyze any accounts you connect
+
+You comply with all applicable laws and third-party platform terms
+
+You maintain the security of your credentials
+
+MARGIX is not responsible for account actions taken by third-party platforms, including suspensions or terminations.
+
+5. Data Accuracy & Disclaimer
+
+The Service relies on data provided by third-party platforms.
+MARGIX does not warrant or guarantee:
+
+Accuracy or completeness of third-party data
+
+Detection of all discrepancies
+
+Any financial outcome
+
+All outputs are provided “as is” and “as available.”
+
+6. Limitation of Liability
+
+To the maximum extent permitted by Washington law, MARGIX shall not be liable for:
+
+Lost revenue, profits, or business opportunities
+
+Platform penalties or enforcement actions
+
+Indirect, incidental, consequential, or punitive damages
+
+In no event shall MARGIX’s total liability exceed the amount paid by you to MARGIX in the three (3) months preceding the claim.
+
+7. Indemnification
+
+You agree to indemnify and hold harmless MARGIX from any claims, damages, liabilities, or expenses arising from:
+
+Your use of the Service
+
+Your violation of these Terms
+
+Your violation of third-party platform rules
+
+8. Suspension & Termination
+
+We may suspend or terminate your access at any time, with or without notice, for misuse, violation of these Terms, or legal compliance reasons.
+
+9. Modifications
+
+We may modify these Terms at any time. Continued use of the Service constitutes acceptance of the revised Terms.
+
+10. Governing Law & Venue
+
+These Terms are governed by the laws of the State of Washington, without regard to conflict-of-law principles.
+
+Any legal action shall be brought exclusively in the state or federal courts located in Washington State, and you consent to their jurisdiction.

@@ -205,7 +205,7 @@ const Signup = () => {
             <div className="mt-6 pt-6 border-t border-border/50 text-center">
               <p className="text-xs text-muted-foreground leading-relaxed">
                 By signing up, you agree to our{" "}
-                <a href="#" className="underline">Terms of Service</a> and{" "}
+                <Link to="/terms" className="underline">Terms of Service</Link> and{" "}
                 <a href="#" className="underline">Privacy Policy</a>.
               </p>
             </div>
