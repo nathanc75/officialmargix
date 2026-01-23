@@ -141,16 +141,10 @@ const HowItWorksSection = () => {
               </p>
             </div>
             <div className="space-y-3">
-              <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary border border-border">
+              <Link to="/signup" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary border border-border hover:border-primary transition-colors cursor-text">
                 <Mail className="w-4 h-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Enter Email Address</span>
-              </div>
-              <Button variant="outline" className="w-full">
-                Send Verification Code
-              </Button>
-              <Button className="w-full brand-gradient border-0 text-white">
-                Sign up with Google
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
