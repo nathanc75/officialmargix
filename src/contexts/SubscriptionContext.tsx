@@ -11,7 +11,9 @@ interface SubscriptionContextType {
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
 
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
-  const [tier, setTier] = useState<SubscriptionTier>("starter");
+  // Default to "trial" for free analysis users
+  // Paid subscribers will have their tier set after payment
+  const [tier, setTier] = useState<SubscriptionTier>("trial");
 
   const isPaid = tier !== "trial";
 
