@@ -1,7 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { DollarSign, Percent, Tag, TrendingUp, ArrowUp, ArrowDown } from "lucide-react";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const ProfitOverview = () => {
+  const { isPaid } = useSubscription();
   const metrics = [
     {
       label: "Gross Sales",
@@ -50,9 +52,15 @@ const ProfitOverview = () => {
     <section>
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">Profit Overview</h2>
-        <div className="text-[10px] text-amber-600 bg-amber-50 dark:bg-amber-950/30 px-2 py-1 rounded-md border border-amber-200 dark:border-amber-800 shrink-0">
-          30-day snapshot
-        </div>
+        {isPaid ? (
+          <div className="text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-1 rounded-md border border-emerald-200 dark:border-emerald-800 shrink-0">
+            Real-time
+          </div>
+        ) : (
+          <div className="text-[10px] text-amber-600 bg-amber-50 dark:bg-amber-950/30 px-2 py-1 rounded-md border border-amber-200 dark:border-amber-800 shrink-0">
+            30-day snapshot
+          </div>
+        )}
       </div>
       <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {metrics.map((metric) => (

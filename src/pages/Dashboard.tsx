@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import AnalysisBanner from "@/components/dashboard/AnalysisBanner";
+import PaidSubscriberBanner from "@/components/dashboard/PaidSubscriberBanner";
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
 import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
@@ -10,6 +12,7 @@ import LockedPremiumSection from "@/components/dashboard/LockedPremiumSection";
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("7days");
   const [platform, setPlatform] = useState("all");
+  const { isPaid } = useSubscription();
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -31,8 +34,8 @@ const Dashboard = () => {
         <DashboardHeader dateRange={dateRange} setDateRange={setDateRange} platform={platform} setPlatform={setPlatform} />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-          {/* Analysis mode banner */}
-          <AnalysisBanner />
+          {/* Show different banner based on subscription status */}
+          {isPaid ? <PaidSubscriberBanner /> : <AnalysisBanner />}
           
           {/* Critical alerts - collapsible */}
           <InsightsSection />
@@ -46,8 +49,8 @@ const Dashboard = () => {
           {/* Combined promo + AI section */}
           <InsightsAnalysisTabs />
           
-          {/* Locked premium features */}
-          <LockedPremiumSection />
+          {/* Only show locked premium section for trial users */}
+          {!isPaid && <LockedPremiumSection />}
         </main>
       </div>
     </div>

@@ -1,0 +1,31 @@
+import { createContext, useContext, useState, ReactNode } from "react";
+
+type SubscriptionTier = "trial" | "starter" | "pro" | "custom";
+
+interface SubscriptionContextType {
+  tier: SubscriptionTier;
+  setTier: (tier: SubscriptionTier) => void;
+  isPaid: boolean;
+}
+
+const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
+
+export function SubscriptionProvider({ children }: { children: ReactNode }) {
+  const [tier, setTier] = useState<SubscriptionTier>("starter");
+
+  const isPaid = tier !== "trial";
+
+  return (
+    <SubscriptionContext.Provider value={{ tier, setTier, isPaid }}>
+      {children}
+    </SubscriptionContext.Provider>
+  );
+}
+
+export function useSubscription() {
+  const context = useContext(SubscriptionContext);
+  if (context === undefined) {
+    throw new Error("useSubscription must be used within a SubscriptionProvider");
+  }
+  return context;
+}
