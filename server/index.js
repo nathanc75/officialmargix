@@ -11,23 +11,28 @@ app.use(express.json());
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-if (!supabaseUrl || !supabaseServiceKey) {
-  console.warn('Supabase credentials not configured. Please add VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to your environment variables.');
-}
+let supabaseAdmin = null;
 
-export const supabaseAdmin = createClient(
-  supabaseUrl || '',
-  supabaseServiceKey || '',
-  {
+if (supabaseUrl && supabaseServiceKey) {
+  supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
     }
-  }
-);
+  });
+  console.log('Supabase admin client initialized');
+} else {
+  console.warn('Supabase credentials not configured. Please add VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to your environment variables.');
+}
+
+export { supabaseAdmin };
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    supabase: supabaseAdmin ? 'connected' : 'not configured'
+  });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
