@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { UserPlus, Settings, TrendingUp, ArrowRight } from "lucide-react";
+import { UserPlus, Settings, TrendingUp, ArrowRight, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -126,6 +126,33 @@ const HowItWorksSection = () => {
             </div>
           </div>
 
+          {/* Right Column - Sign Up Preview */}
+          <div className="rounded-2xl bg-card border border-border p-6 space-y-5">
+            <div className="flex justify-between items-start">
+              <div className="w-10 h-10 rounded-lg brand-gradient flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-white" />
+              </div>
+              <button className="text-muted-foreground hover:text-foreground text-sm">×</button>
+            </div>
+            <div className="text-center space-y-2">
+              <h4 className="font-semibold text-foreground">Sign up for Free</h4>
+              <p className="text-xs text-muted-foreground">
+                No training, no script, just one line of code and real insights begin
+              </p>
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary border border-border">
+                <Mail className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Enter Email Address</span>
+              </div>
+              <Button variant="outline" className="w-full">
+                Send Verification Code
+              </Button>
+              <Button className="w-full brand-gradient border-0 text-white">
+                Sign up with Google
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
