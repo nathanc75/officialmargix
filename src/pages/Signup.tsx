@@ -65,7 +65,7 @@ const Signup = () => {
             <ul className="space-y-2 text-sm text-foreground">
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Connect your delivery platforms (read-only)
+                Upload your delivery reports (read-only)
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
