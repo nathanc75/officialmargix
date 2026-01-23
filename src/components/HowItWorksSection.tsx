@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { UserPlus, Settings, TrendingUp, ArrowRight, Mail } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const steps = [
   {
@@ -94,10 +95,12 @@ const HowItWorksSection = () => {
             <p className="text-muted-foreground leading-relaxed">
               {currentStep.description}
             </p>
-            <Button className="gap-2">
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </Button>
+            <Link to="/signup">
+              <Button className="gap-2">
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
           </div>
 
           {/* Center Column - Product Card */}

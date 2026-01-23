@@ -60,9 +60,9 @@ const Navbar = () => {
                 Sign in
               </Button>
             </Link>
-            <a href="#pricing" onClick={(e) => handleNavClick(e, "#pricing")}>
+            <Link to="/signup">
               <Button size="sm" className="xl:text-base xl:px-4 xl:py-2">Get Started</Button>
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -99,9 +99,9 @@ const Navbar = () => {
                     Sign in
                   </Button>
                 </Link>
-                <a href="#pricing" onClick={(e) => handleNavClick(e, "#pricing")} className="flex-1">
+                <Link to="/signup" className="flex-1">
                   <Button size="default" className="w-full justify-center">Get Started</Button>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
