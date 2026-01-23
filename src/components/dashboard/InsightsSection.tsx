@@ -5,7 +5,11 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-const InsightsSection = () => {
+interface InsightsSectionProps {
+  isTrial?: boolean;
+}
+
+const InsightsSection = ({ isTrial = false }: InsightsSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
   
   const insights = [

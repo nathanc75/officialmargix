@@ -1,16 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, RefreshCw, Zap, Calendar } from "lucide-react";
-import { useSubscription } from "@/contexts/SubscriptionContext";
 
 const PaidSubscriberBanner = () => {
-  const { tier } = useSubscription();
-
-  const tierLabels: Record<string, string> = {
-    starter: "Starter Plan",
-    pro: "Pro Plan",
-    custom: "Enterprise"
-  };
 
   return (
     <div className="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-background p-4 sm:p-5">
@@ -24,7 +16,7 @@ const PaidSubscriberBanner = () => {
           </Badge>
           <Badge variant="outline" className="gap-1.5 text-primary border-primary/30">
             <Zap className="w-3 h-3" />
-            {tierLabels[tier] || "Pro Plan"}
+            Pro Plan
           </Badge>
           <Badge variant="outline" className="gap-1.5 text-muted-foreground">
             <Calendar className="w-3 h-3" />

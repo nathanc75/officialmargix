@@ -1,13 +1,14 @@
 import { useState } from "react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PaidSubscriberBanner from "@/components/dashboard/PaidSubscriberBanner";
+import AnalysisBanner from "@/components/dashboard/AnalysisBanner";
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
 import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
+import LockedPremiumSection from "@/components/dashboard/LockedPremiumSection";
 
-const Dashboard = () => {
-  const [dateRange, setDateRange] = useState("7days");
+const TrialDashboard = () => {
+  const [dateRange, setDateRange] = useState("30days");
   const [platform, setPlatform] = useState("all");
 
   return (
@@ -31,19 +32,20 @@ const Dashboard = () => {
           setDateRange={setDateRange} 
           platform={platform} 
           setPlatform={setPlatform}
-          isTrial={false}
+          isTrial={true}
         />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-          <PaidSubscriberBanner />
-          <InsightsSection isTrial={false} />
-          <ProfitOverview isTrial={false} />
-          <ItemBreakdownTable isTrial={false} />
-          <InsightsAnalysisTabs isTrial={false} />
+          <AnalysisBanner />
+          <InsightsSection isTrial={true} />
+          <ProfitOverview isTrial={true} />
+          <ItemBreakdownTable isTrial={true} />
+          <InsightsAnalysisTabs isTrial={true} />
+          <LockedPremiumSection />
         </main>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default TrialDashboard;

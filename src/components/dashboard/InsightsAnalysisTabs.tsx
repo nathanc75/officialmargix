@@ -4,10 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, TrendingDown, Lightbulb, ChevronRight, XCircle, Calendar, Lock, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useSubscription } from "@/contexts/SubscriptionContext";
 
-const InsightsAnalysisTabs = () => {
-  const { isPaid } = useSubscription();
+interface InsightsAnalysisTabsProps {
+  isTrial?: boolean;
+}
+
+const InsightsAnalysisTabs = ({ isTrial = false }: InsightsAnalysisTabsProps) => {
   const promos = [
     { name: "SAVE20", cost: "$620", revenue: "$890", impact: "+$270", profitable: true, platform: "Uber Eats" },
     { name: "BOGO Friday", cost: "$420", revenue: "$310", impact: "-$110", profitable: false, platform: "DoorDash" },
@@ -38,7 +40,7 @@ const InsightsAnalysisTabs = () => {
             >
               <Lightbulb className="h-3.5 w-3.5" />
               AI Suggestions
-              {!isPaid && <Lock className="h-3 w-3 text-amber-500" />}
+              {isTrial && <Lock className="h-3 w-3 text-amber-500" />}
             </TabsTrigger>
           </TabsList>
         </CardHeader>
@@ -96,7 +98,7 @@ const InsightsAnalysisTabs = () => {
           </TabsContent>
           
           <TabsContent value="ai" className="mt-0 space-y-3 sm:space-y-4">
-            {isPaid ? (
+            {!isTrial ? (
               <>
                 <div className="space-y-3">
                   {recommendations.map((rec, index) => (

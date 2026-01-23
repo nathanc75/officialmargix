@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, CheckCircle2, Lock, Menu, RefreshCw } from "lucide-react";
-import { useSubscription } from "@/contexts/SubscriptionContext";
 import {
   Sheet,
   SheetContent,
@@ -18,9 +17,10 @@ interface DashboardHeaderProps {
   setDateRange: (value: string) => void;
   platform: string;
   setPlatform: (value: string) => void;
+  isTrial?: boolean;
 }
 
-const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: DashboardHeaderProps) => {
+const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTrial = false }: DashboardHeaderProps) => {
   return (
     <header 
       className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
@@ -132,8 +132,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform }: Das
             </div>
 
             {(() => {
-              const { isPaid } = useSubscription();
-              return isPaid ? (
+              return !isTrial ? (
                 <Button 
                   variant="default" 
                   size="sm"

@@ -12,7 +12,11 @@ import {
 
 type FilterType = 'all' | 'profitable' | 'loss';
 
-const ItemBreakdownTable = () => {
+interface ItemBreakdownTableProps {
+  isTrial?: boolean;
+}
+
+const ItemBreakdownTable = ({ isTrial = false }: ItemBreakdownTableProps) => {
   const [showAll, setShowAll] = useState(false);
   const [filter, setFilter] = useState<FilterType>('all');
   
