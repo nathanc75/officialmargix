@@ -14,10 +14,9 @@ const PrivacyPolicy = () => {
           Back to Home
         </Link>
 
-        <h1 className="text-3xl font-bold text-foreground mb-2" data-testid="text-privacy-title">
+        <h1 className="text-3xl font-bold text-foreground mb-8" data-testid="text-privacy-title">
           Privacy Policy
         </h1>
-        <p className="text-muted-foreground mb-8">Last Updated: January 2026</p>
 
         <div className="prose prose-neutral dark:prose-invert max-w-none space-y-8">
           <section>
