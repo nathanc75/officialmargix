@@ -30,7 +30,7 @@ const plans = [
     description: "Operate and optimize multiple locations from one dashboard.",
     features: [
       "Full Margix dashboard",
-      "Up to 10 restaurant locations",
+      "Multiple restaurant locations",
       "Unlimited delivery platforms",
       "Higher-volume data processing",
       "Real-time alerts & pricing signals",

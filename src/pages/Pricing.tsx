@@ -32,7 +32,7 @@ const plans = [
     description: "Operate and optimize multiple locations from one dashboard.",
     features: [
       "Full Margix dashboard",
-      "Up to 10 restaurant locations",
+      "Multiple restaurant locations",
       "Unlimited delivery platforms",
       "Higher-volume data processing",
       "Real-time alerts & pricing signals",
@@ -181,7 +181,7 @@ const Pricing = () => {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            Need more than 10 locations?{" "}
+            Need more locations?{" "}
             <a href="/#contact" className="text-primary hover:underline font-medium">
               Contact us for custom pricing
             </a>
