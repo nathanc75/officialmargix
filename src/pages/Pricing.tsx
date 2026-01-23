@@ -181,7 +181,10 @@ const Pricing = () => {
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            Need more? Contact us for custom pricing
+            Need more?{" "}
+            <a href="/#contact" className="text-primary hover:underline font-medium">
+              Contact us for custom pricing
+            </a>
           </p>
         </div>
       </div>
