@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, Sparkles } from "lucide-react";
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, MapPin, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo.png";
@@ -12,6 +12,7 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [restaurantName, setRestaurantName] = useState("");
+  const [restaurantAddress, setRestaurantAddress] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -138,6 +139,21 @@ const Signup = () => {
                       required
                     />
                   </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <Label htmlFor="restaurantAddress" className="text-foreground text-base">Restaurant Address</Label>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Input
+                    id="restaurantAddress"
+                    placeholder="123 Main St, Seattle, WA 98101"
+                    value={restaurantAddress}
+                    onChange={(e) => setRestaurantAddress(e.target.value)}
+                    className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
+                    required
+                  />
                 </div>
               </div>
 
