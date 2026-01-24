@@ -51,11 +51,11 @@ const Signup = () => {
             <span className="text-3xl font-bold text-foreground tracking-tight">MARGIX</span>
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Get your{" "}
-            <span className="text-gradient">free revenue analysis</span>
+            Uncover your{" "}
+            <span className="text-gradient">hidden delivery losses</span>
           </h1>
           <p className="text-muted-foreground text-lg">
-            See exactly how much revenue you're losing on delivery platforms. No credit card required.
+            Upload your reports and menu to see where you're losing money. No credit card required.
           </p>
           
           <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
@@ -66,15 +66,15 @@ const Signup = () => {
             <ul className="space-y-2 text-sm text-foreground">
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Upload your delivery reports (read-only)
+                Order-level profitability analysis
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                30-day revenue analysis
+                Fee, promotion & refund breakdown
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                See missed refunds & pricing errors
+                Clear insights labeled exact or estimated
               </li>
             </ul>
           </div>

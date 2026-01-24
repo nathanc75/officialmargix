@@ -7,28 +7,28 @@ import {
 
 const faqs = [
   {
-    question: "How does MARGIX connect to my restaurant's delivery platforms?",
-    answer: "MARGIX securely connects to your delivery platform accounts (Uber Eats, DoorDash, Grubhub, etc.) through their official APIs. Setup takes just a few minutes — simply log in to each platform and authorize access for automated revenue tracking.",
+    question: "How do I get started with MARGIX?",
+    answer: "Simply upload your delivery platform reports (Uber Eats, DoorDash, Grubhub) along with your online menu. Our AI analyzes them together to uncover where you're losing money. No API connections needed — just upload your files.",
   },
   {
-    question: "What types of restaurant revenue losses does MARGIX detect?",
-    answer: "MARGIX identifies pricing discrepancies, missed refunds, excessive platform fees, promotional losses, and menu pricing errors across all connected delivery platforms. Our AI analyzes every transaction to spot patterns costing your restaurant money.",
+    question: "What kind of insights will I get?",
+    answer: "We focus on order-level profitability, fees, promotions, and refunds. Because platforms don't always provide item-level data, we use your menu pricing to estimate which items and price ranges may be driving losses. Every insight is clearly labeled as exact or estimated.",
   },
   {
-    question: "How quickly will my restaurant see revenue recovery ROI?",
-    answer: "Most restaurants recover 3-10× their monthly subscription cost within the first month. The average restaurant discovers $500-$2,000 in recoverable revenue issues immediately after connecting their delivery platforms.",
+    question: "Why are some insights labeled as 'estimated'?",
+    answer: "Delivery platforms don't always provide complete item-level data in their reports. When we use your menu pricing to fill in gaps, we clearly label those insights as estimates so you know exactly what's based on hard data versus smart analysis.",
   },
   {
-    question: "Is my restaurant's delivery platform data secure?",
-    answer: "Absolutely. We use bank-level encryption and never store your delivery platform login credentials. All data is encrypted in transit and at rest. We're SOC 2 compliant and undergo regular security audits.",
+    question: "Is my uploaded data secure?",
+    answer: "Absolutely. Your reports are handled with modern encryption and security controls. We only analyze the data you upload and never share it with third parties.",
   },
   {
     question: "Can I use MARGIX for multiple restaurant locations?",
-    answer: "Yes! Our Enterprise plan is designed for multi-location restaurants and franchise groups. You'll get a unified dashboard to monitor delivery platform performance across all locations, with custom reporting and dedicated account management.",
+    answer: "Yes! Our Enterprise plan is designed for multi-location restaurants and franchise groups. Upload reports for each location and get a unified view of your delivery profitability across all sites.",
   },
   {
-    question: "Do I need technical knowledge for restaurant delivery analytics?",
-    answer: "Not at all. MARGIX is designed for restaurant owners and operators, not tech experts. Our delivery analytics dashboard is intuitive, and our support team is always available to help you maximize revenue recovery.",
+    question: "Do I need technical knowledge to use MARGIX?",
+    answer: "Not at all. If you can download a report from your delivery platforms and upload it here, you can use MARGIX. Our dashboard is designed for restaurant owners, not tech experts.",
   },
 ];
 
@@ -46,15 +46,15 @@ const FAQSection = () => {
           <div className="lg:sticky lg:top-32">
             <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                Restaurant Revenue Recovery FAQ
+                FAQ
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Delivery Platform{" "}
-              <span className="text-gradient">Analytics Questions</span>
+              Common{" "}
+              <span className="text-gradient">Questions</span>
             </h2>
             <p className="text-muted-foreground max-w-md leading-relaxed">
-              Common questions about restaurant revenue recovery and delivery platform management.
+              Everything you need to know about how MARGIX analyzes your data.
             </p>
           </div>
 

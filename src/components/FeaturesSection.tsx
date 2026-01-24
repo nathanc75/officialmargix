@@ -13,44 +13,44 @@ const features = [
   {
     icon: TrendingUp,
     iconBg: "bg-orange-500",
-    title: "Revenue Recovery Engine",
-    subtitle: "Automated Loss Detection",
-    description: "Automatically detect pricing errors, missed refunds, and hidden fees across Uber Eats, DoorDash, and Grubhub.",
+    title: "Order-Level Profitability",
+    subtitle: "Deep Loss Detection",
+    description: "Since platforms don't always provide item-level data, we analyze order-level profitability to find where you're losing money.",
   },
   {
     icon: Bell,
     iconBg: "bg-blue-500",
-    title: "Real-Time Delivery Alerts",
-    subtitle: "Instant Platform Notifications",
-    description: "Get instant alerts when delivery platforms change fees, apply incorrect pricing, or create promotional discrepancies.",
+    title: "Fee & Promotion Tracking",
+    subtitle: "Complete Cost Visibility",
+    description: "Track fees, promotions, and refunds across all platforms. See exactly what's eating into your margins.",
   },
   {
     icon: BarChart3,
     iconBg: "bg-purple-500",
-    title: "Multi-Platform Analytics",
-    subtitle: "Unified Delivery Dashboard",
-    description: "Compare performance across Uber Eats, DoorDash, Grubhub, and more from a single restaurant analytics dashboard.",
+    title: "Menu-Based Estimates",
+    subtitle: "Smart Price Analysis",
+    description: "We use your menu pricing to estimate which items and price ranges may be driving losses — clearly labeled as estimates.",
   },
   {
     icon: Shield,
     iconBg: "bg-green-500",
-    title: "Secure Platform Integration",
-    subtitle: "Enterprise Data Protection",
-    description: "We secure info using modern encryption, least-privilege access, and audited security controls designed around SOC 2 Trust Services Criteria",
+    title: "Secure Data Handling",
+    subtitle: "Your Data, Protected",
+    description: "Your uploaded reports are handled with modern encryption and security controls. We only analyze what you share.",
   },
   {
     icon: FileText,
     iconBg: "bg-yellow-500",
-    title: "Revenue Recovery Reports",
-    subtitle: "Export & Analytics",
-    description: "Generate detailed reports showing recovered revenue, platform comparisons, and profit optimization opportunities.",
+    title: "Clear Labeled Insights",
+    subtitle: "Exact vs. Estimated",
+    description: "All insights are based on your uploaded data and clearly labeled as exact or estimated — so you can make confident decisions.",
   },
   {
     icon: Smartphone,
     iconBg: "bg-primary",
-    title: "Mobile Restaurant Dashboard",
-    subtitle: "Manage On-The-Go",
-    description: "Monitor your delivery platform performance and revenue recovery from any device with our mobile-optimized dashboard.",
+    title: "Mobile Dashboard",
+    subtitle: "Insights Anywhere",
+    description: "Access your profitability insights from any device. Make informed decisions on the go.",
     isNew: true,
   },
 ];
@@ -73,18 +73,18 @@ const FeaturesSection = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Delivery Analytics Features
+              Features
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Restaurant Revenue Recovery Tools{" "}
-            <span className="text-muted-foreground">That Drive Profits</span>
+            Insights Without{" "}
+            <span className="text-muted-foreground">Guesswork</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            AI-powered features designed for restaurant delivery platform management
+            Clear, actionable insights based on your uploaded data and menu pricing
           </p>
           <Button className="gap-2">
-            Explore MARGIX Features
+            Get Started Free
           </Button>
         </div>
 

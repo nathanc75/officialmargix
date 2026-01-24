@@ -7,29 +7,29 @@ const steps = [
   {
     id: 1,
     icon: UserPlus,
-    title: "Connect Platforms",
+    title: "Upload Reports",
     number: "01",
-    heading: "Connect your delivery platforms",
-    description: "Link Uber Eats, DoorDash, Grubhub, and other delivery apps to start automated revenue tracking.",
-    features: ["One-click integration", "Secure API connections", "All major platforms supported"],
+    heading: "Upload your delivery reports",
+    description: "Upload your delivery platform reports and online menu. We analyze them together to uncover where you're losing money.",
+    features: ["CSV, Excel, PDF support", "Menu pricing analysis", "Secure data handling"],
   },
   {
     id: 2,
     icon: Settings,
-    title: "Configure Analytics",
+    title: "AI Analysis",
     number: "02",
-    heading: "Set up delivery analytics alerts",
-    description: "Configure profit thresholds, pricing alerts, and custom reports for your restaurant's needs.",
-    features: ["Profit margin tracking", "Real-time fee alerts", "Custom revenue dashboards"],
+    heading: "Get order-level insights",
+    description: "Since platforms don't always provide item-level data, we focus on order-level profitability, fees, promotions, and refunds.",
+    features: ["Order-level profitability", "Fee breakdown", "Promotion tracking"],
   },
   {
     id: 3,
     icon: TrendingUp,
-    title: "Recover Revenue",
+    title: "Clear Insights",
     number: "03",
-    heading: "Start recovering lost revenue",
-    description: "Get AI-powered insights on pricing errors, promotional losses, and refund discrepancies across all platforms.",
-    features: ["Revenue recovery reports", "Platform comparison", "Actionable recommendations"],
+    heading: "Make confident decisions",
+    description: "All insights are based on your uploaded data and clearly labeled as exact or estimated — no guesswork required.",
+    features: ["Exact vs. estimated labels", "Menu-based estimates", "Actionable recommendations"],
   },
 ];
 
@@ -49,11 +49,11 @@ const HowItWorksSection = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Delivery Platform Integration
+              How It Works
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
-            How Restaurant Revenue Recovery Works
+            From Reports to Clear Insights
           </h2>
         </div>
 
@@ -112,7 +112,7 @@ const HowItWorksSection = () => {
               <span className="text-lg font-semibold text-foreground">MARGIX AI</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              Get Started by registering to join the league of elite restaurants using our services
+              Upload your data and get insights based on order-level profitability and your menu pricing
             </p>
             <div className="space-y-3">
               {currentStep.features.map((feature) => (
@@ -137,7 +137,7 @@ const HowItWorksSection = () => {
             <div className="text-center space-y-2">
               <h4 className="font-semibold text-foreground">Sign up for Free</h4>
               <p className="text-xs text-muted-foreground">
-                No training, no script, just one line of code and real insights begin
+                Upload your reports and get clear, labeled insights — no guesswork
               </p>
             </div>
             <div className="space-y-3">

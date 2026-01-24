@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-xl font-bold text-foreground mb-4">MARGIX</h3>
             <p className="text-sm text-muted-foreground max-w-md">
-              AI-powered delivery analytics helping restaurants uncover hidden losses and recover revenue from third-party platforms.
+              Our AI analyzes your delivery reports and menu to find where you're losing money. Clear insights, labeled as exact or estimated.
             </p>
           </div>
 

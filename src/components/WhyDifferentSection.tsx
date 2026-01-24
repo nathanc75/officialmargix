@@ -1,15 +1,15 @@
 import { X, Check } from "lucide-react";
 
 const notItems = [
-  "Not another restaurant analytics dashboard",
-  "Not generic POS or sales reporting",
-  "Not manual spreadsheet tracking",
+  "Not generic dashboards with vanity metrics",
+  "Not vague estimates without data backing",
+  "Not guesswork about where you're losing money",
 ];
 
 const isItems = [
-  "Built specifically for delivery platform revenue recovery",
-  "Focused on recovering lost profits, not vanity metrics",
-  "Shows exactly what to fix across Uber Eats, DoorDash & Grubhub",
+  "Analyzes your actual reports together with your menu",
+  "Focuses on order-level profitability, fees & refunds",
+  "All insights clearly labeled as exact or estimated",
 ];
 
 const WhyDifferentSection = () => {
@@ -23,7 +23,7 @@ const WhyDifferentSection = () => {
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Header */}
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-12">
-          Why Restaurants Choose MARGIX for Delivery Revenue Recovery
+          Confident Decisions, Not Guesswork
         </h2>
 
         {/* Two columns */}

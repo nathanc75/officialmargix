@@ -21,18 +21,18 @@ const BookDemoSection = () => {
             </div>
             
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
-              See Restaurant Revenue Recovery in Action
+              See How MARGIX Finds Your Hidden Losses
             </h2>
             
             <p className="text-lg text-muted-foreground mb-8">
-              Schedule a personalized demo to see how MARGIX helps restaurants recover 
-              lost revenue from Uber Eats, DoorDash, Grubhub and other delivery platforms.
+              Schedule a demo to see how our AI analyzes your delivery reports and menu together — 
+              revealing order-level profitability with clear, labeled insights.
             </p>
 
             <div className="space-y-4">
               {[
                 { icon: Clock, text: "15-minute personalized walkthrough" },
-                { icon: Users, text: "Meet with a revenue recovery specialist" },
+                { icon: Users, text: "Meet with a delivery analytics specialist" },
                 { icon: Calendar, text: "Flexible scheduling to fit your needs" },
                 { icon: ShieldCheck, text: "No prep, no pressure, no obligation" },
               ].map((item, index) => (
