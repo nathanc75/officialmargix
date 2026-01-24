@@ -1,14 +1,120 @@
 import express from 'express';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
+import { Storage } from '@google-cloud/storage';
+import { randomUUID } from 'crypto';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// Object storage setup
+const REPLIT_SIDECAR_ENDPOINT = "http://127.0.0.1:1106";
+
+const objectStorageClient = new Storage({
+  credentials: {
+    audience: "replit",
+    subject_token_type: "access_token",
+    token_url: `${REPLIT_SIDECAR_ENDPOINT}/token`,
+    type: "external_account",
+    credential_source: {
+      url: `${REPLIT_SIDECAR_ENDPOINT}/credential`,
+      format: {
+        type: "json",
+        subject_token_field_name: "access_token",
+      },
+    },
+    universe_domain: "googleapis.com",
+  },
+  projectId: "",
+});
+
+async function signObjectURL({ bucketName, objectName, method, ttlSec }) {
+  const request = {
+    bucket_name: bucketName,
+    object_name: objectName,
+    method,
+    expires_at: new Date(Date.now() + ttlSec * 1000).toISOString(),
+  };
+  const response = await fetch(
+    `${REPLIT_SIDECAR_ENDPOINT}/object-storage/signed-object-url`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    }
+  );
+  if (!response.ok) {
+    throw new Error(`Failed to sign object URL: ${response.status}`);
+  }
+  const { signed_url } = await response.json();
+  return signed_url;
+}
+
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+// File upload endpoint - returns presigned URL
+app.post("/api/uploads/request-url", async (req, res) => {
+  try {
+    const { name, size, contentType } = req.body;
+    
+    if (!name) {
+      return res.status(400).json({ error: "Missing required field: name" });
+    }
+
+    const privateDir = process.env.PRIVATE_OBJECT_DIR || "";
+    if (!privateDir) {
+      return res.status(500).json({ error: "Object storage not configured" });
+    }
+
+    const objectId = randomUUID();
+    const extension = name.split('.').pop() || '';
+    const objectName = `uploads/${objectId}.${extension}`;
+    
+    // Parse the private dir to get bucket name
+    const parts = privateDir.startsWith('/') ? privateDir.slice(1).split('/') : privateDir.split('/');
+    const bucketName = parts[0];
+    const fullObjectName = parts.slice(1).join('/') + '/' + objectName;
+
+    const uploadURL = await signObjectURL({
+      bucketName,
+      objectName: fullObjectName,
+      method: "PUT",
+      ttlSec: 900,
+    });
+
+    res.json({
+      uploadURL,
+      objectPath: `/objects/${objectName}`,
+      metadata: { name, size, contentType },
+    });
+  } catch (error) {
+    console.error("Error generating upload URL:", error);
+    res.status(500).json({ error: "Failed to generate upload URL" });
+  }
+});
+
+// List uploaded files (for demo purposes, stores in memory)
+const uploadedFiles = [];
+
+app.post("/api/uploads/complete", (req, res) => {
+  const { name, objectPath, size, contentType } = req.body;
+  uploadedFiles.push({
+    id: randomUUID(),
+    name,
+    objectPath,
+    size,
+    contentType,
+    uploadedAt: new Date().toISOString(),
+  });
+  res.json({ success: true, file: uploadedFiles[uploadedFiles.length - 1] });
+});
+
+app.get("/api/uploads", (req, res) => {
+  res.json(uploadedFiles);
 });
 
 const supabase = createClient(

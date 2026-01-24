@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock, Lock, Sparkles } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
+import { useUpload } from "@/hooks/use-upload";
 
 interface PromoData {
   name: string;
@@ -45,7 +46,38 @@ interface UploadData {
 const UploadsAndPOS = () => {
   const [selectedUpload, setSelectedUpload] = useState<UploadData | null>(null);
   const [hasUploaded, setHasUploaded] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  
+  const { uploadFile, isUploading, progress } = useUpload({
+    onSuccess: async (response) => {
+      // Record the upload on the server
+      await fetch("/api/uploads/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: response.metadata.name,
+          objectPath: response.objectPath,
+          size: response.metadata.size,
+          contentType: response.metadata.contentType,
+        }),
+      });
+      setUploadedFileName(response.metadata.name);
+      setHasUploaded(true);
+    },
+    onError: (error) => {
+      console.error("Upload failed:", error);
+      alert("Upload failed. Please try again.");
+    },
+  });
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      await uploadFile(file);
+    }
+  };
 
   const handleAnalyze = () => {
     navigate("/trial");
@@ -200,33 +232,77 @@ const UploadsAndPOS = () => {
                 {!hasUploaded ? (
                   <div 
                     className="border-2 border-dashed border-border rounded-xl p-8 sm:p-12 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                    onClick={() => setHasUploaded(true)}
+                    onClick={() => fileInputRef.current?.click()}
                   >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv,.xlsx,.xls,.pdf"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                      data-testid="input-file-upload"
+                    />
                     <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
-                      <Upload className="h-8 w-8 text-muted-foreground" />
+                      {isUploading ? (
+                        <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                      ) : (
+                        <Upload className="h-8 w-8 text-muted-foreground" />
+                      )}
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">Drop your files here</h3>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">
+                      {isUploading ? "Uploading..." : "Drop your files here"}
+                    </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      Support for CSV, Excel, and PDF reports from Uber Eats, DoorDash, Grubhub, etc.
+                      {isUploading 
+                        ? `Upload progress: ${progress}%` 
+                        : "Support for CSV, Excel, and PDF reports from Uber Eats, DoorDash, Grubhub, etc."}
                     </p>
-                    <Button className="gap-2" onClick={(e) => { e.stopPropagation(); setHasUploaded(true); }}>
-                      <Plus className="h-4 w-4" />
-                      Browse Files
+                    <Button 
+                      className="gap-2" 
+                      onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                      disabled={isUploading}
+                      data-testid="button-browse-files"
+                    >
+                      {isUploading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Uploading...
+                        </>
+                      ) : (
+                        <>
+                          <Plus className="h-4 w-4" />
+                          Browse Files
+                        </>
+                      )}
                     </Button>
                   </div>
                 ) : (
                   <div className="text-center p-8">
-                    <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
+                    <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-4">
                       <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                     </div>
                     <h3 className="text-lg font-semibold text-foreground mb-2">Report uploaded successfully!</h3>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      <span className="font-medium text-foreground">{uploadedFileName}</span>
+                    </p>
                     <p className="text-sm text-muted-foreground mb-6">
                       Your delivery data is ready to be analyzed. Click below to see your revenue insights.
                     </p>
-                    <Button className="gap-2 brand-gradient border-0 text-white" onClick={handleAnalyze} data-testid="button-view-analysis">
-                      <Sparkles className="h-4 w-4" />
-                      View My Analysis
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Button className="gap-2 brand-gradient border-0 text-white" onClick={handleAnalyze} data-testid="button-view-analysis">
+                        <Sparkles className="h-4 w-4" />
+                        View My Analysis
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="gap-2" 
+                        onClick={() => { setHasUploaded(false); setUploadedFileName(""); }}
+                        data-testid="button-upload-another"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Upload Another
+                      </Button>
+                    </div>
                   </div>
                 )}
               </CardContent>
