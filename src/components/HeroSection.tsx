@@ -27,13 +27,13 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center">
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
-            Uncover Where You're{" "}
-            <span className="text-gradient">Losing Money</span>
+            AI-Powered Delivery Analytics for{" "}
+            <span className="text-gradient">Smarter Restaurants</span>
           </h1>
 
           {/* Subheadline */}
           <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Our AI analyzes your delivery platform reports together with your online menu to find hidden losses. 
+            MARGIX analyzes your delivery platform reports together with your online menu to uncover where you're losing money. 
             Get clear insights on order-level profitability, fees, promotions, and refunds — all labeled as exact or estimated.
           </p>
 
