@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     question: "Can I use MARGIX for multiple restaurant locations?",
-    answer: "Yes! Our Enterprise plan is designed for multi-location restaurants and franchise groups. Upload reports for each location and get a unified view of your delivery profitability across all sites.",
+    answer: "Yes! Our Custom plan is designed for multi-location restaurants and franchise groups. Upload reports for each location and get a unified view of your delivery profitability across all sites.",
   },
   {
     question: "Do I need technical knowledge to use MARGIX?",
