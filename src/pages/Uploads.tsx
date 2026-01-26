@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Zap, Link2, Sparkles, AlertCircle } from "lucide-react";
+import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Zap, Link2, Sparkles, AlertCircle, Car, DoorOpen, Utensils, Package, Square, Slice, Clover } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUpload } from "@/hooks/use-upload";
@@ -133,13 +133,13 @@ const Uploads = () => {
   };
 
   const platforms = [
-    { name: "UberEats", icon: "🚗", connected: true, color: "bg-green-500" },
-    { name: "DoorDash", icon: "🚪", connected: true, color: "bg-red-500" },
-    { name: "Grubhub", icon: "🍔", connected: false, color: "bg-orange-500" },
-    { name: "Postmates", icon: "📦", connected: false, color: "bg-purple-500" },
-    { name: "Square POS", icon: "⬜", connected: false, color: "bg-slate-700" },
-    { name: "Toast", icon: "🍞", connected: false, color: "bg-orange-600" },
-    { name: "Clover", icon: "🍀", connected: false, color: "bg-emerald-500" },
+    { name: "UberEats", icon: <Car className="h-6 w-6 text-white" />, connected: true, color: "bg-green-500" },
+    { name: "DoorDash", icon: <DoorOpen className="h-6 w-6 text-white" />, connected: true, color: "bg-red-500" },
+    { name: "Grubhub", icon: <Utensils className="h-6 w-6 text-white" />, connected: false, color: "bg-orange-500" },
+    { name: "Postmates", icon: <Package className="h-6 w-6 text-white" />, connected: false, color: "bg-purple-500" },
+    { name: "Square POS", icon: <Square className="h-6 w-6 text-white" />, connected: false, color: "bg-slate-700" },
+    { name: "Toast", icon: <Slice className="h-6 w-6 text-white" />, connected: false, color: "bg-orange-600" },
+    { name: "Clover", icon: <Clover className="h-6 w-6 text-white" />, connected: false, color: "bg-emerald-500" },
   ];
 
   return (

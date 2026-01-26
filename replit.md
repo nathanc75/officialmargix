@@ -43,7 +43,27 @@ API Endpoints:
 
 All AI-generated values are marked as estimates (~) for transparency.
 
+## User Plan Tiers
+The platform supports three user tiers managed via UserContext (src/context/UserContext.tsx):
+- **Free Trial**: Can upload reports for analysis, but POS connections are locked
+- **Starter Plan**: Can connect up to 2 POS/delivery platforms
+- **Pro Plan**: Unlimited POS/delivery platform connections
+
+The SignIn page allows users to select their plan tier (for demo purposes). After signing in, users are redirected to the UploadsAndPOS page which shows different UI based on their plan:
+- Free trial users see locked platforms with "Upgrade to Connect" buttons
+- Starter users can connect 2 platforms, then see limit reached messaging
+- Pro users can connect unlimited platforms
+
 ## Recent Changes
+- 2026-01-26: Implemented plan-based POS connection limits
+  - Created UserContext (src/context/UserContext.tsx) with auth state, plan tier, and connected platforms tracking
+  - SignIn page now allows plan selection and redirects to UploadsAndPOS after login
+  - UploadsAndPOS page shows different UI based on user's plan tier:
+    - Header badge shows plan tier (Free Trial, Starter Plan, Pro Plan)
+    - Starter users see connection count (e.g., "1/2 Connected")
+    - Pro users see "Unlimited Connections" badge
+    - Messaging and buttons adapt to plan tier and connection limits
+  - Connect/Disconnect functionality with toast notifications
 - 2026-01-26: Simplified upload pages and added Clover POS
   - Removed menu screenshot upload from both Uploads.tsx and UploadsAndPOS.tsx pages
   - Now users only upload delivery reports for analysis (simpler flow)

@@ -3,12 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain, Crown, Zap, Car, DoorOpen, Utensils, Package, Square, Slice, Clover } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUpload } from "@/hooks/use-upload";
 import { useAnalysis } from "@/context/AnalysisContext";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/context/UserContext";
 
 interface PromoData {
   name: string;
@@ -54,6 +55,47 @@ const UploadsAndPOS = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { analyzeReport, isAnalyzing, analysisStep, hasData, reportAnalysis, error: analysisError } = useAnalysis();
+  const { user, connectPlatform, disconnectPlatform, canConnectMore, getConnectionLimit, getRemainingConnections } = useUser();
+  
+  const isPaidUser = user.isAuthenticated && user.planTier !== "free";
+  const isProUser = user.planTier === "pro";
+  const isStarterUser = user.planTier === "starter";
+  const connectedCount = user.connectedPlatforms.length;
+  const connectionLimit = getConnectionLimit();
+  const remainingConnections = getRemainingConnections();
+
+  const handleConnectPlatform = (platformId: string, platformName: string) => {
+    if (!canConnectMore()) {
+      toast({
+        title: "Connection Limit Reached",
+        description: isStarterUser 
+          ? "Upgrade to Pro for unlimited POS connections." 
+          : "Upgrade to a paid plan to connect POS systems.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const success = connectPlatform(platformId, platformName);
+    if (success) {
+      toast({
+        title: "Platform Connected",
+        description: `${platformName} has been connected successfully.`,
+      });
+    }
+  };
+
+  const handleDisconnectPlatform = (platformId: string, platformName: string) => {
+    disconnectPlatform(platformId);
+    toast({
+      title: "Platform Disconnected",
+      description: `${platformName} has been disconnected.`,
+    });
+  };
+
+  const isPlatformConnected = (platformId: string) => {
+    return user.connectedPlatforms.some(p => p.id === platformId);
+  };
   
   const { uploadFile: uploadReportFile, isUploading: isUploadingReport, progress: reportProgress } = useUpload({
     onSuccess: async (response) => {
@@ -118,13 +160,13 @@ const UploadsAndPOS = () => {
   };
 
   const platforms = [
-    { name: "UberEats", icon: "🚗", connected: true, color: "bg-green-500" },
-    { name: "DoorDash", icon: "🚪", connected: false, color: "bg-red-500" },
-    { name: "Grubhub", icon: "🍔", connected: true, color: "bg-orange-500" },
-    { name: "Postmates", icon: "📦", connected: false, color: "bg-purple-500" },
-    { name: "Square POS", icon: "⬜", connected: false, color: "bg-slate-700" },
-    { name: "Toast", icon: "🍞", connected: false, color: "bg-orange-600" },
-    { name: "Clover", icon: "🍀", connected: false, color: "bg-emerald-500" },
+    { name: "UberEats", icon: <Car className="h-6 w-6 text-white" />, color: "bg-green-500" },
+    { name: "DoorDash", icon: <DoorOpen className="h-6 w-6 text-white" />, color: "bg-red-500" },
+    { name: "Grubhub", icon: <Utensils className="h-6 w-6 text-white" />, color: "bg-orange-500" },
+    { name: "Postmates", icon: <Package className="h-6 w-6 text-white" />, color: "bg-purple-500" },
+    { name: "Square POS", icon: <Square className="h-6 w-6 text-white" />, color: "bg-slate-700" },
+    { name: "Toast", icon: <Slice className="h-6 w-6 text-white" />, color: "bg-orange-600" },
+    { name: "Clover", icon: <Clover className="h-6 w-6 text-white" />, color: "bg-emerald-500" },
   ];
 
   const recentUploads: UploadData[] = [
@@ -250,10 +292,17 @@ const UploadsAndPOS = () => {
                   </div>
                 </div>
               </div>
-              <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-primary/20">
-                <Sparkles className="h-3 w-3" />
-                Free Trial
-              </Badge>
+              {isPaidUser ? (
+                <Badge variant="secondary" className={`gap-1 ${isProUser ? 'bg-amber-500/10 text-amber-600 border-amber-500/20' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                  {isProUser ? <Crown className="h-3 w-3" /> : <Zap className="h-3 w-3" />}
+                  {isProUser ? 'Pro Plan' : 'Starter Plan'}
+                </Badge>
+              ) : (
+                <Badge variant="secondary" className="gap-1 bg-primary/10 text-primary border-primary/20">
+                  <Sparkles className="h-3 w-3" />
+                  Free Trial
+                </Badge>
+              )}
             </div>
           </div>
         </header>
@@ -369,57 +418,162 @@ const UploadsAndPOS = () => {
           <section className="relative">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-foreground">Connect POS & Delivery Platforms</h2>
-              <Badge variant="outline" className="gap-1 text-muted-foreground">
-                <Lock className="h-3 w-3" />
-                Upgrade Required
-              </Badge>
+              {isPaidUser ? (
+                <Badge variant="outline" className={`gap-1 ${isProUser ? 'text-amber-600 border-amber-500/30' : 'text-primary border-primary/30'}`}>
+                  {isProUser ? (
+                    <>
+                      <Crown className="h-3 w-3" />
+                      Unlimited Connections
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="h-3 w-3" />
+                      {connectedCount}/{connectionLimit} Connected
+                    </>
+                  )}
+                </Badge>
+              ) : (
+                <Badge variant="outline" className="gap-1 text-muted-foreground">
+                  <Lock className="h-3 w-3" />
+                  Upgrade Required
+                </Badge>
+              )}
             </div>
             
-            {/* Locked overlay message */}
-            <div className="mb-4 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
-              <div className="flex items-start gap-3">
-                <Lock className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
-                <div>
-                  <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                    POS and platform connections available on paid plans
-                  </p>
-                  <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-                    Upgrade to Starter or Pro to connect your POS and delivery platforms for automatic, real-time data syncing across dine-in, takeout, and delivery. <span data-testid="text-pos-requirement-uploads">Full analytics powered by your POS connection.</span> For your free trial, upload a report above.
-                  </p>
+            {/* Messaging based on plan tier */}
+            {!isPaidUser ? (
+              <div className="mb-4 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                <div className="flex items-start gap-3">
+                  <Lock className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                      POS and platform connections available on paid plans
+                    </p>
+                    <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                      Upgrade to Starter or Pro to connect your POS and delivery platforms for automatic, real-time data syncing across dine-in, takeout, and delivery. <span data-testid="text-pos-requirement-uploads">Full analytics powered by your POS connection.</span> For your free trial, upload a report above.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 opacity-60 pointer-events-none">
-              {platforms.map((platform) => (
-                <Card 
-                  key={platform.name}
-                  className="backdrop-blur-xl border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] bg-white/70 dark:bg-card/70"
-                >
-                  <CardContent className="p-5">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl ${platform.color} flex items-center justify-center text-2xl shadow-sm grayscale`}>
-                          {platform.icon}
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-foreground">{platform.name}</h3>
-                          <p className="text-xs text-muted-foreground">Not connected</p>
-                        </div>
-                      </div>
-                    </div>
+            ) : isStarterUser && connectedCount >= 2 ? (
+              <div className="mb-4 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                      Connection limit reached
+                    </p>
+                    <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                      Your Starter plan includes 2 POS connections. Upgrade to Pro for unlimited connections.
+                    </p>
                     <Button 
-                      variant="outline"
-                      className="w-full gap-2"
-                      size="sm"
+                      size="sm" 
+                      className="mt-2 gap-1"
                       onClick={() => navigate("/pricing")}
+                      data-testid="button-upgrade-to-pro"
                     >
-                      <Lock className="h-4 w-4" />
-                      Upgrade to Connect
+                      <Crown className="h-3 w-3" />
+                      Upgrade to Pro
                     </Button>
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+                </div>
+              </div>
+            ) : isPaidUser && (
+              <div className="mb-4 p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800">
+                <div className="flex items-start gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-medium text-emerald-800 dark:text-emerald-200">
+                      {isProUser ? 'Connect unlimited platforms' : `Connect up to ${connectionLimit} platforms`}
+                    </p>
+                    <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-1">
+                      {isProUser 
+                        ? 'Your Pro plan includes unlimited POS and delivery platform connections for real-time data syncing.'
+                        : `You can connect ${remainingConnections} more platform${remainingConnections !== 1 ? 's' : ''}. Click on any platform below to connect.`
+                      }
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ${!isPaidUser ? 'opacity-60 pointer-events-none' : ''}`}>
+              {platforms.map((platform) => {
+                const platformId = platform.name.toLowerCase().replace(/\s+/g, '-');
+                const isConnected = isPlatformConnected(platformId);
+                const canConnect = canConnectMore();
+                
+                return (
+                  <Card 
+                    key={platform.name}
+                    className={`backdrop-blur-xl border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] bg-white/70 dark:bg-card/70 ${isConnected ? 'ring-2 ring-emerald-500/50' : ''}`}
+                  >
+                    <CardContent className="p-5">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-12 h-12 rounded-xl ${platform.color} flex items-center justify-center text-2xl shadow-sm ${!isPaidUser && !isConnected ? 'grayscale' : ''}`}>
+                            {platform.icon}
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-foreground">{platform.name}</h3>
+                            <p className={`text-xs ${isConnected ? 'text-emerald-600' : 'text-muted-foreground'}`}>
+                              {isConnected ? 'Connected' : 'Not connected'}
+                            </p>
+                          </div>
+                        </div>
+                        {isConnected && (
+                          <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                        )}
+                      </div>
+                      {isPaidUser ? (
+                        isConnected ? (
+                          <Button 
+                            variant="outline"
+                            className="w-full gap-2"
+                            size="sm"
+                            onClick={() => handleDisconnectPlatform(platformId, platform.name)}
+                            data-testid={`button-disconnect-${platformId}`}
+                          >
+                            <Link2 className="h-4 w-4" />
+                            Disconnect
+                          </Button>
+                        ) : (
+                          <Button 
+                            variant={canConnect ? "default" : "outline"}
+                            className="w-full gap-2"
+                            size="sm"
+                            onClick={() => canConnect ? handleConnectPlatform(platformId, platform.name) : navigate("/pricing")}
+                            data-testid={`button-connect-${platformId}`}
+                          >
+                            {canConnect ? (
+                              <>
+                                <Link2 className="h-4 w-4" />
+                                Connect
+                              </>
+                            ) : (
+                              <>
+                                <Crown className="h-4 w-4" />
+                                Upgrade for More
+                              </>
+                            )}
+                          </Button>
+                        )
+                      ) : (
+                        <Button 
+                          variant="outline"
+                          className="w-full gap-2"
+                          size="sm"
+                          onClick={() => navigate("/pricing")}
+                          data-testid={`button-upgrade-${platformId}`}
+                        >
+                          <Lock className="h-4 w-4" />
+                          Upgrade to Connect
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </section>
         </main>
