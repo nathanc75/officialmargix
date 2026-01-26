@@ -5,38 +5,26 @@ import { CheckCircle2, RefreshCw, Zap, Calendar } from "lucide-react";
 const PaidSubscriberBanner = () => {
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-background p-4 sm:p-5">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      
-      <div className="relative">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <Badge className="gap-1.5 bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20">
-            <CheckCircle2 className="w-3 h-3" />
-            Live Monitoring Active
+    <div className="relative overflow-hidden rounded-lg border border-emerald-500/30 bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-background px-3 py-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge className="gap-1 py-0.5 text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/20">
+            <CheckCircle2 className="w-2.5 h-2.5" />
+            Live Monitoring
           </Badge>
-          <Badge variant="outline" className="gap-1.5 text-primary border-primary/30">
-            <Zap className="w-3 h-3" />
-            Pro Plan
+          <Badge variant="outline" className="gap-1 py-0.5 text-[10px] text-primary border-primary/30">
+            <Zap className="w-2.5 h-2.5" />
+            Pro
           </Badge>
-          <Badge variant="outline" className="gap-1.5 text-muted-foreground">
-            <Calendar className="w-3 h-3" />
-            Last synced: 2 min ago
-          </Badge>
+          <span className="text-[10px] text-muted-foreground hidden sm:inline">
+            Syncs every 15 min
+          </span>
         </div>
-
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h3 className="text-lg font-bold text-foreground mb-1">Real-time Revenue Analytics</h3>
-            <p className="text-sm text-muted-foreground max-w-2xl">
-              Your data syncs automatically every 15 minutes. All platforms connected and monitoring for pricing errors.
-            </p>
-          </div>
-          
-          <Button variant="outline" className="gap-2 shrink-0" data-testid="button-sync-now">
-            <RefreshCw className="w-4 h-4" />
-            Sync Now
-          </Button>
-        </div>
+        
+        <Button variant="outline" size="sm" className="h-7 gap-1.5 text-xs" data-testid="button-sync-now">
+          <RefreshCw className="w-3 h-3" />
+          Sync Now
+        </Button>
       </div>
     </div>
   );
