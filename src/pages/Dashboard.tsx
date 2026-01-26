@@ -9,6 +9,9 @@ import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("7days");
   const [platform, setPlatform] = useState("all");
+  
+  // No data uploaded yet - show empty states
+  const hasData = false;
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -36,10 +39,10 @@ const Dashboard = () => {
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           <PaidSubscriberBanner />
-          <InsightsSection isTrial={false} />
-          <ProfitOverview isTrial={false} />
-          <ItemBreakdownTable isTrial={false} />
-          <InsightsAnalysisTabs isTrial={false} />
+          <InsightsSection isTrial={false} hasData={hasData} />
+          <ProfitOverview isTrial={false} hasData={hasData} />
+          <ItemBreakdownTable isTrial={false} hasData={hasData} />
+          <InsightsAnalysisTabs isTrial={false} hasData={hasData} />
         </main>
       </div>
     </div>

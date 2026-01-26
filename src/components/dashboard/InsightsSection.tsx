@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, TrendingDown, Percent, ChevronDown, ChevronUp } from "lucide-react";
+import { AlertTriangle, TrendingDown, Percent, ChevronDown, ChevronUp, Upload } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,10 +7,16 @@ import { Button } from "@/components/ui/button";
 
 interface InsightsSectionProps {
   isTrial?: boolean;
+  hasData?: boolean;
 }
 
-const InsightsSection = ({ isTrial = false }: InsightsSectionProps) => {
+const InsightsSection = ({ isTrial = false, hasData = false }: InsightsSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Don't render anything if no data
+  if (!hasData) {
+    return null;
+  }
   
   const insights = [
     {
