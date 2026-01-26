@@ -41,9 +41,9 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTri
                   className="w-full h-full object-contain"
                 />
               </div>
-              <div className="hidden sm:block">
+              <div>
                 <h1 className="text-sm sm:text-base font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
-                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-medium">Analytics Dashboard</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block font-medium">Analytics Dashboard</p>
               </div>
             </div>
             
