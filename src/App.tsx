@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import TrialDashboard from "./pages/TrialDashboard";
 import UploadsAndPOS from "./pages/UploadsAndPOS";
+import Uploads from "./pages/Uploads";
 import Signup from "./pages/Signup";
 import SignIn from "./pages/SignIn";
 import Pricing from "./pages/Pricing";
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/trial" element={<TrialDashboard />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/uploads-pos" element={<UploadsAndPOS />} />
+          <Route path="/uploads" element={<Uploads />} />
           <Route path="/terms" element={<TermsOfService />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
