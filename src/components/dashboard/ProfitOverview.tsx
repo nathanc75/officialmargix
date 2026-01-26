@@ -50,8 +50,11 @@ const ProfitOverview = ({ isTrial = false, hasData = false }: ProfitOverviewProp
         <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">Profit Overview</h2>
         {hasData ? (
           !isTrial ? (
-            <div className="text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-1 rounded-md border border-emerald-200 dark:border-emerald-800 shrink-0">
-              Real-time
+            <div className="flex flex-col items-end gap-0.5 shrink-0">
+              <div className="text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-1 rounded-md border border-emerald-200 dark:border-emerald-800" data-testid="badge-realtime">
+                Real-time
+              </div>
+              <span className="text-[8px] text-muted-foreground" data-testid="text-pos-requirement-overview">POS-connected stores only</span>
             </div>
           ) : (
             <div className="text-[10px] text-amber-600 bg-amber-50 dark:bg-amber-950/30 px-2 py-1 rounded-md border border-amber-200 dark:border-amber-800 shrink-0">

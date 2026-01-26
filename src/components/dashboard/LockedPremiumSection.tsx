@@ -15,7 +15,7 @@ const LockedPremiumSection = () => {
     {
       icon: Bell,
       title: "Real-time Alerts",
-      description: "Get instant notifications when pricing errors or fee anomalies are detected",
+      description: "Get instant notifications when pricing errors or fee anomalies are detected. Real-time order tracking available for POS-connected stores.",
       value: "Catch errors as they happen"
     },
     {

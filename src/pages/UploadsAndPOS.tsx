@@ -442,7 +442,7 @@ const UploadsAndPOS = () => {
                     Platform connections available on paid plans
                   </p>
                   <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-                    Upgrade to Starter or Pro to connect your delivery platforms for automatic, real-time data syncing. For your free analysis, upload a report above.
+                    Upgrade to Starter or Pro to connect your delivery platforms for automatic, real-time data syncing. <span data-testid="text-pos-requirement-uploads">Real-time order tracking available for POS-connected stores.</span> For your free analysis, upload a report above.
                   </p>
                 </div>
               </div>

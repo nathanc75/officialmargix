@@ -196,6 +196,9 @@ const PricingSection = () => {
             </div>
           ))}
         </div>
+        <p className="text-xs text-muted-foreground text-center mt-6" data-testid="text-pos-requirement">
+          Real-time order tracking available for POS-connected stores.
+        </p>
       </div>
     </section>
   );

@@ -89,6 +89,9 @@ const Pricing = () => {
           <p className="text-muted-foreground max-w-xl mx-auto">
             You've seen what MARGIX can find. Now unlock continuous monitoring to catch every pricing error and missed refund in real-time.
           </p>
+          <p className="text-xs text-muted-foreground mt-2" data-testid="text-pos-requirement">
+            Real-time order tracking available for POS-connected stores.
+          </p>
 
           <div className="inline-flex items-center gap-2 p-1.5 rounded-full backdrop-blur-xl border border-white/20 dark:border-white/10 mt-8" style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}>
             <button

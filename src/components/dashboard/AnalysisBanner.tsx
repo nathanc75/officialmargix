@@ -37,7 +37,7 @@ const AnalysisBanner = () => {
             </div>
             <p className="text-sm text-muted-foreground max-w-2xl">
               We found <span className="font-semibold text-red-600">$1,247 in potential revenue recovery</span> from your 30-day data. 
-              This analysis won't update — upgrade to get live monitoring, real-time alerts, and catch every pricing error as it happens.
+              This analysis won't update — upgrade to get live monitoring, real-time alerts, and catch every pricing error as it happens. <span data-testid="text-pos-requirement-banner">Real-time order tracking available for POS-connected stores.</span>
             </p>
           </div>
           
