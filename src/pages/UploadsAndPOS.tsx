@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2 } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUpload } from "@/hooks/use-upload";
+import { useAnalysis } from "@/context/AnalysisContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface PromoData {
   name: string;
@@ -49,9 +51,13 @@ const UploadsAndPOS = () => {
   const [uploadedReportName, setUploadedReportName] = useState("");
   const [hasUploadedMenu, setHasUploadedMenu] = useState(false);
   const [uploadedMenuName, setUploadedMenuName] = useState("");
+  const [reportFileContent, setReportFileContent] = useState<string>("");
+  const [menuFileData, setMenuFileData] = useState<{ base64: string; mimeType: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const menuInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { analyzeReport, analyzeMenu, isAnalyzing, analysisStep, hasData, reportAnalysis, menuAnalysis, error: analysisError } = useAnalysis();
   
   const { uploadFile: uploadReportFile, isUploading: isUploadingReport, progress: reportProgress } = useUpload({
     onSuccess: async (response) => {
@@ -100,6 +106,8 @@ const UploadsAndPOS = () => {
   const handleReportSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      const text = await file.text();
+      setReportFileContent(text);
       await uploadReportFile(file);
     }
   };
@@ -107,11 +115,44 @@ const UploadsAndPOS = () => {
   const handleMenuSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const dataUrl = event.target?.result as string;
+        const base64 = dataUrl.split(",")[1];
+        setMenuFileData({ base64, mimeType: file.type || "image/jpeg" });
+      };
+      reader.readAsDataURL(file);
       await uploadMenuFile(file);
     }
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = async () => {
+    let reportResult = null;
+    let menuResult = null;
+    
+    if (reportFileContent) {
+      reportResult = await analyzeReport(reportFileContent, "delivery");
+    }
+    if (menuFileData) {
+      menuResult = await analyzeMenu(menuFileData.base64, menuFileData.mimeType);
+    }
+    
+    if (!reportResult && !menuResult) {
+      toast({
+        title: "Analysis Failed",
+        description: "We couldn't analyze your files. Please try again or upload different files.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (reportResult || menuResult) {
+      toast({
+        title: "Analysis Complete",
+        description: "Your data has been analyzed. View your insights on the dashboard.",
+      });
+    }
+    
     navigate("/trial");
   };
   
@@ -403,21 +444,36 @@ const UploadsAndPOS = () => {
             {hasUploaded && (
               <div className="mt-6 text-center">
                 <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6">
-                  <p className="text-sm text-muted-foreground mb-4">
-                    {hasUploadedReport && hasUploadedMenu 
-                      ? "Great! Both your delivery reports and menu are ready for analysis."
-                      : hasUploadedReport 
-                        ? "Report uploaded! Add your menu screenshots for more accurate item-level estimates."
-                        : "Menu uploaded! Add your delivery reports for a complete analysis."}
-                  </p>
-                  <Button 
-                    className="gap-2 brand-gradient border-0 text-white" 
-                    onClick={handleAnalyze} 
-                    data-testid="button-view-analysis"
-                  >
-                    <Sparkles className="h-4 w-4" />
-                    View My Analysis
-                  </Button>
+                  {isAnalyzing ? (
+                    <>
+                      <div className="flex items-center justify-center gap-3 mb-4">
+                        <Brain className="h-6 w-6 text-primary animate-pulse" />
+                        <p className="text-sm font-medium text-foreground">{analysisStep || "Analyzing your data..."}</p>
+                      </div>
+                      <div className="w-full max-w-xs mx-auto h-2 bg-secondary rounded-full overflow-hidden">
+                        <div className="h-full bg-primary animate-pulse w-3/4 rounded-full"></div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        {hasUploadedReport && hasUploadedMenu 
+                          ? "Great! Both your delivery reports and menu are ready for analysis."
+                          : hasUploadedReport 
+                            ? "Report uploaded! Add your menu screenshots for more accurate item-level estimates."
+                            : "Menu uploaded! Add your delivery reports for a complete analysis."}
+                      </p>
+                      <Button 
+                        className="gap-2 brand-gradient border-0 text-white" 
+                        onClick={handleAnalyze} 
+                        disabled={isAnalyzing}
+                        data-testid="button-view-analysis"
+                      >
+                        <Sparkles className="h-4 w-4" />
+                        Analyze My Data
+                      </Button>
+                    </>
+                  )}
                 </Card>
               </div>
             )}

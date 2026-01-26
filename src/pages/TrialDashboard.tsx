@@ -6,10 +6,12 @@ import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
 import LockedPremiumSection from "@/components/dashboard/LockedPremiumSection";
+import { useAnalysis } from "@/context/AnalysisContext";
 
 const TrialDashboard = () => {
   const [dateRange, setDateRange] = useState("30days");
   const [platform, setPlatform] = useState("all");
+  const { hasData, reportAnalysis, isAnalyzing, analysisStep } = useAnalysis();
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -36,11 +38,16 @@ const TrialDashboard = () => {
         />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-          <AnalysisBanner />
-          <InsightsSection isTrial={true} />
-          <ProfitOverview isTrial={true} />
-          <ItemBreakdownTable isTrial={true} />
-          <InsightsAnalysisTabs isTrial={true} />
+          <AnalysisBanner 
+            hasData={hasData} 
+            reportAnalysis={reportAnalysis}
+            isAnalyzing={isAnalyzing}
+            analysisStep={analysisStep}
+          />
+          <InsightsSection isTrial={true} hasData={hasData} reportAnalysis={reportAnalysis} />
+          <ProfitOverview isTrial={true} hasData={hasData} reportAnalysis={reportAnalysis} />
+          <ItemBreakdownTable isTrial={true} hasData={hasData} reportAnalysis={reportAnalysis} />
+          <InsightsAnalysisTabs isTrial={true} hasData={hasData} reportAnalysis={reportAnalysis} />
           <LockedPremiumSection />
         </main>
       </div>

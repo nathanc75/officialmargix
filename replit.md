@@ -47,6 +47,16 @@ API Endpoints:
 All AI-generated values are marked as estimates (~) for transparency.
 
 ## Recent Changes
+- 2026-01-26: Implemented end-to-end AI analysis data flow
+  - Created AnalysisContext (src/context/AnalysisContext.tsx) for global state management of AI analysis results
+  - Updated UploadsAndPOS page to read file content and trigger AI analysis with error handling via toast notifications
+  - Updated Trial Dashboard and its components to display real AI analysis data:
+    - AnalysisBanner: Shows analysis status, recoverable amount from issues
+    - InsightsSection: Displays issues with severity and potential recovery amounts
+    - ProfitOverview: Shows revenue, fees, promos, and net profit from analysis
+    - ItemBreakdownTable: Lists analyzed menu items with profit/loss indicators
+    - InsightsAnalysisTabs: Shows promo issues and AI recommendations
+  - All components properly handle empty states and display estimated values with ~ indicator
 - 2026-01-26: Added AI-powered analysis using Replit AI Integrations
   - Integrated OpenAI (GPT-4o-mini) for text-based delivery report analysis
   - Integrated Gemini (2.5-flash) for image/screenshot reading with vision

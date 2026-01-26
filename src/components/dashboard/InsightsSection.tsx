@@ -1,42 +1,40 @@
 import { useState } from "react";
-import { AlertTriangle, TrendingDown, Percent, ChevronDown, ChevronUp, Upload } from "lucide-react";
+import { AlertTriangle, TrendingDown, Percent, ChevronDown, ChevronUp, DollarSign, RefreshCw } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import type { ReportAnalysis } from "@/context/AnalysisContext";
 
 interface InsightsSectionProps {
   isTrial?: boolean;
   hasData?: boolean;
+  reportAnalysis?: ReportAnalysis | null;
 }
 
-const InsightsSection = ({ isTrial = false, hasData = false }: InsightsSectionProps) => {
+const InsightsSection = ({ isTrial = false, hasData = false, reportAnalysis }: InsightsSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
   
-  // Don't render anything if no data
-  if (!hasData) {
+  if (!hasData || !reportAnalysis?.issues?.length) {
     return null;
   }
   
-  const insights = [
-    {
-      icon: TrendingDown,
-      title: "Promo codes reduced your profit by $1,840 this period",
-      severity: "high",
-    },
-    {
-      icon: AlertTriangle,
-      title: "6 menu items are being sold at a loss",
-      severity: "high",
-    },
-    {
-      icon: Percent,
-      title: "Uber Eats fees are 12% higher than DoorDash",
-      severity: "medium",
-    },
-  ];
+  const issueTypeToIcon = {
+    pricing_error: DollarSign,
+    missed_refund: RefreshCw,
+    fee_discrepancy: Percent,
+    promo_loss: TrendingDown,
+  };
+
+  const insights = reportAnalysis.issues.map(issue => ({
+    icon: issueTypeToIcon[issue.type] || AlertTriangle,
+    title: issue.description,
+    severity: issue.potentialRecovery > 500 ? "high" : "medium",
+    recovery: issue.potentialRecovery,
+  }));
 
   const criticalCount = insights.filter(i => i.severity === 'high').length;
+  const totalRecovery = insights.reduce((sum, i) => sum + (i.recovery || 0), 0);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -49,11 +47,13 @@ const InsightsSection = ({ isTrial = false, hasData = false }: InsightsSectionPr
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-bold text-red-900 dark:text-red-100 flex flex-wrap items-center gap-2">
-                  {criticalCount} Critical Revenue Insights
-                  <Badge variant="destructive" className="h-4 px-1.5 text-[9px] uppercase font-bold shrink-0">Action Required</Badge>
+                  {criticalCount > 0 ? criticalCount : insights.length} Revenue Insight{insights.length !== 1 ? 's' : ''} Found
+                  {criticalCount > 0 && (
+                    <Badge variant="destructive" className="h-4 px-1.5 text-[9px] uppercase font-bold shrink-0">Action Required</Badge>
+                  )}
                 </h3>
                 <p className="text-xs text-red-700/70 dark:text-red-300/70">
-                  Found in your uploaded report — Potential recovery: <span className="font-bold">$1,247.00</span>
+                  From your uploaded data — Optimization potential: <span className="font-bold">${totalRecovery.toLocaleString()}</span>
                 </p>
               </div>
             </div>
@@ -89,7 +89,14 @@ const InsightsSection = ({ isTrial = false, hasData = false }: InsightsSectionPr
                       insight.severity === 'high' ? 'text-red-600' : 'text-amber-600'
                     }`} />
                   </div>
-                  <p className="text-sm font-medium text-foreground leading-tight">{insight.title}</p>
+                  <div>
+                    <p className="text-sm font-medium text-foreground leading-tight">{insight.title}</p>
+                    {insight.recovery > 0 && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Potential recovery: <span className="font-semibold text-emerald-600">${insight.recovery.toLocaleString()}</span>
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <Button variant="ghost" size="sm" className="h-8 text-[10px] uppercase font-bold text-muted-foreground hover:text-foreground self-end sm:self-auto">
                   View details
