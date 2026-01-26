@@ -413,6 +413,7 @@ const Uploads = () => {
                       variant={platform.connected ? "outline" : "default"}
                       className="w-full gap-2"
                       size="sm"
+                      onClick={() => !platform.connected && navigate("/pricing")}
                       data-testid={`button-connect-${platform.name.toLowerCase()}`}
                     >
                       <Link2 className="h-4 w-4" />
