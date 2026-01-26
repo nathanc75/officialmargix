@@ -1,10 +1,15 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import cors from 'cors';
 import { createClient } from '@supabase/supabase-js';
 import { Storage } from '@google-cloud/storage';
 import { randomUUID } from 'crypto';
 import OpenAI from 'openai';
 import { GoogleGenAI } from '@google/genai';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -377,5 +382,35 @@ Respond in JSON format:
     res.status(500).json({ error: "Failed to compare data", details: error.message });
   }
 });
+
+// Serve static assets from 'dist' in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  });
+} else {
+  // In development, handle fallback for SPA if not handled by Vite
+  // Note: Vite usually handles this, but if index.js is the entry point, we need it.
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api')) return res.status(404).json({ error: "API not found" });
+    res.status(404).send("Cannot GET " + req.path + ". If you're in development, ensure Vite is running and proxying requests.");
+  });
+}
+
+// Serve static assets from 'dist' in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  });
+} else {
+  // In development, handle fallback for SPA if not handled by Vite
+  // Note: Vite usually handles this, but if index.js is the entry point, we need it.
+  app.get('/*', (req, res) => {
+    if (req.path.startsWith('/api')) return res.status(404).json({ error: "API not found" });
+    res.status(404).send("Cannot GET " + req.path + ". If you're in development, ensure Vite is running and proxying requests.");
+  });
+}
 
 app.listen(3001, '0.0.0.0', () => console.log("Backend running on port 3001"));
