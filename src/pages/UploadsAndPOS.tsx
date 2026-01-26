@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, Tag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUpload } from "@/hooks/use-upload";
@@ -49,15 +49,11 @@ const UploadsAndPOS = () => {
   const [selectedUpload, setSelectedUpload] = useState<UploadData | null>(null);
   const [hasUploadedReport, setHasUploadedReport] = useState(false);
   const [uploadedReportName, setUploadedReportName] = useState("");
-  const [hasUploadedMenu, setHasUploadedMenu] = useState(false);
-  const [uploadedMenuName, setUploadedMenuName] = useState("");
   const [reportFileContent, setReportFileContent] = useState<string>("");
-  const [menuFileData, setMenuFileData] = useState<{ base64: string; mimeType: string } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const menuInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { analyzeReport, analyzeMenu, isAnalyzing, analysisStep, hasData, reportAnalysis, menuAnalysis, error: analysisError } = useAnalysis();
+  const { analyzeReport, isAnalyzing, analysisStep, hasData, reportAnalysis, error: analysisError } = useAnalysis();
   
   const { uploadFile: uploadReportFile, isUploading: isUploadingReport, progress: reportProgress } = useUpload({
     onSuccess: async (response) => {
@@ -81,27 +77,6 @@ const UploadsAndPOS = () => {
     },
   });
 
-  const { uploadFile: uploadMenuFile, isUploading: isUploadingMenu, progress: menuProgress } = useUpload({
-    onSuccess: async (response) => {
-      await fetch("/api/uploads/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: response.metadata.name,
-          objectPath: response.objectPath,
-          size: response.metadata.size,
-          contentType: response.metadata.contentType,
-          type: "menu",
-        }),
-      });
-      setUploadedMenuName(response.metadata.name);
-      setHasUploadedMenu(true);
-    },
-    onError: (error) => {
-      console.error("Menu upload failed:", error);
-      alert("Upload failed. Please try again.");
-    },
-  });
 
   const handleReportSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -112,51 +87,35 @@ const UploadsAndPOS = () => {
     }
   };
 
-  const handleMenuSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        const dataUrl = event.target?.result as string;
-        const base64 = dataUrl.split(",")[1];
-        setMenuFileData({ base64, mimeType: file.type || "image/jpeg" });
-      };
-      reader.readAsDataURL(file);
-      await uploadMenuFile(file);
-    }
-  };
 
   const handleAnalyze = async () => {
-    let reportResult = null;
-    let menuResult = null;
-    
-    if (reportFileContent) {
-      reportResult = await analyzeReport(reportFileContent, "delivery");
-    }
-    if (menuFileData) {
-      menuResult = await analyzeMenu(menuFileData.base64, menuFileData.mimeType);
-    }
-    
-    if (!reportResult && !menuResult) {
+    if (!reportFileContent) {
       toast({
-        title: "Analysis Failed",
-        description: "We couldn't analyze your files. Please try again or upload different files.",
+        title: "No Report",
+        description: "Please upload a delivery report to analyze.",
         variant: "destructive",
       });
       return;
     }
     
-    if (reportResult || menuResult) {
+    const reportResult = await analyzeReport(reportFileContent, "delivery");
+    
+    if (!reportResult) {
       toast({
-        title: "Analysis Complete",
-        description: "Your data has been analyzed. View your insights on the dashboard.",
+        title: "Analysis Failed",
+        description: "We couldn't analyze your report. Please try again or upload a different file.",
+        variant: "destructive",
       });
+      return;
     }
+    
+    toast({
+      title: "Analysis Complete",
+      description: "Your data has been analyzed. View your insights on the dashboard.",
+    });
     
     navigate("/trial");
   };
-  
-  const hasUploaded = hasUploadedReport || hasUploadedMenu;
 
   const platforms = [
     { name: "UberEats", icon: "🚗", connected: true, color: "bg-green-500" },
@@ -165,6 +124,7 @@ const UploadsAndPOS = () => {
     { name: "Postmates", icon: "📦", connected: false, color: "bg-purple-500" },
     { name: "Square POS", icon: "⬜", connected: false, color: "bg-slate-700" },
     { name: "Toast", icon: "🍞", connected: false, color: "bg-orange-600" },
+    { name: "Clover", icon: "🍀", connected: false, color: "bg-emerald-500" },
   ];
 
   const recentUploads: UploadData[] = [
@@ -302,146 +262,76 @@ const UploadsAndPOS = () => {
           {/* Upload Sections */}
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-4">Upload Your Data</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Delivery Reports Upload */}
-              <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <FileText className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-foreground">Delivery Reports</h3>
-                  </div>
-                  {!hasUploadedReport ? (
-                    <div 
-                      className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                      onClick={() => fileInputRef.current?.click()}
+            {/* Delivery Reports Upload */}
+            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <FileText className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold text-foreground">Delivery Reports</h3>
+                </div>
+                {!hasUploadedReport ? (
+                  <div 
+                    className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv,.xlsx,.xls,.pdf"
+                      onChange={handleReportSelect}
+                      className="hidden"
+                      data-testid="input-file-upload"
+                    />
+                    <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                      {isUploadingReport ? (
+                        <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                      ) : (
+                        <Upload className="h-6 w-6 text-muted-foreground" />
+                      )}
+                    </div>
+                    <p className="text-sm font-medium text-foreground mb-1">
+                      {isUploadingReport ? "Uploading..." : "Drop reports here"}
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      {isUploadingReport 
+                        ? `${reportProgress}%` 
+                        : "CSV, Excel, PDF from Uber Eats, DoorDash, Grubhub"}
+                    </p>
+                    <Button 
+                      size="sm"
+                      className="gap-2" 
+                      onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                      disabled={isUploadingReport}
+                      data-testid="button-browse-reports"
                     >
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".csv,.xlsx,.xls,.pdf"
-                        onChange={handleReportSelect}
-                        className="hidden"
-                        data-testid="input-file-upload"
-                      />
-                      <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                        {isUploadingReport ? (
-                          <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                        ) : (
-                          <Upload className="h-6 w-6 text-muted-foreground" />
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">
-                        {isUploadingReport ? "Uploading..." : "Drop reports here"}
-                      </p>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        {isUploadingReport 
-                          ? `${reportProgress}%` 
-                          : "CSV, Excel, PDF from Uber Eats, DoorDash, Grubhub"}
-                      </p>
-                      <Button 
-                        size="sm"
-                        className="gap-2" 
-                        onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                        disabled={isUploadingReport}
-                        data-testid="button-browse-reports"
-                      >
-                        {isUploadingReport ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                        {isUploadingReport ? "Uploading..." : "Browse Files"}
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="border-2 border-emerald-200 dark:border-emerald-800 rounded-xl p-6 text-center bg-emerald-50/50 dark:bg-emerald-900/10">
-                      <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-3">
-                        <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">Report uploaded</p>
-                      <p className="text-xs text-muted-foreground mb-3 truncate max-w-[200px] mx-auto">{uploadedReportName}</p>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="gap-2" 
-                        onClick={() => { setHasUploadedReport(false); setUploadedReportName(""); }}
-                        data-testid="button-upload-another-report"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Upload Another
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Menu Screenshots Upload */}
-              <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Tag className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-foreground">Menu Screenshots</h3>
+                      {isUploadingReport ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                      {isUploadingReport ? "Uploading..." : "Browse Files"}
+                    </Button>
                   </div>
-                  {!hasUploadedMenu ? (
-                    <div 
-                      className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                      onClick={() => menuInputRef.current?.click()}
+                ) : (
+                  <div className="border-2 border-emerald-200 dark:border-emerald-800 rounded-xl p-6 text-center bg-emerald-50/50 dark:bg-emerald-900/10">
+                    <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-3">
+                      <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                    </div>
+                    <p className="text-sm font-medium text-foreground mb-1">Report uploaded</p>
+                    <p className="text-xs text-muted-foreground mb-3 truncate max-w-[200px] mx-auto">{uploadedReportName}</p>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="gap-2" 
+                      onClick={() => { setHasUploadedReport(false); setUploadedReportName(""); }}
+                      data-testid="button-upload-another-report"
                     >
-                      <input
-                        ref={menuInputRef}
-                        type="file"
-                        accept="image/*,.png,.jpg,.jpeg,.webp"
-                        onChange={handleMenuSelect}
-                        className="hidden"
-                        data-testid="input-menu-upload"
-                      />
-                      <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                        {isUploadingMenu ? (
-                          <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                        ) : (
-                          <Upload className="h-6 w-6 text-muted-foreground" />
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">
-                        {isUploadingMenu ? "Uploading..." : "Drop menu images here"}
-                      </p>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        {isUploadingMenu 
-                          ? `${menuProgress}%` 
-                          : "Screenshots of your online menu with prices"}
-                      </p>
-                      <Button 
-                        size="sm"
-                        className="gap-2" 
-                        onClick={(e) => { e.stopPropagation(); menuInputRef.current?.click(); }}
-                        disabled={isUploadingMenu}
-                        data-testid="button-browse-menu"
-                      >
-                        {isUploadingMenu ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                        {isUploadingMenu ? "Uploading..." : "Browse Images"}
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="border-2 border-emerald-200 dark:border-emerald-800 rounded-xl p-6 text-center bg-emerald-50/50 dark:bg-emerald-900/10">
-                      <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mx-auto mb-3">
-                        <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">Menu uploaded</p>
-                      <p className="text-xs text-muted-foreground mb-3 truncate max-w-[200px] mx-auto">{uploadedMenuName}</p>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="gap-2" 
-                        onClick={() => { setHasUploadedMenu(false); setUploadedMenuName(""); }}
-                        data-testid="button-upload-another-menu"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Upload Another
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                      <Plus className="h-4 w-4" />
+                      Upload Another
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {/* Analyze Button - Shows when at least one file is uploaded */}
-            {hasUploaded && (
+            {/* Analyze Button - Shows when report is uploaded */}
+            {hasUploadedReport && (
               <div className="mt-6 text-center">
                 <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6">
                   {isAnalyzing ? (
@@ -457,11 +347,7 @@ const UploadsAndPOS = () => {
                   ) : (
                     <>
                       <p className="text-sm text-muted-foreground mb-4">
-                        {hasUploadedReport && hasUploadedMenu 
-                          ? "Great! Both your delivery reports and menu are ready for analysis."
-                          : hasUploadedReport 
-                            ? "Report uploaded! Add your menu screenshots for more accurate item-level estimates."
-                            : "Menu uploaded! Add your delivery reports for a complete analysis."}
+                        Your delivery report is ready for analysis. Click below to get AI-powered insights.
                       </p>
                       <Button 
                         className="gap-2 brand-gradient border-0 text-white" 
@@ -612,7 +498,7 @@ const UploadsAndPOS = () => {
               {/* Promos Section */}
               <div className="p-4 rounded-lg border border-border/50 bg-muted/30 space-y-3">
                 <h4 className="font-medium text-foreground text-sm flex items-center gap-2">
-                  <Tag className="h-4 w-4" />
+                  <Percent className="h-4 w-4" />
                   Promo Performance
                 </h4>
                 <div className="space-y-2">
