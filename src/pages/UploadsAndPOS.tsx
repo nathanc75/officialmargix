@@ -412,10 +412,10 @@ const UploadsAndPOS = () => {
                       variant="outline"
                       className="w-full gap-2"
                       size="sm"
-                      disabled
+                      onClick={() => navigate("/pricing")}
                     >
                       <Lock className="h-4 w-4" />
-                      Locked
+                      Upgrade to Connect
                     </Button>
                   </CardContent>
                 </Card>
