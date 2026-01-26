@@ -38,8 +38,8 @@ const ProfitOverview = ({ isTrial = false }: ProfitOverviewProps) => {
       iconColor: "text-red-600",
     },
     {
-      label: "Net Profit",
-      value: "$7,420",
+      label: "Est. Net Profit",
+      value: "~$7,420",
       trend: "+15%",
       trendUp: true,
       icon: TrendingUp,

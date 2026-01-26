@@ -80,8 +80,8 @@ const ItemBreakdownTable = ({ isTrial = false }: ItemBreakdownTableProps) => {
 
   const filterButtons: { value: FilterType; label: string }[] = [
     { value: 'all', label: 'All' },
-    { value: 'loss', label: 'At Loss' },
-    { value: 'profitable', label: 'Profitable' },
+    { value: 'loss', label: 'Estimated Loss' },
+    { value: 'profitable', label: 'Estimated Profit' },
   ];
 
   const formatCurrency = (value: string) => {
@@ -130,9 +130,9 @@ const ItemBreakdownTable = ({ isTrial = false }: ItemBreakdownTableProps) => {
                   <span>Item Name</span>
                   <span>Platform</span>
                   <span className="text-right">Price</span>
-                  <span className="text-right">Fees</span>
+                  <span className="text-right">Platform Fees</span>
                   <span className="text-right">Promo</span>
-                  <span className="text-right">Profit</span>
+                  <span className="text-right">Est. Profit</span>
                 </div>
 
                 <div className="divide-y divide-border">
@@ -173,7 +173,7 @@ const ItemBreakdownTable = ({ isTrial = false }: ItemBreakdownTableProps) => {
                         {formatCurrency(item.promo)}
                       </span>
                       <span className={`text-right font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
-                        {formatCurrency(item.profit)}
+                        ~{formatCurrency(item.profit)}
                       </span>
                     </div>
                   ))}
@@ -217,9 +217,9 @@ const ItemBreakdownTable = ({ isTrial = false }: ItemBreakdownTableProps) => {
                       </p>
                     </div>
                     <div className="space-y-0.5 text-right">
-                      <p className="text-[9px] font-bold text-muted-foreground uppercase">Net Profit</p>
+                      <p className="text-[9px] font-bold text-muted-foreground uppercase">Est. Profit</p>
                       <p className={`text-sm font-bold ${item.profitable ? "text-emerald-600" : "text-red-600"}`}>
-                        {formatCurrency(item.profit)}
+                        ~{formatCurrency(item.profit)}
                       </p>
                     </div>
                   </div>
@@ -249,19 +249,32 @@ const ItemBreakdownTable = ({ isTrial = false }: ItemBreakdownTableProps) => {
           
           <div className="flex items-center justify-between w-full sm:w-auto gap-4 sm:gap-6 border-t sm:border-t-0 pt-3 sm:pt-0">
             <div className="space-y-0.5 text-left sm:text-right flex-1 sm:flex-none">
-              <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase">Total Period Profit</p>
+              <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase">Total Est. Platform Profit</p>
               <p className={`text-sm sm:text-base font-bold ${totalProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                {formatCurrency(totalProfit.toString())}
+                ~{formatCurrency(totalProfit.toString())}
               </p>
             </div>
             <div className="w-px h-8 bg-border hidden sm:block" />
             <div className="space-y-0.5 text-right flex-1 sm:flex-none">
               <p className="text-[9px] sm:text-[10px] font-bold text-muted-foreground uppercase">Avg / Transaction</p>
               <p className={`text-sm sm:text-base font-bold ${avgProfit >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
-                {formatCurrency(avgProfit.toString())}
+                ~{formatCurrency(avgProfit.toString())}
               </p>
             </div>
           </div>
+        </div>
+        
+        {/* Legend */}
+        <div className="px-4 sm:px-6 py-3 bg-amber-50/50 dark:bg-amber-950/20 border-t border-amber-200/50 dark:border-amber-800/30">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="h-3.5 w-3.5 text-amber-600 mt-0.5 shrink-0" />
+            <p className="text-[10px] sm:text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+              <span className="font-semibold">Estimated values</span> are calculated using menu pricing and available delivery platform data. Exact values are shown where platforms provide full fee and promotion breakdowns.
+            </p>
+          </div>
+          <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-2 ml-5">
+            Excludes food cost (COGS), labor, taxes, tips, and delayed platform adjustments. Actual payouts may vary.
+          </p>
         </div>
       </CardContent>
     </Card>
