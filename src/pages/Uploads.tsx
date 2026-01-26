@@ -174,7 +174,7 @@ const Uploads = () => {
                     <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
                   </div>
                   <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Upload Files</h1>
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Upload and Connect</h1>
                     <p className="text-xs sm:text-sm text-muted-foreground">Upload and connect to analyze</p>
                   </div>
                 </div>
