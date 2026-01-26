@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, CheckCircle2, Lock, Menu, RefreshCw } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Lock, Menu, Upload } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -131,31 +131,18 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTri
               </Sheet>
             </div>
 
-            {(() => {
-              return !isTrial ? (
-                <Button 
-                  variant="default" 
-                  size="sm"
-                  className="h-8 sm:h-9 px-3 sm:px-6 text-xs sm:text-sm font-medium gap-2 shadow-sm"
-                  data-testid="button-sync-data"
-                >
-                  <RefreshCw className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Sync Data</span>
-                  <span className="sm:hidden">Sync</span>
-                </Button>
-              ) : (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  className="h-8 sm:h-9 px-3 sm:px-6 text-xs sm:text-sm font-medium gap-2 opacity-60"
-                  disabled
-                >
-                  <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  <span className="hidden sm:inline">Sync Data</span>
-                  <span className="sm:hidden">Sync</span>
-                </Button>
-              );
-            })()}
+            <Link to="/uploads">
+              <Button 
+                variant="default" 
+                size="sm"
+                className="h-8 sm:h-9 px-3 sm:px-6 text-xs sm:text-sm font-medium gap-2 shadow-sm"
+                data-testid="button-upload"
+              >
+                <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Upload</span>
+                <span className="sm:hidden">Upload</span>
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
