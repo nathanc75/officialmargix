@@ -34,7 +34,25 @@ server/
 ## Deployment
 Configured as a static site deployment with build output in `dist/` directory.
 
+## AI Integrations
+The platform uses Replit AI Integrations (no API keys needed, billed to credits):
+- **OpenAI (GPT-4o-mini)**: Analyzes delivery reports to extract financial data, detect pricing errors
+- **Gemini (2.5-flash)**: Vision model to read menu screenshots and extract item prices
+
+API Endpoints:
+- `POST /api/analyze/report` - Analyze delivery report content with OpenAI
+- `POST /api/analyze/menu` - Extract menu items/prices from images with Gemini Vision
+- `POST /api/analyze/compare` - Compare report data with menu prices to find discrepancies
+
+All AI-generated values are marked as estimates (~) for transparency.
+
 ## Recent Changes
+- 2026-01-26: Added AI-powered analysis using Replit AI Integrations
+  - Integrated OpenAI (GPT-4o-mini) for delivery report analysis
+  - Integrated Gemini (2.5-flash) for menu image reading with vision
+  - Added AI analysis endpoints in server/index.js
+  - Updated Uploads.tsx to trigger AI analysis after file upload
+  - Shows analysis progress with animated UI feedback
 - 2026-01-23: Added Supabase integration and Express backend
   - Installed @supabase/supabase-js for database/auth
   - Created server/index.js with Express and Supabase admin client
