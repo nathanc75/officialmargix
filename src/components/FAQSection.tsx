@@ -8,27 +8,27 @@ import {
 const faqs = [
   {
     question: "How do I get started with MARGIX?",
-    answer: "Simply upload your delivery platform reports (Uber Eats, DoorDash, Grubhub) along with your online menu. Our AI analyzes them together to uncover where you're losing money. No API connections needed — just upload your files.",
+    answer: "Simply connect your POS system and we'll automatically sync your order data across all channels — dine-in, takeout, and delivery. No manual uploads needed. Our AI starts analyzing your performance right away.",
   },
   {
     question: "What kind of insights will I get?",
-    answer: "We focus on order-level profitability, fees, promotions, and refunds. Because platforms don't always provide item-level data, we use your menu pricing to estimate which items and price ranges may be driving losses. Every insight is clearly labeled as exact or estimated.",
+    answer: "Our AI provides performance analysis, sales trends, efficiency insights, and actionable recommendations. When delivery platforms like Uber Eats or DoorDash are connected to your POS, we include those insights in the same unified analysis.",
   },
   {
-    question: "Why are some insights labeled as 'estimated'?",
-    answer: "Delivery platforms don't always provide complete item-level data in their reports. When we use your menu pricing to fill in gaps, we clearly label those insights as estimates so you know exactly what's based on hard data versus smart analysis.",
+    question: "Which POS systems do you support?",
+    answer: "We support most popular POS systems used in the restaurant industry. Contact us to confirm compatibility with your specific system and get started with the integration.",
   },
   {
-    question: "Is my uploaded data secure?",
-    answer: "Absolutely. Your reports are handled with modern encryption and security controls. We only analyze the data you upload and never share it with third parties.",
+    question: "Is my data secure?",
+    answer: "Absolutely. We use industry-standard encryption for all POS connections and data storage. Your restaurant data is protected at all times and never shared with third parties.",
   },
   {
     question: "Can I use MARGIX for multiple restaurant locations?",
-    answer: "Yes! Our Custom plan is designed for multi-location restaurants and franchise groups. Upload reports for each location and get a unified view of your delivery profitability across all sites.",
+    answer: "Yes! Our Custom plan is designed for multi-location restaurants and franchise groups. Connect each location's POS and get a unified view of performance across all sites.",
   },
   {
     question: "Do I need technical knowledge to use MARGIX?",
-    answer: "Not at all. If you can download a report from your delivery platforms and upload it here, you can use MARGIX. Our dashboard is designed for restaurant owners, not tech experts.",
+    answer: "Not at all. Our platform is designed for restaurant owners, not tech experts. Once your POS is connected, everything syncs automatically and insights appear in an easy-to-understand dashboard.",
   },
 ];
 

@@ -42,8 +42,8 @@ const ContactSection = () => {
               </span>
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-8">
-              Questions About Restaurant{" "}
-              <span className="text-muted-foreground">Revenue Recovery?</span>
+              Questions About{" "}
+              <span className="text-muted-foreground">Restaurant Analytics?</span>
             </h2>
 
             <div className="space-y-4">

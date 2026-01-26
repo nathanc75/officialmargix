@@ -14,7 +14,7 @@ const plans = [
     features: [
       "Full Margix dashboard",
       "1 restaurant location",
-      "Up to 3 delivery platforms",
+      "Up to 2 delivery platforms",
       "Standard analytics refresh",
       "Daily revenue & promo insights",
       "Email support",

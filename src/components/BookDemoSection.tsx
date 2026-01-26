@@ -21,18 +21,18 @@ const BookDemoSection = () => {
             </div>
             
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
-              See How MARGIX Finds Your Hidden Losses
+              See MARGIX in Action
             </h2>
             
             <p className="text-lg text-muted-foreground mb-8">
-              Schedule a demo to see how our AI analyzes your delivery reports and menu together — 
-              revealing order-level profitability with clear, labeled insights.
+              Schedule a demo to see how our AI connects to your POS and delivers 
+              unified insights across dine-in, takeout, and delivery channels.
             </p>
 
             <div className="space-y-4">
               {[
                 { icon: Clock, text: "15-minute personalized walkthrough" },
-                { icon: Users, text: "Meet with a delivery analytics specialist" },
+                { icon: Users, text: "Meet with a restaurant analytics specialist" },
                 { icon: Calendar, text: "Flexible scheduling to fit your needs" },
                 { icon: ShieldCheck, text: "No prep, no pressure, no obligation" },
               ].map((item, index) => (
@@ -110,10 +110,10 @@ const BookDemoSection = () => {
 
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">
-                    Delivery Platforms Used
+                    Current POS System
                   </label>
                   <Input 
-                    placeholder="e.g., Uber Eats, DoorDash, Grubhub" 
+                    placeholder="e.g., Toast, Square, Clover" 
                     className="bg-secondary/50 border-border"
                   />
                 </div>

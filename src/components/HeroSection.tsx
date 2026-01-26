@@ -33,8 +33,8 @@ const HeroSection = () => {
 
           {/* Subheadline */}
           <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            MARGIX connects to your POS system to analyze real order data across dine-in, takeout, and delivery. 
-            Get AI-driven performance insights and actionable recommendations to improve sales, efficiency, and profitability.
+            Securely connect to your restaurant's POS system to analyze real order data across dine-in, takeout, and delivery channels. 
+            Our AI provides feedback, performance analysis, and actionable suggestions to help improve sales, efficiency, and profitability.
           </p>
 
           {/* CTA Buttons */}

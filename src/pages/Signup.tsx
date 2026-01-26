@@ -51,11 +51,11 @@ const Signup = () => {
             <span className="text-3xl font-bold text-foreground tracking-tight">MARGIX</span>
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Uncover your{" "}
-            <span className="text-gradient">hidden delivery losses</span>
+            Unlock{" "}
+            <span className="text-gradient">AI-powered restaurant insights</span>
           </h1>
           <p className="text-muted-foreground text-lg">
-            Upload your reports and menu to see where you're losing money. No credit card required.
+            Connect your POS to get unified analytics across all order channels. No credit card required.
           </p>
           
           <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
@@ -66,15 +66,15 @@ const Signup = () => {
             <ul className="space-y-2 text-sm text-foreground">
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Order-level profitability analysis
+                Unified dine-in, takeout & delivery analytics
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Fee, promotion & refund breakdown
+                AI-driven performance recommendations
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Clear insights labeled exact or estimated
+                Real data from your POS system
               </li>
             </ul>
           </div>
@@ -106,7 +106,7 @@ const Signup = () => {
             <div className="mb-6">
               <h2 className="text-3xl font-bold text-foreground mb-1">Create your account</h2>
               <p className="text-muted-foreground text-base">
-                Get a free analysis of your delivery revenue — no payment required
+                Connect your POS and get AI-powered insights — no payment required
               </p>
             </div>
 
@@ -205,7 +205,7 @@ const Signup = () => {
 
               <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white mt-2" data-testid="button-run-analysis">
                 <Sparkles className="w-4 h-4 mr-2" />
-                Run free analysis
+                Connect POS & Start
               </Button>
             </form>
 

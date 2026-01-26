@@ -12,13 +12,13 @@ const plans = [
     price: { monthly: 39, yearly: 27 },
     cta: "Start with Starter",
     positioning: "Same dashboard. Same intelligence. Scoped to one location.",
-    description: "Full revenue intelligence for one restaurant location.",
+    description: "Full AI-powered analytics for one restaurant location.",
     features: [
       "Full Margix dashboard",
-      "1 restaurant location",
-      "Up to 3 delivery platforms",
+      "1 POS connection",
+      "Dine-in, takeout & delivery insights",
       "Standard analytics refresh",
-      "Daily revenue & promo insights",
+      "AI-driven recommendations",
       "Email support",
     ],
   },
@@ -29,14 +29,14 @@ const plans = [
     cta: "Start with Pro",
     popular: true,
     positioning: "Same tools — dramatically more operational leverage.",
-    description: "Operate and optimize multiple locations from one dashboard.",
+    description: "Unified analytics across all your restaurant locations.",
     features: [
       "Full Margix dashboard",
-      "Multiple restaurant locations",
-      "Unlimited delivery platforms",
+      "Multiple POS connections",
+      "Delivery platform integration",
       "Higher-volume data processing",
-      "Real-time alerts & pricing signals",
-      "Cross-location performance comparison",
+      "Real-time performance alerts",
+      "Cross-location comparison",
       "Priority support",
     ],
   },
@@ -84,13 +84,13 @@ const Pricing = () => {
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-            Upgrade to Live Monitoring
+            Upgrade to Live Analytics
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            You've seen what MARGIX can find. Now unlock continuous monitoring to catch every pricing error and missed refund in real-time.
+            Unlock continuous AI-powered insights across all your order channels. Monitor dine-in, takeout, and delivery performance in real-time.
           </p>
           <p className="text-xs text-muted-foreground mt-2" data-testid="text-pos-requirement">
-            Real-time order tracking available for POS-connected stores.
+            Real-time analytics powered by your POS connection.
           </p>
 
           <div className="inline-flex items-center gap-2 p-1.5 rounded-full backdrop-blur-xl border border-white/20 dark:border-white/10 mt-8" style={{ background: 'linear-gradient(135deg, hsl(var(--card) / 0.7) 0%, hsl(var(--card) / 0.5) 100%)' }}>
