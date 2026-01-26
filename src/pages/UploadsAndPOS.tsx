@@ -244,8 +244,8 @@ const UploadsAndPOS = () => {
                     <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
                   </div>
                   <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Free Analysis</h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Upload your reports and menu screenshots</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Connect & Analyze</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Connect your POS or upload reports to get started</p>
                   </div>
                 </div>
               </div>
@@ -423,10 +423,10 @@ const UploadsAndPOS = () => {
             )}
           </section>
 
-          {/* Connect Platforms - Locked for Free Trial */}
+          {/* Connect POS & Platforms */}
           <section className="relative">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Connect Delivery Platforms</h2>
+              <h2 className="text-lg font-semibold text-foreground">Connect POS & Delivery Platforms</h2>
               <Badge variant="outline" className="gap-1 text-muted-foreground">
                 <Lock className="h-3 w-3" />
                 Upgrade Required
@@ -439,10 +439,10 @@ const UploadsAndPOS = () => {
                 <Lock className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
                 <div>
                   <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
-                    Platform connections available on paid plans
+                    POS and platform connections available on paid plans
                   </p>
                   <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
-                    Upgrade to Starter or Pro to connect your delivery platforms for automatic, real-time data syncing. <span data-testid="text-pos-requirement-uploads">Real-time order tracking available for POS-connected stores.</span> For your free analysis, upload a report above.
+                    Upgrade to Starter or Pro to connect your POS and delivery platforms for automatic, real-time data syncing across dine-in, takeout, and delivery. <span data-testid="text-pos-requirement-uploads">Full analytics powered by your POS connection.</span> For your free trial, upload a report above.
                   </p>
                 </div>
               </div>

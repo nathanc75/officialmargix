@@ -10,13 +10,13 @@ const plans = [
     price: { monthly: 39, yearly: 27 },
     cta: "Get Started",
     positioning: "Same dashboard. Same intelligence. Scoped to one location.",
-    description: "Full revenue intelligence for one restaurant location.",
+    description: "Full AI-powered analytics for one restaurant location.",
     features: [
       "Full Margix dashboard",
-      "1 restaurant location",
-      "Up to 2 delivery platforms",
+      "1 POS connection",
+      "Dine-in, takeout & delivery insights",
       "Standard analytics refresh",
-      "Daily revenue & promo insights",
+      "AI-driven recommendations",
       "Email support",
     ],
   },
@@ -27,14 +27,14 @@ const plans = [
     cta: "Get Started",
     popular: true,
     positioning: "Same tools — dramatically more operational leverage.",
-    description: "Operate and optimize multiple locations from one dashboard.",
+    description: "Unified analytics across all your restaurant locations.",
     features: [
       "Full Margix dashboard",
-      "Multiple restaurant locations",
-      "Unlimited delivery platforms",
+      "Multiple POS connections",
+      "Delivery platform integration",
       "Higher-volume data processing",
-      "Real-time alerts & pricing signals",
-      "Cross-location performance comparison",
+      "Real-time performance alerts",
+      "Cross-location comparison",
       "Priority support",
     ],
   },
@@ -49,7 +49,7 @@ const plans = [
       "Unlimited locations",
       "Custom data volumes & refresh rates",
       "Dedicated onboarding & support",
-      "POS & custom integrations",
+      "Advanced POS integrations",
       "SLA guarantees",
     ],
   },
@@ -83,10 +83,10 @@ const PricingSection = () => {
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Start with a Free Analysis
+            Connect Your POS, Get Insights
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Get a one-time 30-day snapshot of your revenue leaks. Upgrade when you're ready for live monitoring.
+            Start with a free trial. Connect your POS to see unified analytics across all order channels.
           </p>
 
           {/* Toggle */}

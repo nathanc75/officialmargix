@@ -49,10 +49,10 @@ const SignIn = () => {
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-4">
             Welcome back to your{" "}
-            <span className="text-gradient">AI-powered</span> delivery analytics
+            <span className="text-gradient">AI-powered</span> restaurant analytics
           </h1>
           <p className="text-muted-foreground text-lg">
-            Monitor your delivery platforms, detect pricing errors, and recover lost revenue — all in one dashboard.
+            Access your unified view of dine-in, takeout, and delivery performance — all powered by your POS data.
           </p>
         </div>
       </div>
