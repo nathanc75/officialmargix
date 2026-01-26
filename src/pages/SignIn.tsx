@@ -1,24 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo.png";
-import { useUser, PlanTier } from "@/context/UserContext";
+import { useUser } from "@/context/UserContext";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedPlan, setSelectedPlan] = useState<PlanTier>("starter");
   const navigate = useNavigate();
   const { login } = useUser();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, selectedPlan);
+    // Sign in goes to paid (Pro) experience with full POS access
+    login(email, "pro");
     navigate("/uploads-pos");
   };
 
@@ -139,22 +138,7 @@ const SignIn = () => {
                 </div>
               </div>
 
-              <div className="space-y-1">
-                <Label className="text-foreground text-base">Your Plan</Label>
-                <Select value={selectedPlan} onValueChange={(value) => setSelectedPlan(value as PlanTier)}>
-                  <SelectTrigger className="h-12 text-base bg-background/50 border-border" data-testid="select-plan">
-                    <SelectValue placeholder="Select your plan" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="free" data-testid="option-free">Free Trial (Upload only)</SelectItem>
-                    <SelectItem value="starter" data-testid="option-starter">Starter (2 POS connections)</SelectItem>
-                    <SelectItem value="pro" data-testid="option-pro">Pro (Unlimited POS connections)</SelectItem>
-                  </SelectContent>
-                </Select>
-                <p className="text-xs text-muted-foreground">Demo: Select your subscription plan</p>
-              </div>
-
-              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white">
+              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white" data-testid="button-signin">
                 Sign in
               </Button>
             </form>

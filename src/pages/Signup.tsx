@@ -5,6 +5,7 @@ import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, MapPin, Sparkles }
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo.png";
+import { useUser } from "@/context/UserContext";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,10 +15,12 @@ const Signup = () => {
   const [restaurantName, setRestaurantName] = useState("");
   const [restaurantAddress, setRestaurantAddress] = useState("");
   const navigate = useNavigate();
+  const { login } = useUser();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement registration
+    // Create account goes to Free Trial (demo mode with locked POS)
+    login(email, "free");
     navigate("/uploads-pos");
   };
 
