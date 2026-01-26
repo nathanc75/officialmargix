@@ -21,7 +21,7 @@ const Signup = () => {
     e.preventDefault();
     // Create account goes to Free Trial (demo mode with locked POS)
     login(email, "free");
-    navigate("/uploads-pos");
+    navigate("/dashboard");
   };
 
   return (

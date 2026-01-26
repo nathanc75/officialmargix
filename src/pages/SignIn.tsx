@@ -18,7 +18,7 @@ const SignIn = () => {
     e.preventDefault();
     // Sign in goes to paid (Pro) experience with full POS access
     login(email, "pro");
-    navigate("/uploads-pos");
+    navigate("/dashboard");
   };
 
   return (
