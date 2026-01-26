@@ -48,8 +48,8 @@ All AI-generated values are marked as estimates (~) for transparency.
 
 ## Recent Changes
 - 2026-01-26: Added AI-powered analysis using Replit AI Integrations
-  - Integrated OpenAI (GPT-4o-mini) for delivery report analysis
-  - Integrated Gemini (2.5-flash) for menu image reading with vision
+  - Integrated OpenAI (GPT-4o-mini) for text-based delivery report analysis
+  - Integrated Gemini (2.5-flash) for image/screenshot reading with vision
   - Added AI analysis endpoints in server/index.js
   - Updated Uploads.tsx to trigger AI analysis after file upload
   - Shows analysis progress with animated UI feedback
