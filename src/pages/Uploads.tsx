@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Tag, Loader2, Zap, Link2, Sparkles, AlertCircle } from "lucide-react";
+import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Zap, Link2, Sparkles, AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUpload } from "@/hooks/use-upload";
@@ -44,14 +44,9 @@ const formatEstValue = (value: number | undefined, isEstimate: boolean = true): 
 const Uploads = () => {
   const [hasUploadedReport, setHasUploadedReport] = useState(false);
   const [uploadedReportName, setUploadedReportName] = useState("");
-  const [hasUploadedMenu, setHasUploadedMenu] = useState(false);
-  const [uploadedMenuName, setUploadedMenuName] = useState("");
   const [isAnalyzingReport, setIsAnalyzingReport] = useState(false);
-  const [isAnalyzingMenu, setIsAnalyzingMenu] = useState(false);
   const [reportAnalysis, setReportAnalysis] = useState<AnalysisResult | null>(null);
-  const [menuAnalysis, setMenuAnalysis] = useState<AnalysisResult | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const menuInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   const analyzeReport = async (fileContent: string, fileName: string) => {
@@ -83,31 +78,6 @@ const Uploads = () => {
     }
   };
 
-  const analyzeMenuImage = async (base64Data: string, mimeType: string) => {
-    setIsAnalyzingMenu(true);
-    try {
-      const response = await fetch("/api/analyze/menu", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: base64Data, imageMimeType: mimeType }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Server error" }));
-        setMenuAnalysis({ success: false, error: errorData.error || "Analysis failed" });
-        return;
-      }
-      
-      const result = await response.json();
-      setMenuAnalysis(result);
-    } catch (error) {
-      console.error("Menu analysis failed:", error);
-      setMenuAnalysis({ success: false, error: "Analysis failed - please try again" });
-    } finally {
-      setIsAnalyzingMenu(false);
-    }
-  };
-
   const readFileContent = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -117,21 +87,7 @@ const Uploads = () => {
     });
   };
 
-  const readFileAsBase64 = (file: File): Promise<{ base64: string; mimeType: string }> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        const base64 = result.split(',')[1];
-        resolve({ base64, mimeType: file.type });
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  };
-  
   const [pendingReportFile, setPendingReportFile] = useState<File | null>(null);
-  const [pendingMenuFile, setPendingMenuFile] = useState<File | null>(null);
 
   const { uploadFile: uploadReportFile, isUploading: isUploadingReport, progress: reportProgress } = useUpload({
     onSuccess: async (response) => {
@@ -163,36 +119,6 @@ const Uploads = () => {
     },
   });
 
-  const { uploadFile: uploadMenuFile, isUploading: isUploadingMenu, progress: menuProgress } = useUpload({
-    onSuccess: async (response) => {
-      await fetch("/api/uploads/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: response.metadata.name,
-          objectPath: response.objectPath,
-          size: response.metadata.size,
-          contentType: response.metadata.contentType,
-          type: "menu",
-        }),
-      });
-      setUploadedMenuName(response.metadata.name);
-      setHasUploadedMenu(true);
-      
-      // Trigger AI analysis for the menu image
-      if (pendingMenuFile) {
-        const { base64, mimeType } = await readFileAsBase64(pendingMenuFile);
-        analyzeMenuImage(base64, mimeType);
-        setPendingMenuFile(null);
-      }
-    },
-    onError: (error) => {
-      console.error("Menu upload failed:", error);
-      alert("Upload failed. Please try again.");
-      setPendingMenuFile(null);
-    },
-  });
-
   const handleReportSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -202,20 +128,9 @@ const Uploads = () => {
     }
   };
 
-  const handleMenuSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPendingMenuFile(file);
-      setMenuAnalysis(null);
-      await uploadMenuFile(file);
-    }
-  };
-
   const handleAnalyze = () => {
     navigate("/dashboard");
   };
-  
-  const hasUploaded = hasUploadedReport || hasUploadedMenu;
 
   const platforms = [
     { name: "UberEats", icon: "🚗", connected: true, color: "bg-green-500" },
@@ -224,6 +139,7 @@ const Uploads = () => {
     { name: "Postmates", icon: "📦", connected: false, color: "bg-purple-500" },
     { name: "Square POS", icon: "⬜", connected: false, color: "bg-slate-700" },
     { name: "Toast", icon: "🍞", connected: false, color: "bg-orange-600" },
+    { name: "Clover", icon: "🍀", connected: false, color: "bg-emerald-500" },
   ];
 
   return (
@@ -259,7 +175,7 @@ const Uploads = () => {
                   </div>
                   <div>
                     <h1 className="text-lg sm:text-xl font-bold text-foreground">Upload Files</h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Upload reports and menu screenshots</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Upload delivery reports to analyze</p>
                   </div>
                 </div>
               </div>
@@ -274,283 +190,148 @@ const Uploads = () => {
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-4">Upload Your Data</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <FileText className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-foreground">Delivery Reports</h3>
-                  </div>
-                  {!hasUploadedReport ? (
-                    <div 
-                      className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                      onClick={() => fileInputRef.current?.click()}
-                    >
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept=".csv,.txt,.tsv"
-                        onChange={handleReportSelect}
-                        className="hidden"
-                        data-testid="input-file-upload"
-                      />
-                      <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                        {isUploadingReport ? (
-                          <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                        ) : (
-                          <Upload className="h-6 w-6 text-muted-foreground" />
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">
-                        {isUploadingReport ? "Uploading..." : "Drop reports here"}
-                      </p>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        {isUploadingReport 
-                          ? `${reportProgress}%` 
-                          : "CSV exports from Uber Eats, DoorDash, Grubhub"}
-                      </p>
-                      <Button 
-                        size="sm"
-                        className="gap-2" 
-                        onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                        disabled={isUploadingReport}
-                        data-testid="button-browse-reports"
-                      >
-                        {isUploadingReport ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                        {isUploadingReport ? "Uploading..." : "Browse Files"}
-                      </Button>
+            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <FileText className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold text-foreground">Delivery Reports</h3>
+                </div>
+                {!hasUploadedReport ? (
+                  <div 
+                    className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv,.txt,.tsv"
+                      onChange={handleReportSelect}
+                      className="hidden"
+                      data-testid="input-file-upload"
+                    />
+                    <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                      {isUploadingReport ? (
+                        <Loader2 className="h-6 w-6 text-primary animate-spin" />
+                      ) : (
+                        <Upload className="h-6 w-6 text-muted-foreground" />
+                      )}
                     </div>
-                  ) : (
-                    <div className={`border-2 rounded-xl p-6 text-center ${
+                    <p className="text-sm font-medium text-foreground mb-1">
+                      {isUploadingReport ? "Uploading..." : "Drop reports here"}
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      {isUploadingReport 
+                        ? `${reportProgress}%` 
+                        : "CSV exports from Uber Eats, DoorDash, Grubhub"}
+                    </p>
+                    <Button 
+                      size="sm"
+                      className="gap-2" 
+                      onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                      disabled={isUploadingReport}
+                      data-testid="button-browse-reports"
+                    >
+                      {isUploadingReport ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                      {isUploadingReport ? "Uploading..." : "Browse Files"}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className={`border-2 rounded-xl p-6 text-center ${
+                    isAnalyzingReport 
+                      ? "border-primary/50 bg-primary/5" 
+                      : reportAnalysis?.success 
+                        ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
+                        : reportAnalysis?.error
+                          ? "border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/10"
+                          : "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
+                  }`}>
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
                       isAnalyzingReport 
-                        ? "border-primary/50 bg-primary/5" 
+                        ? "bg-primary/20" 
                         : reportAnalysis?.success 
-                          ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
+                          ? "bg-emerald-100 dark:bg-emerald-900/30"
                           : reportAnalysis?.error
-                            ? "border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/10"
-                            : "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
+                            ? "bg-amber-100 dark:bg-amber-900/30"
+                            : "bg-emerald-100 dark:bg-emerald-900/30"
                     }`}>
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
-                        isAnalyzingReport 
-                          ? "bg-primary/20" 
-                          : reportAnalysis?.success 
-                            ? "bg-emerald-100 dark:bg-emerald-900/30"
-                            : reportAnalysis?.error
-                              ? "bg-amber-100 dark:bg-amber-900/30"
-                              : "bg-emerald-100 dark:bg-emerald-900/30"
-                      }`}>
-                        {isAnalyzingReport ? (
-                          <Sparkles className="h-6 w-6 text-primary animate-pulse" />
-                        ) : reportAnalysis?.success ? (
-                          <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                        ) : reportAnalysis?.error ? (
-                          <AlertCircle className="h-6 w-6 text-amber-600" />
-                        ) : (
-                          <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">
-                        {isAnalyzingReport 
-                          ? "AI analyzing report..." 
-                          : reportAnalysis?.success 
-                            ? "Analysis complete" 
-                            : reportAnalysis?.error
-                              ? "Analysis issue"
-                              : "Report uploaded"}
-                      </p>
-                      <p className="text-xs text-muted-foreground mb-3 truncate max-w-[200px] mx-auto">
-                        {isAnalyzingReport 
-                          ? "Extracting financial data with GPT-4o-mini" 
-                          : uploadedReportName}
-                      </p>
-                      {reportAnalysis?.success && reportAnalysis.analysis?.summary && (
-                        <div className="mt-3 p-3 bg-secondary/50 rounded-lg text-left space-y-1">
-                          <div className="flex items-center gap-1 mb-2">
-                            <Sparkles className="h-3 w-3 text-primary" />
-                            <span className="text-xs font-medium text-primary">AI Analysis Preview (Est.)</span>
-                          </div>
-                          <div className="grid grid-cols-2 gap-2 text-xs">
-                            <div>
-                              <span className="text-muted-foreground">Revenue:</span>
-                              <span className="ml-1 font-medium text-foreground">
-                                {formatEstValue(reportAnalysis.analysis.summary.totalRevenue?.value, reportAnalysis.analysis.summary.totalRevenue?.isEstimate ?? true)}
-                              </span>
-                            </div>
-                            <div>
-                              <span className="text-muted-foreground">Fees:</span>
-                              <span className="ml-1 font-medium text-foreground">
-                                {formatEstValue(reportAnalysis.analysis.summary.totalFees?.value, reportAnalysis.analysis.summary.totalFees?.isEstimate ?? true)}
-                              </span>
-                            </div>
-                            <div>
-                              <span className="text-muted-foreground">Net Profit:</span>
-                              <span className={`ml-1 font-medium ${(reportAnalysis.analysis.summary.netProfit?.value ?? 0) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                                {formatEstValue(reportAnalysis.analysis.summary.netProfit?.value, reportAnalysis.analysis.summary.netProfit?.isEstimate ?? true)}
-                              </span>
-                            </div>
-                            {reportAnalysis.analysis.issues && reportAnalysis.analysis.issues.length > 0 && (
-                              <div>
-                                <span className="text-muted-foreground">Issues:</span>
-                                <span className="ml-1 font-medium text-amber-600">{reportAnalysis.analysis.issues.length} found</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
+                      {isAnalyzingReport ? (
+                        <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+                      ) : reportAnalysis?.success ? (
+                        <CheckCircle2 className="h-6 w-6 text-emerald-600" />
+                      ) : reportAnalysis?.error ? (
+                        <AlertCircle className="h-6 w-6 text-amber-600" />
+                      ) : (
+                        <CheckCircle2 className="h-6 w-6 text-emerald-600" />
                       )}
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="gap-2 mt-3" 
-                        onClick={() => { setHasUploadedReport(false); setUploadedReportName(""); setReportAnalysis(null); }}
-                        disabled={isAnalyzingReport}
-                        data-testid="button-upload-another-report"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Upload Another
-                      </Button>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Tag className="h-5 w-5 text-primary" />
-                    <h3 className="font-semibold text-foreground">Menu Screenshots</h3>
-                  </div>
-                  {!hasUploadedMenu ? (
-                    <div 
-                      className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                      onClick={() => menuInputRef.current?.click()}
+                    <p className="text-sm font-medium text-foreground mb-1">
+                      {isAnalyzingReport 
+                        ? "AI analyzing report..." 
+                        : reportAnalysis?.success 
+                          ? "Analysis complete" 
+                          : reportAnalysis?.error
+                            ? "Analysis issue"
+                            : "Report uploaded"}
+                    </p>
+                    <p className="text-xs text-muted-foreground mb-3 truncate max-w-[200px] mx-auto">
+                      {isAnalyzingReport 
+                        ? "Extracting financial data with GPT-4o-mini" 
+                        : uploadedReportName}
+                    </p>
+                    {reportAnalysis?.success && reportAnalysis.analysis?.summary && (
+                      <div className="mt-3 p-3 bg-secondary/50 rounded-lg text-left space-y-1">
+                        <div className="flex items-center gap-1 mb-2">
+                          <Sparkles className="h-3 w-3 text-primary" />
+                          <span className="text-xs font-medium text-primary">AI Analysis Preview (Est.)</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div>
+                            <span className="text-muted-foreground">Revenue:</span>
+                            <span className="ml-1 font-medium text-foreground">
+                              {formatEstValue(reportAnalysis.analysis.summary.totalRevenue?.value, reportAnalysis.analysis.summary.totalRevenue?.isEstimate ?? true)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Fees:</span>
+                            <span className="ml-1 font-medium text-foreground">
+                              {formatEstValue(reportAnalysis.analysis.summary.totalFees?.value, reportAnalysis.analysis.summary.totalFees?.isEstimate ?? true)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-muted-foreground">Net Profit:</span>
+                            <span className={`ml-1 font-medium ${(reportAnalysis.analysis.summary.netProfit?.value ?? 0) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                              {formatEstValue(reportAnalysis.analysis.summary.netProfit?.value, reportAnalysis.analysis.summary.netProfit?.isEstimate ?? true)}
+                            </span>
+                          </div>
+                          {reportAnalysis.analysis.issues && reportAnalysis.analysis.issues.length > 0 && (
+                            <div>
+                              <span className="text-muted-foreground">Issues:</span>
+                              <span className="ml-1 font-medium text-amber-600">{reportAnalysis.analysis.issues.length} found</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="gap-2 mt-3" 
+                      onClick={() => { setHasUploadedReport(false); setUploadedReportName(""); setReportAnalysis(null); }}
+                      disabled={isAnalyzingReport}
+                      data-testid="button-upload-another-report"
                     >
-                      <input
-                        ref={menuInputRef}
-                        type="file"
-                        accept="image/*,.png,.jpg,.jpeg,.webp"
-                        onChange={handleMenuSelect}
-                        className="hidden"
-                        data-testid="input-menu-upload"
-                      />
-                      <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                        {isUploadingMenu ? (
-                          <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                        ) : (
-                          <Upload className="h-6 w-6 text-muted-foreground" />
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">
-                        {isUploadingMenu ? "Uploading..." : "Drop menu images here"}
-                      </p>
-                      <p className="text-xs text-muted-foreground mb-3">
-                        {isUploadingMenu 
-                          ? `${menuProgress}%` 
-                          : "Screenshots of your online menu with prices"}
-                      </p>
-                      <Button 
-                        size="sm"
-                        className="gap-2" 
-                        onClick={(e) => { e.stopPropagation(); menuInputRef.current?.click(); }}
-                        disabled={isUploadingMenu}
-                        data-testid="button-browse-menu"
-                      >
-                        {isUploadingMenu ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                        {isUploadingMenu ? "Uploading..." : "Browse Images"}
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className={`border-2 rounded-xl p-6 text-center ${
-                      isAnalyzingMenu 
-                        ? "border-primary/50 bg-primary/5" 
-                        : menuAnalysis?.success 
-                          ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
-                          : menuAnalysis?.error
-                            ? "border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/10"
-                            : "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
-                    }`}>
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
-                        isAnalyzingMenu 
-                          ? "bg-primary/20" 
-                          : menuAnalysis?.success 
-                            ? "bg-emerald-100 dark:bg-emerald-900/30"
-                            : menuAnalysis?.error
-                              ? "bg-amber-100 dark:bg-amber-900/30"
-                              : "bg-emerald-100 dark:bg-emerald-900/30"
-                      }`}>
-                        {isAnalyzingMenu ? (
-                          <Sparkles className="h-6 w-6 text-primary animate-pulse" />
-                        ) : menuAnalysis?.success ? (
-                          <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                        ) : menuAnalysis?.error ? (
-                          <AlertCircle className="h-6 w-6 text-amber-600" />
-                        ) : (
-                          <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                        )}
-                      </div>
-                      <p className="text-sm font-medium text-foreground mb-1">
-                        {isAnalyzingMenu 
-                          ? "AI reading menu..." 
-                          : menuAnalysis?.success 
-                            ? "Menu items extracted" 
-                            : menuAnalysis?.error
-                              ? "Reading issue"
-                              : "Menu uploaded"}
-                      </p>
-                      <p className="text-xs text-muted-foreground mb-3 truncate max-w-[200px] mx-auto">
-                        {isAnalyzingMenu 
-                          ? "Extracting prices with Gemini Vision" 
-                          : uploadedMenuName}
-                      </p>
-                      {menuAnalysis?.success && menuAnalysis.menuData?.menuItems && (
-                        <div className="mt-3 p-3 bg-secondary/50 rounded-lg text-left space-y-1">
-                          <div className="flex items-center gap-1 mb-2">
-                            <Sparkles className="h-3 w-3 text-primary" />
-                            <span className="text-xs font-medium text-primary">AI Menu Reading (Est.)</span>
-                          </div>
-                          <div className="text-xs space-y-1">
-                            {menuAnalysis.menuData.platform && (
-                              <div>
-                                <span className="text-muted-foreground">Platform:</span>
-                                <span className="ml-1 font-medium text-foreground">{menuAnalysis.menuData.platform}</span>
-                              </div>
-                            )}
-                            <div>
-                              <span className="text-muted-foreground">Items found:</span>
-                              <span className="ml-1 font-medium text-foreground">{menuAnalysis.menuData.menuItems.length}</span>
-                            </div>
-                            {menuAnalysis.menuData.menuItems.slice(0, 3).map((item, i) => (
-                              <div key={i} className="flex justify-between">
-                                <span className="text-muted-foreground truncate max-w-[120px]">{item.name}</span>
-                                <span className="font-medium text-foreground">~${item.price?.toFixed(2)}</span>
-                              </div>
-                            ))}
-                            {menuAnalysis.menuData.menuItems.length > 3 && (
-                              <p className="text-muted-foreground">+{menuAnalysis.menuData.menuItems.length - 3} more items</p>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="gap-2 mt-3" 
-                        onClick={() => { setHasUploadedMenu(false); setUploadedMenuName(""); setMenuAnalysis(null); }}
-                        disabled={isAnalyzingMenu}
-                        data-testid="button-upload-another-menu"
-                      >
-                        <Plus className="h-4 w-4" />
-                        Upload Another
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+                      <Plus className="h-4 w-4" />
+                      Upload Another
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
 
-            {hasUploaded && (
+            {hasUploadedReport && (
               <div className="mt-6 text-center">
                 <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6">
-                  {(isAnalyzingReport || isAnalyzingMenu) ? (
+                  {isAnalyzingReport ? (
                     <>
                       <div className="flex items-center justify-center gap-2 mb-4">
                         <Sparkles className="h-5 w-5 text-primary animate-pulse" />
@@ -559,11 +340,7 @@ const Uploads = () => {
                         </p>
                       </div>
                       <p className="text-xs text-muted-foreground mb-4">
-                        {isAnalyzingReport && isAnalyzingMenu 
-                          ? "Processing reports with GPT-4o-mini and reading menu with Gemini Vision"
-                          : isAnalyzingReport 
-                            ? "Processing reports with GPT-4o-mini"
-                            : "Reading menu with Gemini Vision"}
+                        Processing reports with GPT-4o-mini
                       </p>
                       <div className="flex items-center justify-center gap-2">
                         <Loader2 className="h-4 w-4 animate-spin text-primary" />
@@ -573,19 +350,11 @@ const Uploads = () => {
                   ) : (
                     <>
                       <p className="text-sm text-muted-foreground mb-4">
-                        {hasUploadedReport && hasUploadedMenu 
-                          ? reportAnalysis?.success && menuAnalysis?.success
-                            ? "AI analysis complete! View your estimated profit/loss breakdown."
-                            : "Both files uploaded. Click below to view the dashboard."
-                          : hasUploadedReport 
-                            ? reportAnalysis?.success
-                              ? "Report analyzed! Add menu screenshots for price comparison."
-                              : "Report uploaded! Add your menu screenshots for more accurate item-level estimates."
-                            : menuAnalysis?.success
-                              ? "Menu prices extracted! Add delivery reports for full analysis."
-                              : "Menu uploaded! Add your delivery reports for a complete analysis."}
+                        {reportAnalysis?.success
+                          ? "AI analysis complete! View your estimated profit/loss breakdown."
+                          : "Report uploaded. Click below to view the dashboard."}
                       </p>
-                      {(reportAnalysis?.success || menuAnalysis?.success) && (
+                      {reportAnalysis?.success && (
                         <p className="text-xs text-muted-foreground mb-4 flex items-center justify-center gap-1">
                           <Sparkles className="h-3 w-3" />
                           All values marked with ~ are AI-generated estimates
@@ -597,7 +366,7 @@ const Uploads = () => {
                         data-testid="button-view-analysis"
                       >
                         <Zap className="h-4 w-4" />
-                        {reportAnalysis?.success || menuAnalysis?.success 
+                        {reportAnalysis?.success 
                           ? "View AI Analysis" 
                           : "Analyze & View Dashboard"}
                       </Button>

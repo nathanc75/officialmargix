@@ -37,16 +37,18 @@ Configured as a static site deployment with build output in `dist/` directory.
 ## AI Integrations
 The platform uses Replit AI Integrations (no API keys needed, billed to credits):
 - **OpenAI (GPT-4o-mini)**: Analyzes delivery reports to extract financial data, detect pricing errors
-- **Gemini (2.5-flash)**: Vision model to read menu screenshots and extract item prices
 
 API Endpoints:
 - `POST /api/analyze/report` - Analyze delivery report content with OpenAI
-- `POST /api/analyze/menu` - Extract menu items/prices from images with Gemini Vision
-- `POST /api/analyze/compare` - Compare report data with menu prices to find discrepancies
 
 All AI-generated values are marked as estimates (~) for transparency.
 
 ## Recent Changes
+- 2026-01-26: Simplified upload pages and added Clover POS
+  - Removed menu screenshot upload from both Uploads.tsx and UploadsAndPOS.tsx pages
+  - Now users only upload delivery reports for analysis (simpler flow)
+  - Added Clover as a POS option in both upload pages
+  - Updated page headers and messaging to reflect reports-only upload
 - 2026-01-26: Comprehensive messaging update from delivery-focused to POS-focused platform
   - Updated all landing page components (HeroSection, FeaturesSection, HowItWorksSection, WhyDifferentSection, FAQSection, BookDemoSection, AnimatedDashboard, Footer) with POS-integration messaging
   - Updated user flow pages (Signup, SignIn, Pricing, PricingSection) to emphasize POS connection
