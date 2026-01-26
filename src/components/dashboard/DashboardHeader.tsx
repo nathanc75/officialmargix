@@ -34,7 +34,7 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTri
               </Button>
             </Link>
             <div className="flex items-center gap-2 sm:gap-3 group">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 transition-transform group-hover:scale-105">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 transition-transform group-hover:scale-105">
                 <img 
                   src={margixLogo} 
                   alt="MARGIX" 
@@ -42,18 +42,18 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTri
                 />
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xs sm:text-sm font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
-                <p className="text-[9px] sm:text-[10px] text-muted-foreground mt-0.5 sm:mt-1 font-medium">Analytics Dashboard</p>
+                <h1 className="text-sm sm:text-base font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1 font-medium">Analytics Dashboard</p>
               </div>
             </div>
             
             <div className="hidden lg:flex items-center gap-2 ml-4">
-              <Badge variant="secondary" className="gap-1 py-0.5 px-2 text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
-                <CheckCircle2 className="h-2.5 w-2.5" />
+              <Badge variant="secondary" className="gap-1.5 py-1 px-2.5 text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
+                <CheckCircle2 className="h-3 w-3" />
                 Uber Eats
               </Badge>
-              <Badge variant="secondary" className="gap-1 py-0.5 px-2 text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
-                <CheckCircle2 className="h-2.5 w-2.5" />
+              <Badge variant="secondary" className="gap-1.5 py-1 px-2.5 text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
+                <CheckCircle2 className="h-3 w-3" />
                 DoorDash
               </Badge>
             </div>
