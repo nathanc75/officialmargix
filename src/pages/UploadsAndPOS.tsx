@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain, Crown, Zap, Car, DoorOpen, Utensils, Package, Square, Slice, Clover } from "lucide-react";
+import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain, Crown, Zap, Package, Clover } from "lucide-react";
+import { SiUbereats, SiDoordash, SiGrubhub, SiSquare } from "react-icons/si";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUpload } from "@/hooks/use-upload";
@@ -160,13 +161,13 @@ const UploadsAndPOS = () => {
   };
 
   const platforms = [
-    { name: "UberEats", icon: <Car className="h-6 w-6 text-white" />, color: "bg-green-500" },
-    { name: "DoorDash", icon: <DoorOpen className="h-6 w-6 text-white" />, color: "bg-red-500" },
-    { name: "Grubhub", icon: <Utensils className="h-6 w-6 text-white" />, color: "bg-orange-500" },
-    { name: "Postmates", icon: <Package className="h-6 w-6 text-white" />, color: "bg-purple-500" },
-    { name: "Square POS", icon: <Square className="h-6 w-6 text-white" />, color: "bg-slate-700" },
-    { name: "Toast", icon: <Slice className="h-6 w-6 text-white" />, color: "bg-orange-600" },
-    { name: "Clover", icon: <Clover className="h-6 w-6 text-white" />, color: "bg-emerald-500" },
+    { name: "UberEats", icon: <SiUbereats className="h-6 w-6 text-white" />, color: "bg-[#06C167]" },
+    { name: "DoorDash", icon: <SiDoordash className="h-6 w-6 text-white" />, color: "bg-[#FF3008]" },
+    { name: "Grubhub", icon: <SiGrubhub className="h-6 w-6 text-white" />, color: "bg-[#F63440]" },
+    { name: "Postmates", icon: <Package className="h-5 w-5 text-white" />, color: "bg-[#FFDF00]" },
+    { name: "Square POS", icon: <SiSquare className="h-6 w-6 text-white" />, color: "bg-[#006AFF]" },
+    { name: "Toast", icon: <div className="font-bold text-white text-sm">T</div>, color: "bg-[#FF6600]" },
+    { name: "Clover", icon: <Clover className="h-6 w-6 text-white" />, color: "bg-[#1BC47D]" },
   ];
 
   const recentUploads: UploadData[] = [
