@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
 const fakeData = [
-  { id: "ORD-7291", platform: "Uber Eats", date: "Jan 18", amount: "$47.82", issue: "Missing refund", recovered: "$12.50" },
-  { id: "ORD-7284", platform: "DoorDash", date: "Jan 17", amount: "$32.15", issue: "Price error", recovered: "$8.20" },
-  { id: "ORD-7279", platform: "Grubhub", date: "Jan 17", amount: "$28.90", issue: "Promo loss", recovered: "$15.00" },
-  { id: "ORD-7265", platform: "Uber Eats", date: "Jan 16", amount: "$55.40", issue: "Commission error", recovered: "$22.80" },
-  { id: "ORD-7251", platform: "DoorDash", date: "Jan 15", amount: "$41.25", issue: "Missing refund", recovered: "$18.50" },
-  { id: "ORD-7238", platform: "Grubhub", date: "Jan 14", amount: "$19.99", issue: "Price error", recovered: "$6.40" },
+  { id: "ORD-7291", platform: "Dine-in", date: "Jan 18", amount: "$47.82", issue: "Peak hours", recovered: "+12%" },
+  { id: "ORD-7284", platform: "DoorDash", date: "Jan 17", amount: "$32.15", issue: "High fees", recovered: "$8.20" },
+  { id: "ORD-7279", platform: "Takeout", date: "Jan 17", amount: "$28.90", issue: "Low margin", recovered: "+15%" },
+  { id: "ORD-7265", platform: "Uber Eats", date: "Jan 16", amount: "$55.40", issue: "Commission", recovered: "$22.80" },
+  { id: "ORD-7251", platform: "Dine-in", date: "Jan 15", amount: "$41.25", issue: "Upsell opp", recovered: "+18%" },
+  { id: "ORD-7238", platform: "Takeout", date: "Jan 14", amount: "$19.99", issue: "Bundle deal", recovered: "+6%" },
 ];
 
 const AnimatedDashboard = () => {
@@ -65,21 +65,21 @@ const AnimatedDashboard = () => {
         return (
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
-            Uploading CSV...
+            Syncing POS data...
           </span>
         );
       case "analyzing":
         return (
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            Analyzing orders...
+            Analyzing all channels...
           </span>
         );
       case "found":
         return (
           <span className="flex items-center gap-2 text-green-600 dark:text-green-400">
             <span className="w-2 h-2 rounded-full bg-green-500" />
-            Found ${displayAmount.toFixed(2)} in recoverable revenue!
+            Found {Math.round(displayAmount)} insights across channels!
           </span>
         );
     }
@@ -116,8 +116,8 @@ const AnimatedDashboard = () => {
               <span className="hidden sm:block">Platform</span>
               <span className="hidden sm:block">Date</span>
               <span>Amount</span>
-              <span>Issue</span>
-              <span className="text-right">Recovered</span>
+              <span>Insight</span>
+              <span className="text-right">Impact</span>
             </div>
 
             {/* Table Rows */}
