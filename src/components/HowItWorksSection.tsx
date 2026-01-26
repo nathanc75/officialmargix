@@ -7,29 +7,29 @@ const steps = [
   {
     id: 1,
     icon: UserPlus,
-    title: "Upload Reports",
+    title: "Connect POS",
     number: "01",
-    heading: "Upload your delivery reports",
-    description: "Upload your delivery platform reports and online menu. We analyze them together to uncover where you're losing money.",
-    features: ["CSV, Excel, PDF support", "Menu pricing analysis", "Secure data handling"],
+    heading: "Connect your POS system",
+    description: "Securely connect your restaurant's POS system. We'll automatically sync your order data across dine-in, takeout, and delivery channels.",
+    features: ["Secure POS integration", "All order channels", "Automatic data sync"],
   },
   {
     id: 2,
     icon: Settings,
     title: "AI Analysis",
     number: "02",
-    heading: "Get order-level insights",
-    description: "Since platforms don't always provide item-level data, we focus on order-level profitability, fees, promotions, and refunds.",
-    features: ["Order-level profitability", "Fee breakdown", "Promotion tracking"],
+    heading: "Get AI-powered insights",
+    description: "Our AI analyzes your real order data to provide performance feedback, identify trends, and surface actionable suggestions.",
+    features: ["Performance analysis", "Sales trends", "Efficiency insights"],
   },
   {
     id: 3,
     icon: TrendingUp,
-    title: "Clear Insights",
+    title: "Take Action",
     number: "03",
-    heading: "Make confident decisions",
-    description: "All insights are based on your uploaded data and clearly labeled as exact or estimated — no guesswork required.",
-    features: ["Exact vs. estimated labels", "Menu-based estimates", "Actionable recommendations"],
+    heading: "Improve your operations",
+    description: "Use AI-driven recommendations to boost sales, improve efficiency, and increase profitability across all your order channels.",
+    features: ["Actionable recommendations", "Unified channel view", "Profit optimization"],
   },
 ];
 
@@ -53,7 +53,7 @@ const HowItWorksSection = () => {
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
-            From Reports to Clear Insights
+            From POS Data to Actionable Insights
           </h2>
         </div>
 
@@ -112,7 +112,7 @@ const HowItWorksSection = () => {
               <span className="text-lg font-semibold text-foreground">MARGIX AI</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              Upload your data and get insights based on order-level profitability and your menu pricing
+              Connect your POS and get AI-driven insights across dine-in, takeout, and delivery
             </p>
             <div className="space-y-3">
               {currentStep.features.map((feature) => (
@@ -137,7 +137,7 @@ const HowItWorksSection = () => {
             <div className="text-center space-y-2">
               <h4 className="font-semibold text-foreground">Sign up for Free</h4>
               <p className="text-xs text-muted-foreground">
-                Upload your reports and get clear, labeled insights — no guesswork
+                Connect your POS and get AI-powered insights for your restaurant
               </p>
             </div>
             <div className="space-y-3">

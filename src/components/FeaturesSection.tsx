@@ -13,44 +13,44 @@ const features = [
   {
     icon: TrendingUp,
     iconBg: "bg-orange-500",
-    title: "Order-Level Profitability",
-    subtitle: "Deep Loss Detection",
-    description: "Since platforms don't always provide item-level data, we analyze order-level profitability to find where you're losing money.",
+    title: "Unified Performance View",
+    subtitle: "All Channels, One Dashboard",
+    description: "Connect your POS to see dine-in, takeout, and delivery orders in a single view. Get a complete picture of your restaurant's performance.",
   },
   {
     icon: Bell,
     iconBg: "bg-blue-500",
-    title: "Fee & Promotion Tracking",
-    subtitle: "Complete Cost Visibility",
-    description: "Track fees, promotions, and refunds across all platforms. See exactly what's eating into your margins.",
+    title: "AI-Driven Recommendations",
+    subtitle: "Actionable Insights",
+    description: "Our AI analyzes your real order data to provide feedback, performance analysis, and suggestions to improve sales and efficiency.",
   },
   {
     icon: BarChart3,
     iconBg: "bg-purple-500",
-    title: "Menu-Based Estimates",
-    subtitle: "Smart Price Analysis",
-    description: "We use your menu pricing to estimate which items and price ranges may be driving losses — clearly labeled as estimates.",
+    title: "Delivery Platform Integration",
+    subtitle: "Uber Eats, DoorDash & More",
+    description: "When delivery platforms are connected to your POS, we include delivery insights within the same unified analysis.",
   },
   {
     icon: Shield,
     iconBg: "bg-green-500",
-    title: "Secure Data Handling",
+    title: "Secure POS Connection",
     subtitle: "Your Data, Protected",
-    description: "Your uploaded reports are handled with modern encryption and security controls. We only analyze what you share.",
+    description: "We securely connect to your POS system using industry-standard encryption. Your data stays protected at all times.",
   },
   {
     icon: FileText,
     iconBg: "bg-yellow-500",
-    title: "Clear Labeled Insights",
-    subtitle: "Exact vs. Estimated",
-    description: "All insights are based on your uploaded data and clearly labeled as exact or estimated — so you can make confident decisions.",
+    title: "Real Order Data Analysis",
+    subtitle: "No Guesswork",
+    description: "All insights are powered by your actual POS data — real orders, real numbers, real results you can act on.",
   },
   {
     icon: Smartphone,
     iconBg: "bg-primary",
     title: "Mobile Dashboard",
     subtitle: "Insights Anywhere",
-    description: "Access your profitability insights from any device. Make informed decisions on the go.",
+    description: "Access your performance insights from any device. Make informed decisions on the go.",
     isNew: true,
   },
 ];
@@ -77,11 +77,11 @@ const FeaturesSection = () => {
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Insights Without{" "}
-            <span className="text-muted-foreground">Guesswork</span>
+            Insights Powered by{" "}
+            <span className="text-muted-foreground">Real Data</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Clear, actionable insights based on your uploaded data and menu pricing
+            AI-driven analytics from your POS data across all order channels
           </p>
           <Button className="gap-2">
             Get Started Free

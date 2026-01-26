@@ -27,14 +27,14 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center">
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
-            AI-Powered Delivery Analytics for{" "}
-            <span className="text-gradient">Smarter Restaurants</span>
+            AI-Powered Restaurant Analytics for{" "}
+            <span className="text-gradient">Smarter Operations</span>
           </h1>
 
           {/* Subheadline */}
           <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            MARGIX analyzes your delivery platform reports together with your online menu to uncover where you're losing money. 
-            Get clear insights on order-level profitability, fees, promotions, and refunds — all labeled as exact or estimated.
+            MARGIX connects to your POS system to analyze real order data across dine-in, takeout, and delivery. 
+            Get AI-driven performance insights and actionable recommendations to improve sales, efficiency, and profitability.
           </p>
 
           {/* CTA Buttons */}
