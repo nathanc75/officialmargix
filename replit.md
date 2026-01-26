@@ -1,7 +1,7 @@
-# MARGIX - AI-Powered Delivery Analytics
+# MARGIX - AI-Powered Restaurant Analytics
 
 ## Overview
-MARGIX is an AI-powered delivery analytics platform for restaurants. It monitors Uber Eats, DoorDash, Grubhub, and other delivery platforms to detect pricing errors, missed refunds, and promotional losses to help recover lost revenue.
+MARGIX is an AI-powered restaurant analytics platform. It securely connects to a restaurant's POS system to analyze real order data across dine-in, takeout, and delivery channels. The AI provides feedback, performance analysis, and actionable suggestions to help improve sales, efficiency, and profitability.
 
 ## Project Architecture
 - **Frontend**: React 18 + TypeScript with Vite
@@ -47,6 +47,13 @@ API Endpoints:
 All AI-generated values are marked as estimates (~) for transparency.
 
 ## Recent Changes
+- 2026-01-26: Comprehensive messaging update from delivery-focused to POS-focused platform
+  - Updated all landing page components (HeroSection, FeaturesSection, HowItWorksSection, WhyDifferentSection, FAQSection, BookDemoSection, AnimatedDashboard, Footer) with POS-integration messaging
+  - Updated user flow pages (Signup, SignIn, Pricing, PricingSection) to emphasize POS connection
+  - Updated dashboard components (AnalysisBanner, InsightsSection, ProfitOverview, InsightsAnalysisTabs, ItemBreakdownTable) with "Connect POS" CTAs
+  - Updated SEO meta descriptions in index.html
+  - All messaging now emphasizes multi-channel analytics (dine-in, takeout, delivery) powered by POS connection
+  - Upload functionality remains as fallback option for trial users
 - 2026-01-26: Implemented end-to-end AI analysis data flow
   - Created AnalysisContext (src/context/AnalysisContext.tsx) for global state management of AI analysis results
   - Updated UploadsAndPOS page to read file content and trigger AI analysis with error handling via toast notifications
