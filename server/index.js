@@ -78,6 +78,15 @@ app.get("/api/health", (req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });
 
+// Serve static assets from 'dist' in production
+if (process.env.NODE_ENV === 'production') {
+  const distPath = path.join(__dirname, '../dist');
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
+
 // File upload endpoint - returns presigned URL
 app.post("/api/uploads/request-url", async (req, res) => {
   try {
@@ -383,34 +392,5 @@ Respond in JSON format:
   }
 });
 
-// Serve static assets from 'dist' in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-  });
-} else {
-  // In development, handle fallback for SPA if not handled by Vite
-  // Note: Vite usually handles this, but if index.js is the entry point, we need it.
-  app.get('*', (req, res) => {
-    if (req.path.startsWith('/api')) return res.status(404).json({ error: "API not found" });
-    res.status(404).send("Cannot GET " + req.path + ". If you're in development, ensure Vite is running and proxying requests.");
-  });
-}
-
-// Serve static assets from 'dist' in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../dist')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../dist/index.html'));
-  });
-} else {
-  // In development, handle fallback for SPA if not handled by Vite
-  // Note: Vite usually handles this, but if index.js is the entry point, we need it.
-  app.get('/*', (req, res) => {
-    if (req.path.startsWith('/api')) return res.status(404).json({ error: "API not found" });
-    res.status(404).send("Cannot GET " + req.path + ". If you're in development, ensure Vite is running and proxying requests.");
-  });
-}
 
 app.listen(3001, '0.0.0.0', () => console.log("Backend running on port 3001"));
