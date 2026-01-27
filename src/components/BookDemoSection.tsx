@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, Clock, Users, ShieldCheck } from "lucide-react";
+import { FileText, Zap, Shield, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const BookDemoSection = () => {
   return (
@@ -16,25 +17,25 @@ const BookDemoSection = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-6">
               <span className="text-xs font-medium text-primary uppercase tracking-wider">
-                Schedule a Demo
+                Get Started
               </span>
             </div>
             
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-6">
-              See MARGIX in Action
+              Ready to Find Your Leaks?
             </h2>
             
             <p className="text-lg text-muted-foreground mb-8">
-              Schedule a demo to see how our AI connects to your POS and delivers 
-              unified insights across dine-in, takeout, and delivery channels.
+              Upload your financial documents and let our AI discover where 
+              your business is losing money. No account connections, no complex setup.
             </p>
 
             <div className="space-y-4">
               {[
-                { icon: Clock, text: "15-minute personalized walkthrough" },
-                { icon: Users, text: "Meet with a restaurant analytics specialist" },
-                { icon: Calendar, text: "Flexible scheduling to fit your needs" },
-                { icon: ShieldCheck, text: "No prep, no pressure, no obligation" },
+                { icon: FileText, text: "Upload any PDF or CSV financial file" },
+                { icon: Zap, text: "Get results in minutes, not days" },
+                { icon: Shield, text: "Bank-level security, files never stored" },
+                { icon: ArrowRight, text: "Clear action steps to recover money" },
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -50,7 +51,7 @@ const BookDemoSection = () => {
           <div className="relative">
             <div className="p-8 rounded-2xl bg-card border border-border shadow-xl">
               <h3 className="text-xl font-semibold text-foreground mb-6">
-                Request Your Demo
+                Start Your Free Scan
               </h3>
               
               <form className="space-y-4">
@@ -81,49 +82,39 @@ const BookDemoSection = () => {
                   </label>
                   <Input 
                     type="email" 
-                    placeholder="john@restaurant.com" 
+                    placeholder="john@company.com" 
                     className="bg-secondary/50 border-border"
                   />
                 </div>
                 
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">
-                    Restaurant Name
+                    Business Name
                   </label>
                   <Input 
-                    placeholder="Your Restaurant" 
+                    placeholder="Your Business" 
                     className="bg-secondary/50 border-border"
                   />
                 </div>
                 
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">
-                    Number of Locations
+                    Industry (Optional)
                   </label>
                   <Input 
-                    type="number" 
-                    placeholder="1" 
-                    min="1"
+                    placeholder="e.g., E-commerce, Agency, Consulting" 
                     className="bg-secondary/50 border-border"
                   />
                 </div>
 
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 block">
-                    Current POS System
-                  </label>
-                  <Input 
-                    placeholder="e.g., Toast, Square, Clover" 
-                    className="bg-secondary/50 border-border"
-                  />
-                </div>
-
-                <Button type="submit" size="lg" className="w-full mt-2">
-                  Schedule Demo
-                </Button>
+                <Link to="/signup" className="block">
+                  <Button type="button" size="lg" className="w-full mt-2">
+                    Get Free Leak Scan
+                  </Button>
+                </Link>
                 
                 <p className="text-xs text-muted-foreground text-center">
-                  We'll reach out within 24 hours to confirm your demo time.
+                  No credit card required. Your first scan is completely free.
                 </p>
               </form>
             </div>

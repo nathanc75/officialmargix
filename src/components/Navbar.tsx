@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import margixLogo from "@/assets/margix-logo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,14 +29,10 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <a href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 transition-transform group-hover:scale-105">
-              <img 
-                src={margixLogo} 
-                alt="MARGIX" 
-                className="w-full h-full object-contain"
-              />
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
+              <Search className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold text-foreground tracking-tight">MARGIX</span>
+            <span className="text-2xl font-bold text-foreground tracking-tight">LeakDetector</span>
           </a>
 
           {/* Desktop Navigation */}

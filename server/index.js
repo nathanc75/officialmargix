@@ -332,6 +332,83 @@ Respond in JSON format:
   }
 });
 
+// Universal Business Leak Detection endpoint
+app.post("/api/analyze/leaks", async (req, res) => {
+  try {
+    const { fileContent, fileNames } = req.body;
+    
+    if (!fileContent) {
+      return res.status(400).json({ error: "File content is required" });
+    }
+
+    if (!openai) {
+      return res.status(503).json({ error: "AI service not available" });
+    }
+
+    const systemPrompt = `You are an expert financial analyst specializing in detecting revenue leaks and financial inefficiencies for businesses. Analyze the provided financial documents (bank statements, payment reports, invoices, etc.) to identify money leaks.
+
+Look for these types of leaks:
+1. MISSING PAYMENTS - Expected income that never arrived, unpaid invoices, failed transactions
+2. DUPLICATE CHARGES - Being charged twice for the same service, double payments
+3. UNUSED SUBSCRIPTIONS - Subscriptions being paid for but not used, forgotten recurring charges
+4. FAILED PAYMENTS - Transactions that failed but weren't retried, declined payments not followed up
+5. PRICING INEFFICIENCIES - Being overcharged vs market rates, unnecessary fees
+6. BILLING ERRORS - Incorrect amounts, math errors, wrong quantities
+
+For each leak found, provide:
+- A unique ID
+- Type of leak (missing_payment, duplicate_charge, unused_subscription, failed_payment, pricing_inefficiency, billing_error, other)
+- Clear description of the issue
+- Amount involved (best estimate)
+- Date if identifiable
+- Severity (high = >$100 or recurring, medium = $20-$100, low = <$20)
+- Specific recommendation to recover or prevent this leak
+
+Be thorough but realistic. Only flag issues with clear evidence in the data.
+
+Respond in JSON format:
+{
+  "totalLeaks": number,
+  "totalRecoverable": number,
+  "leaks": [
+    {
+      "id": "leak-1",
+      "type": "duplicate_charge",
+      "description": "Clear description of the issue",
+      "amount": 49.99,
+      "date": "2024-01-15",
+      "severity": "high",
+      "recommendation": "Contact vendor to request refund for duplicate charge"
+    }
+  ],
+  "summary": "Brief executive summary of findings",
+  "analyzedAt": "ISO timestamp"
+}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: `Analyze these financial documents for revenue leaks:\n\nFiles analyzed: ${fileNames.join(', ')}\n\n${fileContent}` }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.3,
+    });
+
+    const analysis = JSON.parse(response.choices[0].message.content);
+    analysis.analyzedAt = new Date().toISOString();
+    
+    res.json({
+      success: true,
+      analysis,
+      model: "gpt-4o-mini",
+    });
+  } catch (error) {
+    console.error("Error analyzing for leaks:", error);
+    res.status(500).json({ error: "Failed to analyze documents", details: error.message });
+  }
+});
+
 // Combined analysis endpoint - compares report data with menu prices
 app.post("/api/analyze/compare", async (req, res) => {
   try {
@@ -408,5 +485,5 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.NODE_ENV === 'production' ? (process.env.PORT || 5000) : 3001;
 app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));

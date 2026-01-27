@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, Upload } from "lucide-react";
 import { Link } from "react-router-dom";
 import AnimatedDashboard from "./AnimatedDashboard";
 
@@ -27,35 +27,36 @@ const HeroSection = () => {
         <div className="flex flex-col items-center text-center">
           {/* Main Headline */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground max-w-5xl leading-[1.1]">
-            AI-Powered Restaurant Analytics for{" "}
-            <span className="text-gradient">Smarter Operations</span>
+            Find Where Your Business is{" "}
+            <span className="text-gradient">Losing Money</span>
           </h1>
 
           {/* Subheadline */}
           <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Securely connect to your restaurant's POS system to analyze real order data across dine-in, takeout, and delivery channels. 
-            Our AI provides feedback, performance analysis, and actionable suggestions to help improve sales, efficiency, and profitability.
+            Upload your bank statements, invoices, or payment reports. Our AI scans for missing payments, 
+            duplicate charges, unused subscriptions, and hidden revenue leaks — no account connections needed.
           </p>
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-            <Link to="/signup">
+            <Link to="/upload">
               <Button 
                 size="lg" 
                 className="h-11 px-6 text-sm font-medium gap-2"
+                data-testid="button-free-scan"
               >
-                Get Started
+                Free Leak Scan
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <a href="#book-demo" onClick={(e) => { e.preventDefault(); document.querySelector('#book-demo')?.scrollIntoView({ behavior: 'smooth' }); }}>
+            <a href="#how-it-works" onClick={(e) => { e.preventDefault(); document.querySelector('#how-it-works')?.scrollIntoView({ behavior: 'smooth' }); }}>
               <Button 
                 variant="link" 
                 size="default" 
                 className="text-muted-foreground hover:text-foreground gap-2"
               >
-                <Play className="w-4 h-4" />
-                Book Demo
+                <Upload className="w-4 h-4" />
+                See How It Works
               </Button>
             </a>
           </div>
@@ -64,7 +65,7 @@ const HeroSection = () => {
           {/* Animated Dashboard Preview */}
           <div className="mt-10 sm:mt-14 w-full max-w-4xl">
             <AnimatedDashboard />
-            <p className="text-xs text-muted-foreground/60 text-right mt-2">Example analysis shown</p>
+            <p className="text-xs text-muted-foreground/60 text-right mt-2">Example leak detection shown</p>
           </div>
         </div>
       </div>

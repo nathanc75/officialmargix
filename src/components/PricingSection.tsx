@@ -5,51 +5,51 @@ import { useNavigate } from "react-router-dom";
 
 const plans = [
   {
-    name: "Starter",
-    subtitle: "Single-Location Coverage",
-    price: { monthly: 39, yearly: 27 },
-    cta: "Get Started",
-    positioning: "Same dashboard. Same intelligence. Scoped to one location.",
-    description: "Full AI-powered analytics for one restaurant location.",
+    name: "Free Scan",
+    subtitle: "Try It Once",
+    price: { monthly: 0, yearly: 0 },
+    cta: "Start Free Scan",
+    positioning: "See what leaks exist in your business — no commitment.",
+    description: "Upload files and get your first leak detection report free.",
     features: [
-      "Full Margix dashboard",
-      "1 POS connection",
-      "Dine-in, takeout & delivery insights",
-      "Standard analytics refresh",
-      "AI-driven recommendations",
-      "Email support",
+      "1 free leak scan",
+      "Upload up to 5 files",
+      "Basic leak detection",
+      "Summary report",
+      "Top 3 issues identified",
     ],
   },
   {
     name: "Pro",
-    subtitle: "Multi-Location Coverage",
-    price: { monthly: 99, yearly: 69 },
+    subtitle: "Ongoing Monitoring",
+    price: { monthly: 49, yearly: 34 },
     cta: "Get Started",
     popular: true,
-    positioning: "Same tools — dramatically more operational leverage.",
-    description: "Unified analytics across all your restaurant locations.",
+    positioning: "Continuous leak detection to protect your revenue.",
+    description: "Monthly scans with detailed reports and priority support.",
     features: [
-      "Full Margix dashboard",
-      "Multiple POS connections",
-      "Delivery platform integration",
-      "Higher-volume data processing",
-      "Real-time performance alerts",
-      "Cross-location comparison",
-      "Priority support",
+      "Unlimited leak scans",
+      "Upload unlimited files",
+      "Advanced leak detection",
+      "Detailed PDF reports",
+      "All issues identified",
+      "Recovery action plans",
+      "Email support",
     ],
   },
   {
-    name: "Custom",
-    subtitle: "Enterprise Scale",
+    name: "Enterprise",
+    subtitle: "High-Volume Business",
     price: { monthly: "Custom", yearly: "Custom" },
     cta: "Contact Sales",
-    positioning: "Advanced coverage for restaurant groups and franchises.",
+    positioning: "Custom solutions for businesses with complex financials.",
     description: "",
     features: [
-      "Unlimited locations",
-      "Custom data volumes & refresh rates",
-      "Dedicated onboarding & support",
-      "Advanced POS integrations",
+      "Everything in Pro",
+      "Multiple entity support",
+      "Custom file formats",
+      "API access",
+      "Dedicated account manager",
       "SLA guarantees",
     ],
   },
@@ -60,7 +60,7 @@ const PricingSection = () => {
   const navigate = useNavigate();
 
   const handlePlanSelect = (planName: string) => {
-    if (planName === "Custom") {
+    if (planName === "Enterprise") {
       document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
     } else {
       navigate('/signup');
@@ -79,14 +79,14 @@ const PricingSection = () => {
         <div className="text-center mb-12">
           <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-4">
             <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Restaurant Pricing Plans
+              Simple Pricing
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Connect Your POS, Get Insights
+            Start Free, Upgrade When Ready
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            Start with a free trial. Connect your POS to see unified analytics across all order channels.
+            Your first leak scan is always free. See what you're losing before you commit.
           </p>
 
           {/* Toggle */}
@@ -196,8 +196,8 @@ const PricingSection = () => {
             </div>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground text-center mt-6" data-testid="text-pos-requirement">
-          Real-time order tracking available for POS-connected stores.
+        <p className="text-xs text-muted-foreground text-center mt-6" data-testid="text-file-formats">
+          Supports PDF and CSV files from any bank or payment processor.
         </p>
       </div>
     </section>

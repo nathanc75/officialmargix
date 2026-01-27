@@ -57,10 +57,27 @@ export interface ComparisonResult {
   summary: string;
 }
 
+export interface LeakAnalysis {
+  totalLeaks: number;
+  totalRecoverable: number;
+  leaks: {
+    id: string;
+    type: string;
+    description: string;
+    amount: number;
+    date?: string;
+    severity: "high" | "medium" | "low";
+    recommendation: string;
+  }[];
+  summary: string;
+  analyzedAt: string;
+}
+
 interface AnalysisState {
   reportAnalysis: ReportAnalysis | null;
   menuAnalysis: MenuAnalysis | null;
   comparison: ComparisonResult | null;
+  leakAnalysis: LeakAnalysis | null;
   isAnalyzing: boolean;
   analysisStep: string;
   error: string | null;
@@ -70,6 +87,7 @@ interface AnalysisContextType extends AnalysisState {
   analyzeReport: (reportContent: string, reportType?: string) => Promise<ReportAnalysis | null>;
   analyzeMenu: (imageBase64: string, imageMimeType: string) => Promise<MenuAnalysis | null>;
   compareData: () => Promise<ComparisonResult | null>;
+  setLeakAnalysis: (analysis: LeakAnalysis) => void;
   clearAnalysis: () => void;
   hasData: boolean;
 }
@@ -81,6 +99,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     reportAnalysis: null,
     menuAnalysis: null,
     comparison: null,
+    leakAnalysis: null,
     isAnalyzing: false,
     analysisStep: "",
     error: null,
@@ -189,18 +208,23 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     }
   }, [state.reportAnalysis, state.menuAnalysis]);
 
+  const setLeakAnalysis = useCallback((analysis: LeakAnalysis) => {
+    setState(prev => ({ ...prev, leakAnalysis: analysis }));
+  }, []);
+
   const clearAnalysis = useCallback(() => {
     setState({
       reportAnalysis: null,
       menuAnalysis: null,
       comparison: null,
+      leakAnalysis: null,
       isAnalyzing: false,
       analysisStep: "",
       error: null,
     });
   }, []);
 
-  const hasData = !!(state.reportAnalysis || state.menuAnalysis);
+  const hasData = !!(state.reportAnalysis || state.menuAnalysis || state.leakAnalysis);
 
   return (
     <AnalysisContext.Provider
@@ -209,6 +233,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         analyzeReport,
         analyzeMenu,
         compareData,
+        setLeakAnalysis,
         clearAnalysis,
         hasData,
       }}

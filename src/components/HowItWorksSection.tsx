@@ -1,35 +1,35 @@
 import { Button } from "@/components/ui/button";
-import { UserPlus, Settings, TrendingUp, ArrowRight, Mail } from "lucide-react";
+import { Upload, Search, FileCheck, ArrowRight, Mail } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const steps = [
   {
     id: 1,
-    icon: UserPlus,
-    title: "Connect POS",
+    icon: Upload,
+    title: "Upload Files",
     number: "01",
-    heading: "Connect your POS system",
-    description: "Securely connect your restaurant's POS system. We'll automatically sync your order data across dine-in, takeout, and delivery channels.",
-    features: ["Secure POS integration", "All order channels", "Automatic data sync"],
+    heading: "Upload your financial documents",
+    description: "Upload bank statements, invoices, payment processor exports, or any financial reports you have. We accept PDF and CSV files — no account connections needed.",
+    features: ["Bank statements", "Payment processor exports", "Invoices & receipts"],
   },
   {
     id: 2,
-    icon: Settings,
+    icon: Search,
     title: "AI Analysis",
     number: "02",
-    heading: "Get AI-powered insights",
-    description: "Our AI analyzes your real order data to provide performance feedback, identify trends, and surface actionable suggestions.",
-    features: ["Performance analysis", "Sales trends", "Efficiency insights"],
+    heading: "AI scans for revenue leaks",
+    description: "Our AI standardizes your data and compares expected versus actual financial outcomes, identifying discrepancies that indicate money loss.",
+    features: ["Missing payments", "Duplicate charges", "Unused subscriptions"],
   },
   {
     id: 3,
-    icon: TrendingUp,
-    title: "Take Action",
+    icon: FileCheck,
+    title: "Get Report",
     number: "03",
-    heading: "Improve your operations",
-    description: "Use AI-driven recommendations to boost sales, improve efficiency, and increase profitability across all your order channels.",
-    features: ["Actionable recommendations", "Unified channel view", "Profit optimization"],
+    heading: "Receive your leak report",
+    description: "Get a simple report showing estimated money lost, the reason for each leak, and clear recommended next steps to recover your funds.",
+    features: ["Money lost estimate", "Root cause analysis", "Recovery action plan"],
   },
 ];
 
@@ -53,7 +53,7 @@ const HowItWorksSection = () => {
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
-            From POS Data to Actionable Insights
+            From Upload to Insights in Minutes
           </h2>
         </div>
 
@@ -97,7 +97,7 @@ const HowItWorksSection = () => {
             </p>
             <Link to="/signup">
               <Button className="gap-2">
-                Get Started
+                Start Free Scan
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
@@ -107,12 +107,12 @@ const HowItWorksSection = () => {
           <div className="rounded-2xl bg-card border border-border p-6 space-y-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg brand-gradient flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-white" />
+                <Search className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-semibold text-foreground">MARGIX AI</span>
+              <span className="text-lg font-semibold text-foreground">LeakDetector AI</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              Connect your POS and get AI-driven insights across dine-in, takeout, and delivery
+              Upload your files and let AI find where your business is losing money
             </p>
             <div className="space-y-3">
               {currentStep.features.map((feature) => (
@@ -130,14 +130,14 @@ const HowItWorksSection = () => {
           <div className="rounded-2xl bg-card border border-border p-6 space-y-5">
             <div className="flex justify-between items-start">
               <div className="w-10 h-10 rounded-lg brand-gradient flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-white" />
+                <Search className="w-5 h-5 text-white" />
               </div>
-              <button className="text-muted-foreground hover:text-foreground text-sm">×</button>
+              <button className="text-muted-foreground hover:text-foreground text-sm">x</button>
             </div>
             <div className="text-center space-y-2">
-              <h4 className="font-semibold text-foreground">Sign up for Free</h4>
+              <h4 className="font-semibold text-foreground">Get Your Free Leak Scan</h4>
               <p className="text-xs text-muted-foreground">
-                Connect your POS and get AI-powered insights for your restaurant
+                Upload your files and discover hidden revenue leaks in minutes
               </p>
             </div>
             <div className="space-y-3">

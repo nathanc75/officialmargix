@@ -1,56 +1,56 @@
 import { Button } from "@/components/ui/button";
 import { 
-  TrendingUp, 
-  Bell, 
-  BarChart3, 
-  Shield, 
+  Search, 
   FileText, 
-  Smartphone,
+  AlertTriangle, 
+  Shield, 
+  TrendingUp, 
+  Zap,
   ArrowUpRight 
 } from "lucide-react";
 
 const features = [
   {
-    icon: TrendingUp,
-    iconBg: "bg-orange-500",
-    title: "Unified Performance View",
-    subtitle: "All Channels, One Dashboard",
-    description: "Connect your POS to see dine-in, takeout, and delivery orders in a single view. Get a complete picture of your restaurant's performance.",
-  },
-  {
-    icon: Bell,
+    icon: FileText,
     iconBg: "bg-blue-500",
-    title: "AI-Driven Recommendations",
-    subtitle: "Actionable Insights",
-    description: "Our AI analyzes your real order data to provide feedback, performance analysis, and suggestions to improve sales and efficiency.",
+    title: "Upload Any Financial File",
+    subtitle: "Bank Statements, Invoices, Reports",
+    description: "Simply upload your existing financial documents — PDFs, CSVs, bank statements, or payment processor exports. No account connections required.",
   },
   {
-    icon: BarChart3,
+    icon: Search,
     iconBg: "bg-purple-500",
-    title: "Delivery Platform Integration",
-    subtitle: "Uber Eats, DoorDash & More",
-    description: "When delivery platforms are connected to your POS, we include delivery insights within the same unified analysis.",
+    title: "AI-Powered Leak Detection",
+    subtitle: "Find Hidden Revenue Losses",
+    description: "Our AI scans for missing payments, underpayments, duplicate charges, unused subscriptions, failed payments, and pricing inefficiencies.",
+  },
+  {
+    icon: AlertTriangle,
+    iconBg: "bg-orange-500",
+    title: "Clear Issue Identification",
+    subtitle: "Know Exactly What's Wrong",
+    description: "Each leak is identified with the amount lost, the reason it occurred, and the specific transaction or pattern that caused it.",
+  },
+  {
+    icon: TrendingUp,
+    iconBg: "bg-green-500",
+    title: "Actionable Recommendations",
+    subtitle: "Steps to Recover Money",
+    description: "Get clear, actionable next steps for each issue found — whether it's contacting a vendor, disputing a charge, or canceling an unused service.",
   },
   {
     icon: Shield,
-    iconBg: "bg-green-500",
-    title: "Secure POS Connection",
-    subtitle: "Your Data, Protected",
-    description: "We securely connect to your POS system using industry-standard encryption. Your data stays protected at all times.",
-  },
-  {
-    icon: FileText,
     iconBg: "bg-yellow-500",
-    title: "Real Order Data Analysis",
-    subtitle: "No Guesswork",
-    description: "All insights are powered by your actual POS data — real orders, real numbers, real results you can act on.",
+    title: "Private & Secure",
+    subtitle: "Your Data, Protected",
+    description: "Files are processed securely and never stored permanently. We use bank-level encryption to protect your financial information.",
   },
   {
-    icon: Smartphone,
+    icon: Zap,
     iconBg: "bg-primary",
-    title: "Mobile Dashboard",
-    subtitle: "Insights Anywhere",
-    description: "Access your performance insights from any device. Make informed decisions on the go.",
+    title: "Works for Any Business",
+    subtitle: "Industry-Agnostic Analysis",
+    description: "Whether you run a restaurant, agency, e-commerce store, or consulting firm — if you have income and expenses, we can find your leaks.",
     isNew: true,
   },
 ];
@@ -77,14 +77,14 @@ const FeaturesSection = () => {
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Insights Powered by{" "}
-            <span className="text-muted-foreground">Real Data</span>
+            Stop Losing Money You{" "}
+            <span className="text-muted-foreground">Didn't Know Was Gone</span>
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-            AI-driven analytics from your POS data across all order channels
+            AI-powered analysis that finds revenue leaks hiding in your financial data
           </p>
           <Button className="gap-2">
-            Get Started Free
+            Start Free Scan
           </Button>
         </div>
 

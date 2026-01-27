@@ -2,82 +2,33 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Zap, Link2, Sparkles, AlertCircle, Package, Clover } from "lucide-react";
-import { SiUbereats, SiDoordash, SiGrubhub, SiSquare } from "react-icons/si";
+import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Search, Sparkles, AlertCircle, File, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import margixLogo from "@/assets/margix-logo.png";
-import { useUpload } from "@/hooks/use-upload";
+import { useAnalysis, LeakAnalysis } from "@/context/AnalysisContext";
+import { useToast } from "@/hooks/use-toast";
 
-interface AnalysisSummary {
-  totalRevenue?: { value: number; isEstimate: boolean };
-  totalFees?: { value: number; isEstimate: boolean };
-  totalPromos?: { value: number; isEstimate: boolean };
-  totalRefunds?: { value: number; isEstimate: boolean };
-  netProfit?: { value: number; isEstimate: boolean };
+interface UploadedFile {
+  id: string;
+  name: string;
+  size: number;
+  type: string;
+  status: "uploading" | "uploaded" | "analyzing" | "analyzed" | "error";
+  content?: string;
 }
 
-interface AnalysisData {
-  summary?: AnalysisSummary;
-  issues?: Array<{ type: string; description: string; potentialRecovery: number }>;
-  items?: Array<{ name: string; quantity: number; revenue: number; profit: number; isEstimate: boolean }>;
-  recommendations?: string[];
-}
-
-interface MenuData {
-  platform?: string;
-  menuItems?: Array<{ name: string; price: number; description?: string }>;
-  notes?: string;
-}
-
-interface AnalysisResult {
-  success: boolean;
-  analysis?: AnalysisData;
-  menuData?: MenuData;
-  error?: string;
-}
-
-const formatEstValue = (value: number | undefined, isEstimate: boolean = true): string => {
-  if (value === undefined || value === null) return "~$0.00";
-  const formatted = `$${Math.abs(value).toFixed(2)}`;
-  return isEstimate ? `~${formatted}` : formatted;
+const formatFileSize = (bytes: number): string => {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
 const Uploads = () => {
-  const [hasUploadedReport, setHasUploadedReport] = useState(false);
-  const [uploadedReportName, setUploadedReportName] = useState("");
-  const [isAnalyzingReport, setIsAnalyzingReport] = useState(false);
-  const [reportAnalysis, setReportAnalysis] = useState<AnalysisResult | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-
-  const analyzeReport = async (fileContent: string, fileName: string) => {
-    setIsAnalyzingReport(true);
-    try {
-      const reportType = fileName.toLowerCase().includes('uber') ? 'Uber Eats' :
-                        fileName.toLowerCase().includes('doordash') ? 'DoorDash' :
-                        fileName.toLowerCase().includes('grubhub') ? 'Grubhub' : 'delivery';
-      
-      const response = await fetch("/api/analyze/report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportContent: fileContent, reportType }),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Server error" }));
-        setReportAnalysis({ success: false, error: errorData.error || "Analysis failed" });
-        return;
-      }
-      
-      const result = await response.json();
-      setReportAnalysis(result);
-    } catch (error) {
-      console.error("Report analysis failed:", error);
-      setReportAnalysis({ success: false, error: "Analysis failed - please try again" });
-    } finally {
-      setIsAnalyzingReport(false);
-    }
-  };
+  const { setLeakAnalysis } = useAnalysis();
+  const { toast } = useToast();
 
   const readFileContent = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -88,59 +39,114 @@ const Uploads = () => {
     });
   };
 
-  const [pendingReportFile, setPendingReportFile] = useState<File | null>(null);
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
 
-  const { uploadFile: uploadReportFile, isUploading: isUploadingReport, progress: reportProgress } = useUpload({
-    onSuccess: async (response) => {
-      await fetch("/api/uploads/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: response.metadata.name,
-          objectPath: response.objectPath,
-          size: response.metadata.size,
-          contentType: response.metadata.contentType,
-          type: "report",
-        }),
-      });
-      setUploadedReportName(response.metadata.name);
-      setHasUploadedReport(true);
+    const newFiles: UploadedFile[] = [];
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileId = `file-${Date.now()}-${i}`;
       
-      // Trigger AI analysis for the report
-      if (pendingReportFile) {
-        const content = await readFileContent(pendingReportFile);
-        analyzeReport(content, pendingReportFile.name);
-        setPendingReportFile(null);
+      const uploadedFile: UploadedFile = {
+        id: fileId,
+        name: file.name,
+        size: file.size,
+        type: file.type || (file.name.endsWith('.csv') ? 'text/csv' : 'application/pdf'),
+        status: "uploading",
+      };
+      
+      newFiles.push(uploadedFile);
+    }
+    
+    setUploadedFiles(prev => [...prev, ...newFiles]);
+    
+    // Process files
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const fileId = newFiles[i].id;
+      
+      try {
+        const content = await readFileContent(file);
+        setUploadedFiles(prev => prev.map(f => 
+          f.id === fileId ? { ...f, status: "uploaded", content } : f
+        ));
+      } catch {
+        setUploadedFiles(prev => prev.map(f => 
+          f.id === fileId ? { ...f, status: "error" } : f
+        ));
       }
-    },
-    onError: (error) => {
-      console.error("Report upload failed:", error);
-      alert("Upload failed. Please try again.");
-      setPendingReportFile(null);
-    },
-  });
-
-  const handleReportSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setPendingReportFile(file);
-      setReportAnalysis(null);
-      await uploadReportFile(file);
+    }
+    
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
-  const handleAnalyze = () => {
-    navigate("/dashboard");
+  const removeFile = (fileId: string) => {
+    setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
   };
 
-  const platforms = [
-    { name: "UberEats", icon: <SiUbereats className="h-6 w-6 text-white" />, connected: true, color: "bg-[#06C167]" },
-    { name: "DoorDash", icon: <SiDoordash className="h-6 w-6 text-white" />, connected: true, color: "bg-[#FF3008]" },
-    { name: "Grubhub", icon: <SiGrubhub className="h-6 w-6 text-white" />, connected: false, color: "bg-[#F63440]" },
-    { name: "Postmates", icon: <Package className="h-5 w-5 text-white" />, connected: false, color: "bg-[#FFDF00]" },
-    { name: "Square POS", icon: <SiSquare className="h-6 w-6 text-white" />, connected: false, color: "bg-[#006AFF]" },
-    { name: "Toast", icon: <div className="font-bold text-white text-sm">T</div>, connected: false, color: "bg-[#FF6600]" },
-    { name: "Clover", icon: <Clover className="h-6 w-6 text-white" />, connected: false, color: "bg-[#1BC47D]" },
+  const handleAnalyze = async () => {
+    if (uploadedFiles.length === 0) return;
+    
+    setIsAnalyzing(true);
+    
+    // Update all files to analyzing status
+    setUploadedFiles(prev => prev.map(f => ({ ...f, status: "analyzing" as const })));
+    
+    try {
+      // Combine all file contents for analysis
+      const combinedContent = uploadedFiles
+        .filter(f => f.content)
+        .map(f => `=== File: ${f.name} ===\n${f.content}`)
+        .join("\n\n");
+      
+      const response = await fetch("/api/analyze/leaks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          fileContent: combinedContent,
+          fileNames: uploadedFiles.map(f => f.name),
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Analysis failed");
+      }
+      
+      const result = await response.json();
+      
+      // Update files to analyzed status
+      setUploadedFiles(prev => prev.map(f => ({ ...f, status: "analyzed" as const })));
+      
+      // Store result in context and navigate
+      setLeakAnalysis(result.analysis as LeakAnalysis);
+      navigate("/results");
+      
+    } catch (error) {
+      console.error("Analysis failed:", error);
+      setUploadedFiles(prev => prev.map(f => ({ ...f, status: "error" as const })));
+      setIsAnalyzing(false);
+      toast({
+        title: "Analysis Failed",
+        description: "We couldn't analyze your files. Please try again or upload different files.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const uploadedCount = uploadedFiles.filter(f => f.status === "uploaded" || f.status === "analyzed").length;
+  const hasFiles = uploadedFiles.length > 0;
+  const allUploaded = uploadedFiles.every(f => f.status === "uploaded" || f.status === "analyzed");
+
+  const acceptedFileTypes = [
+    { label: "Bank Statements", desc: "PDF or CSV exports" },
+    { label: "Payment Reports", desc: "Stripe, PayPal, Square" },
+    { label: "Invoices", desc: "PDF invoices and receipts" },
+    { label: "Expense Reports", desc: "CSV or PDF format" },
   ];
 
   return (
@@ -160,271 +166,191 @@ const Uploads = () => {
 
       <div className="relative">
         <header className="border-b border-border/50 bg-white/80 dark:bg-background/80 backdrop-blur-xl sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Link to="/dashboard">
+                <Link to="/">
                   <Button variant="ghost" size="sm" className="gap-2">
                     <ArrowLeft className="h-4 w-4" />
-                    <span className="hidden sm:inline">Back to Dashboard</span>
+                    <span className="hidden sm:inline">Back</span>
                   </Button>
                 </Link>
                 <div className="h-6 w-px bg-border" />
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8">
-                    <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
+                  <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                    <Search className="w-4 h-4 text-primary-foreground" />
                   </div>
                   <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Upload and Connect</h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Upload and connect to analyze</p>
+                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Upload Documents</h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Upload your financial files for analysis</p>
                   </div>
                 </div>
               </div>
               <Badge variant="secondary" className="gap-1.5 py-1 text-xs bg-primary/10 text-primary border-primary/20">
-                <Zap className="h-3 w-3" />
-                Pro Plan
+                <Sparkles className="h-3 w-3" />
+                Free Scan
               </Badge>
             </div>
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-          <section>
-            <h2 className="text-lg font-semibold text-foreground mb-4">Upload Your Data</h2>
-            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <FileText className="h-5 w-5 text-primary" />
-                  <h3 className="font-semibold text-foreground">Delivery Reports</h3>
-                </div>
-                {!hasUploadedReport ? (
-                  <div 
-                    className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".csv,.txt,.tsv"
-                      onChange={handleReportSelect}
-                      className="hidden"
-                      data-testid="input-file-upload"
-                    />
-                    <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                      {isUploadingReport ? (
-                        <Loader2 className="h-6 w-6 text-primary animate-spin" />
-                      ) : (
-                        <Upload className="h-6 w-6 text-muted-foreground" />
-                      )}
-                    </div>
-                    <p className="text-sm font-medium text-foreground mb-1">
-                      {isUploadingReport ? "Uploading..." : "Drop reports here"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      {isUploadingReport 
-                        ? `${reportProgress}%` 
-                        : "CSV exports from Uber Eats, DoorDash, Grubhub"}
-                    </p>
-                    <Button 
-                      size="sm"
-                      className="gap-2" 
-                      onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                      disabled={isUploadingReport}
-                      data-testid="button-browse-reports"
-                    >
-                      {isUploadingReport ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-                      {isUploadingReport ? "Uploading..." : "Browse Files"}
-                    </Button>
-                  </div>
-                ) : (
-                  <div className={`border-2 rounded-xl p-6 text-center ${
-                    isAnalyzingReport 
-                      ? "border-primary/50 bg-primary/5" 
-                      : reportAnalysis?.success 
-                        ? "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
-                        : reportAnalysis?.error
-                          ? "border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/10"
-                          : "border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-900/10"
-                  }`}>
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 ${
-                      isAnalyzingReport 
-                        ? "bg-primary/20" 
-                        : reportAnalysis?.success 
-                          ? "bg-emerald-100 dark:bg-emerald-900/30"
-                          : reportAnalysis?.error
-                            ? "bg-amber-100 dark:bg-amber-900/30"
-                            : "bg-emerald-100 dark:bg-emerald-900/30"
-                    }`}>
-                      {isAnalyzingReport ? (
-                        <Sparkles className="h-6 w-6 text-primary animate-pulse" />
-                      ) : reportAnalysis?.success ? (
-                        <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                      ) : reportAnalysis?.error ? (
-                        <AlertCircle className="h-6 w-6 text-amber-600" />
-                      ) : (
-                        <CheckCircle2 className="h-6 w-6 text-emerald-600" />
-                      )}
-                    </div>
-                    <p className="text-sm font-medium text-foreground mb-1">
-                      {isAnalyzingReport 
-                        ? "AI analyzing report..." 
-                        : reportAnalysis?.success 
-                          ? "Analysis complete" 
-                          : reportAnalysis?.error
-                            ? "Analysis issue"
-                            : "Report uploaded"}
-                    </p>
-                    <p className="text-xs text-muted-foreground mb-3 truncate max-w-[200px] mx-auto">
-                      {isAnalyzingReport 
-                        ? "Extracting financial data with GPT-4o-mini" 
-                        : uploadedReportName}
-                    </p>
-                    {reportAnalysis?.success && reportAnalysis.analysis?.summary && (
-                      <div className="mt-3 p-3 bg-secondary/50 rounded-lg text-left space-y-1">
-                        <div className="flex items-center gap-1 mb-2">
-                          <Sparkles className="h-3 w-3 text-primary" />
-                          <span className="text-xs font-medium text-primary">AI Analysis Preview (Est.)</span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div>
-                            <span className="text-muted-foreground">Revenue:</span>
-                            <span className="ml-1 font-medium text-foreground">
-                              {formatEstValue(reportAnalysis.analysis.summary.totalRevenue?.value, reportAnalysis.analysis.summary.totalRevenue?.isEstimate ?? true)}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Fees:</span>
-                            <span className="ml-1 font-medium text-foreground">
-                              {formatEstValue(reportAnalysis.analysis.summary.totalFees?.value, reportAnalysis.analysis.summary.totalFees?.isEstimate ?? true)}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">Net Profit:</span>
-                            <span className={`ml-1 font-medium ${(reportAnalysis.analysis.summary.netProfit?.value ?? 0) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
-                              {formatEstValue(reportAnalysis.analysis.summary.netProfit?.value, reportAnalysis.analysis.summary.netProfit?.isEstimate ?? true)}
-                            </span>
-                          </div>
-                          {reportAnalysis.analysis.issues && reportAnalysis.analysis.issues.length > 0 && (
-                            <div>
-                              <span className="text-muted-foreground">Issues:</span>
-                              <span className="ml-1 font-medium text-amber-600">{reportAnalysis.analysis.issues.length} found</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="gap-2 mt-3" 
-                      onClick={() => { setHasUploadedReport(false); setUploadedReportName(""); setReportAnalysis(null); }}
-                      disabled={isAnalyzingReport}
-                      data-testid="button-upload-another-report"
-                    >
-                      <Plus className="h-4 w-4" />
-                      Upload Another
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* File Types Info */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {acceptedFileTypes.map((type) => (
+              <div key={type.label} className="p-3 rounded-lg bg-secondary/50 border border-border">
+                <p className="text-sm font-medium text-foreground">{type.label}</p>
+                <p className="text-xs text-muted-foreground">{type.desc}</p>
+              </div>
+            ))}
+          </div>
 
-            {hasUploadedReport && (
-              <div className="mt-6 text-center">
-                <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] p-6">
-                  {isAnalyzingReport ? (
-                    <>
-                      <div className="flex items-center justify-center gap-2 mb-4">
-                        <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-                        <p className="text-sm font-medium text-foreground">
-                          AI is analyzing your data...
+          {/* Upload Area */}
+          <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <FileText className="h-5 w-5 text-primary" />
+                <h3 className="font-semibold text-foreground">Financial Documents</h3>
+                {uploadedCount > 0 && (
+                  <Badge variant="secondary" className="ml-auto">
+                    {uploadedCount} file{uploadedCount !== 1 ? 's' : ''} ready
+                  </Badge>
+                )}
+              </div>
+              
+              <div 
+                className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv,.pdf,.txt,.tsv"
+                  multiple
+                  onChange={handleFileSelect}
+                  className="hidden"
+                  data-testid="input-file-upload"
+                />
+                <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                  <Upload className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <p className="text-lg font-medium text-foreground mb-2">
+                  Drop files here or click to browse
+                </p>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Upload bank statements, invoices, payment reports (PDF, CSV)
+                </p>
+                <Button 
+                  size="default"
+                  className="gap-2" 
+                  onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
+                  data-testid="button-browse-files"
+                >
+                  <Plus className="h-4 w-4" />
+                  Select Files
+                </Button>
+              </div>
+
+              {/* Uploaded Files List */}
+              {hasFiles && (
+                <div className="mt-6 space-y-3">
+                  <p className="text-sm font-medium text-foreground">Uploaded Files</p>
+                  {uploadedFiles.map((file) => (
+                    <div 
+                      key={file.id}
+                      className={`flex items-center gap-3 p-3 rounded-lg border ${
+                        file.status === "error" 
+                          ? "bg-destructive/5 border-destructive/20" 
+                          : file.status === "analyzing"
+                            ? "bg-primary/5 border-primary/20"
+                            : "bg-secondary/50 border-border"
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                        file.status === "error" 
+                          ? "bg-destructive/10" 
+                          : file.status === "analyzing"
+                            ? "bg-primary/10"
+                            : "bg-secondary"
+                      }`}>
+                        {file.status === "uploading" || file.status === "analyzing" ? (
+                          <Loader2 className="h-5 w-5 text-primary animate-spin" />
+                        ) : file.status === "error" ? (
+                          <AlertCircle className="h-5 w-5 text-destructive" />
+                        ) : file.status === "analyzed" ? (
+                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                        ) : (
+                          <File className="h-5 w-5 text-muted-foreground" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatFileSize(file.size)} - {
+                            file.status === "uploading" ? "Uploading..." :
+                            file.status === "analyzing" ? "Analyzing..." :
+                            file.status === "analyzed" ? "Analyzed" :
+                            file.status === "error" ? "Error" : "Ready"
+                          }
                         </p>
                       </div>
-                      <p className="text-xs text-muted-foreground mb-4">
-                        Processing reports with GPT-4o-mini
-                      </p>
-                      <div className="flex items-center justify-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                        <span className="text-sm text-muted-foreground">Please wait...</span>
-                      </div>
+                      {file.status !== "analyzing" && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                          onClick={() => removeFile(file.id)}
+                          data-testid={`button-remove-${file.id}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Analyze Button */}
+          {hasFiles && allUploaded && (
+            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+              <CardContent className="p-6 text-center">
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <p className="text-lg font-semibold text-foreground">
+                    Ready to Scan for Leaks
+                  </p>
+                </div>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Our AI will analyze your {uploadedFiles.length} file{uploadedFiles.length !== 1 ? 's' : ''} 
+                  {' '}to find missing payments, duplicate charges, unused subscriptions, and other revenue leaks.
+                </p>
+                <Button 
+                  size="lg"
+                  className="gap-2 brand-gradient border-0 text-white" 
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing}
+                  data-testid="button-analyze"
+                >
+                  {isAnalyzing ? (
+                    <>
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                      Analyzing...
                     </>
                   ) : (
                     <>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        {reportAnalysis?.success
-                          ? "AI analysis complete! View your estimated profit/loss breakdown."
-                          : "Report uploaded. Click below to view the dashboard."}
-                      </p>
-                      {reportAnalysis?.success && (
-                        <p className="text-xs text-muted-foreground mb-4 flex items-center justify-center gap-1">
-                          <Sparkles className="h-3 w-3" />
-                          All values marked with ~ are AI-generated estimates
-                        </p>
-                      )}
-                      <Button 
-                        className="gap-2 brand-gradient border-0 text-white" 
-                        onClick={handleAnalyze} 
-                        data-testid="button-view-analysis"
-                      >
-                        <Zap className="h-4 w-4" />
-                        {reportAnalysis?.success 
-                          ? "View AI Analysis" 
-                          : "Analyze & View Dashboard"}
-                      </Button>
+                      <Search className="h-5 w-5" />
+                      Start Free Leak Scan
                     </>
                   )}
-                </Card>
-              </div>
-            )}
-          </section>
-
-          <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Connected Platforms</h2>
-              <Badge variant="secondary" className="gap-1 bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-                <CheckCircle2 className="h-3 w-3" />
-                Auto-Sync Enabled
-              </Badge>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {platforms.map((platform) => (
-                <Card 
-                  key={platform.name}
-                  className="backdrop-blur-xl border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)] bg-white/70 dark:bg-card/70"
-                >
-                  <CardContent className="p-5">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-xl ${platform.color} flex items-center justify-center text-2xl shadow-sm ${!platform.connected ? 'grayscale' : ''}`}>
-                          {platform.icon}
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-foreground">{platform.name}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {platform.connected ? "Connected" : "Not connected"}
-                          </p>
-                        </div>
-                      </div>
-                      {platform.connected && (
-                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                      )}
-                    </div>
-                    <Button 
-                      variant={platform.connected ? "outline" : "default"}
-                      className="w-full gap-2"
-                      size="sm"
-                      onClick={() => !platform.connected && navigate("/pricing")}
-                      data-testid={`button-connect-${platform.name.toLowerCase()}`}
-                    >
-                      <Link2 className="h-4 w-4" />
-                      {platform.connected ? "Manage" : "Connect"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </section>
+                </Button>
+                <p className="text-xs text-muted-foreground mt-4">
+                  Files are processed securely and never stored permanently
+                </p>
+              </CardContent>
+            </Card>
+          )}
         </main>
       </div>
     </div>

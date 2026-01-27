@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 
 const fakeData = [
-  { id: "ORD-7291", platform: "Dine-in", date: "Jan 18", amount: "$47.82", issue: "Peak hours", recovered: "+12%" },
-  { id: "ORD-7284", platform: "DoorDash", date: "Jan 17", amount: "$32.15", issue: "High fees", recovered: "$8.20" },
-  { id: "ORD-7279", platform: "Takeout", date: "Jan 17", amount: "$28.90", issue: "Low margin", recovered: "+15%" },
-  { id: "ORD-7265", platform: "Uber Eats", date: "Jan 16", amount: "$55.40", issue: "Commission", recovered: "$22.80" },
-  { id: "ORD-7251", platform: "Dine-in", date: "Jan 15", amount: "$41.25", issue: "Upsell opp", recovered: "+18%" },
-  { id: "ORD-7238", platform: "Takeout", date: "Jan 14", amount: "$19.99", issue: "Bundle deal", recovered: "+6%" },
+  { id: "TXN-8291", type: "Subscription", date: "Jan 18", amount: "$49.99", issue: "Unused service", recovered: "$49.99" },
+  { id: "TXN-8284", type: "Payment", date: "Jan 17", amount: "$1,250.00", issue: "Underpayment", recovered: "$125.00" },
+  { id: "TXN-8279", type: "Invoice", date: "Jan 17", amount: "$890.00", issue: "Missing payment", recovered: "$890.00" },
+  { id: "TXN-8265", type: "Fee", date: "Jan 16", amount: "$35.00", issue: "Duplicate charge", recovered: "$35.00" },
+  { id: "TXN-8251", type: "Subscription", date: "Jan 15", amount: "$29.99", issue: "Price increase", recovered: "$9.99" },
+  { id: "TXN-8238", type: "Payment", date: "Jan 14", amount: "$500.00", issue: "Failed payment", recovered: "$500.00" },
 ];
 
 const AnimatedDashboard = () => {
@@ -30,7 +30,7 @@ const AnimatedDashboard = () => {
         const rowInterval = setInterval(() => {
           if (rowIndex < fakeData.length) {
             setHighlightedRow(rowIndex);
-            const rowValue = parseFloat(fakeData[rowIndex].recovered.replace("$", ""));
+            const rowValue = parseFloat(fakeData[rowIndex].recovered.replace("$", "").replace(",", ""));
             setRecoveredAmount(prev => prev + rowValue);
             rowIndex++;
           } else {
@@ -65,21 +65,21 @@ const AnimatedDashboard = () => {
         return (
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" />
-            Syncing POS data...
+            Uploading documents...
           </span>
         );
       case "analyzing":
         return (
           <span className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            Analyzing all channels...
+            Scanning for leaks...
           </span>
         );
       case "found":
         return (
           <span className="flex items-center gap-2 text-green-600 dark:text-green-400">
             <span className="w-2 h-2 rounded-full bg-green-500" />
-            Found {Math.round(displayAmount)} insights across channels!
+            Found ${displayAmount.toFixed(0)} in potential savings!
           </span>
         );
     }
@@ -112,12 +112,12 @@ const AnimatedDashboard = () => {
           <div className="flex-1 rounded-lg sm:rounded-xl bg-secondary/20 overflow-hidden border border-border/20 shadow-inner">
             {/* Table Header - Show fewer columns on mobile */}
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2.5 bg-gradient-to-r from-secondary/60 to-secondary/40 text-[8px] sm:text-xs font-semibold text-muted-foreground border-b border-border/30 uppercase tracking-wide">
-              <span>Order</span>
-              <span className="hidden sm:block">Platform</span>
+              <span>Transaction</span>
+              <span className="hidden sm:block">Type</span>
               <span className="hidden sm:block">Date</span>
               <span>Amount</span>
-              <span>Insight</span>
-              <span className="text-right">Impact</span>
+              <span>Issue Found</span>
+              <span className="text-right">Recoverable</span>
             </div>
 
             {/* Table Rows */}
@@ -134,7 +134,7 @@ const AnimatedDashboard = () => {
                   }`}
                 >
                   <span className="font-mono text-foreground font-medium truncate">{row.id}</span>
-                  <span className="hidden sm:block text-muted-foreground truncate">{row.platform}</span>
+                  <span className="hidden sm:block text-muted-foreground truncate">{row.type}</span>
                   <span className="hidden sm:block text-muted-foreground">{row.date}</span>
                   <span className="text-foreground font-medium">{row.amount}</span>
                   <span className={`transition-colors duration-300 truncate ${highlightedRow >= index ? "text-destructive font-medium" : "text-muted-foreground"}`}>
@@ -153,10 +153,10 @@ const AnimatedDashboard = () => {
           {/* Bottom Stats */}
           <div className="mt-2 sm:mt-4 pt-2 sm:pt-3 flex items-center justify-between border-t border-border/30">
             <span className="text-[10px] sm:text-xs text-muted-foreground font-medium">
-              {status === "found" ? "6 issues detected" : `${Math.max(0, highlightedRow + 1)} of 6 orders scanned`}
+              {status === "found" ? "6 leaks detected" : `${Math.max(0, highlightedRow + 1)} of 6 transactions scanned`}
             </span>
             <div className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1 sm:py-1.5 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
-              <span className="text-[10px] sm:text-xs text-muted-foreground">Total:</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground">Potential Savings:</span>
               <span className="text-xs sm:text-sm font-bold text-primary">
                 ${displayAmount.toFixed(2)}
               </span>

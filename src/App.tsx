@@ -16,6 +16,7 @@ import Pricing from "./pages/Pricing";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
+import LeakResults from "./pages/LeakResults";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,8 @@ const App = () => (
             <Route path="/trial" element={<TrialDashboard />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/uploads-pos" element={<UploadsAndPOS />} />
-            <Route path="/uploads" element={<Uploads />} />
+            <Route path="/upload" element={<Uploads />} />
+            <Route path="/results" element={<LeakResults />} />
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

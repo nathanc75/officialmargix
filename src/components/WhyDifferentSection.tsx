@@ -1,15 +1,15 @@
 import { X, Check } from "lucide-react";
 
 const notItems = [
-  "Not generic dashboards with vanity metrics",
-  "Not siloed data from separate platforms",
-  "Not manual report analysis and spreadsheets",
+  "Not account connections or bank linking",
+  "Not complex software requiring training",
+  "Not expensive consultants or manual audits",
 ];
 
 const isItems = [
-  "Direct POS connection for real order data",
-  "Unified view of dine-in, takeout & delivery",
-  "AI-powered recommendations to boost profitability",
+  "Simple file upload — use what you already have",
+  "AI-powered analysis in minutes, not weeks",
+  "Clear action steps to recover lost money",
 ];
 
 const WhyDifferentSection = () => {
@@ -23,7 +23,7 @@ const WhyDifferentSection = () => {
       <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Header */}
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-12">
-          One Platform, Complete Visibility
+          Find Leaks Without the Hassle
         </h2>
 
         {/* Two columns */}

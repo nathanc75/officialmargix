@@ -7,28 +7,28 @@ import {
 
 const faqs = [
   {
-    question: "How do I get started with MARGIX?",
-    answer: "Simply connect your POS system and we'll automatically sync your order data across all channels — dine-in, takeout, and delivery. No manual uploads needed. Our AI starts analyzing your performance right away.",
+    question: "How does LeakDetector work?",
+    answer: "Simply upload your financial documents — bank statements, invoices, payment processor exports, or any financial reports. Our AI scans the data to identify missing payments, duplicate charges, unused subscriptions, and other revenue leaks. You get a simple report showing what was found and how to fix it.",
   },
   {
-    question: "What kind of insights will I get?",
-    answer: "Our AI provides performance analysis, sales trends, efficiency insights, and actionable recommendations. When delivery platforms like Uber Eats or DoorDash are connected to your POS, we include those insights in the same unified analysis.",
+    question: "What types of files can I upload?",
+    answer: "We accept PDF and CSV files including bank statements, credit card statements, payment processor exports (Stripe, PayPal, Square, etc.), invoices, expense reports, and subscription billing summaries.",
   },
   {
-    question: "Which POS systems do you support?",
-    answer: "We support most popular POS systems used in the restaurant industry. Contact us to confirm compatibility with your specific system and get started with the integration.",
+    question: "Do I need to connect my bank account?",
+    answer: "No! Unlike other financial tools, LeakDetector works entirely with file uploads. You never need to connect your bank account, POS system, or any third-party platform. Just upload the files you already have.",
   },
   {
     question: "Is my data secure?",
-    answer: "Absolutely. We use industry-standard encryption for all POS connections and data storage. Your restaurant data is protected at all times and never shared with third parties.",
+    answer: "Absolutely. We use bank-level encryption for all file uploads and processing. Your files are analyzed in real-time and never stored permanently. We never share your data with third parties.",
   },
   {
-    question: "Can I use MARGIX for multiple restaurant locations?",
-    answer: "Yes! Our Custom plan is designed for multi-location restaurants and franchise groups. Connect each location's POS and get a unified view of performance across all sites.",
+    question: "What kind of leaks can you find?",
+    answer: "We detect missing payments, underpayments, duplicate charges, failed recurring payments, unused subscriptions, pricing inconsistencies, fee overcharges, and unexpected cost increases. Any discrepancy between expected and actual financial outcomes.",
   },
   {
-    question: "Do I need technical knowledge to use MARGIX?",
-    answer: "Not at all. Our platform is designed for restaurant owners, not tech experts. Once your POS is connected, everything syncs automatically and insights appear in an easy-to-understand dashboard.",
+    question: "How much does it cost?",
+    answer: "Your first leak scan is completely free. After that, you can subscribe for ongoing monitoring and detailed reports. See our pricing page for current plans.",
   },
 ];
 
@@ -54,7 +54,7 @@ const FAQSection = () => {
               <span className="text-gradient">Questions</span>
             </h2>
             <p className="text-muted-foreground max-w-md leading-relaxed">
-              Everything you need to know about how MARGIX analyzes your data.
+              Everything you need to know about finding revenue leaks in your business.
             </p>
           </div>
 
