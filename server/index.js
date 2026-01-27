@@ -14,19 +14,25 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Initialize OpenAI client (via Replit AI Integrations - no API key needed)
-const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-});
+let openai = null;
+if (process.env.AI_INTEGRATIONS_OPENAI_API_KEY) {
+  openai = new OpenAI({
+    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+  });
+}
 
 // Initialize Gemini client (via Replit AI Integrations - no API key needed)
-const gemini = new GoogleGenAI({
-  apiKey: process.env.AI_INTEGRATIONS_GEMINI_API_KEY,
-  httpOptions: {
-    apiVersion: "",
-    baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL,
-  },
-});
+let gemini = null;
+if (process.env.AI_INTEGRATIONS_GEMINI_API_KEY) {
+  gemini = new GoogleGenAI({
+    apiKey: process.env.AI_INTEGRATIONS_GEMINI_API_KEY,
+    httpOptions: {
+      apiVersion: "",
+      baseUrl: process.env.AI_INTEGRATIONS_GEMINI_BASE_URL,
+    },
+  });
+}
 
 app.use(cors());
 app.use(express.json());
