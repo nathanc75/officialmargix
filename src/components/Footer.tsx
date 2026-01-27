@@ -1,4 +1,5 @@
-import { Mail, Search } from "lucide-react";
+import { Mail } from "lucide-react";
+import margixLogo from "@/assets/margix-logo.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -10,8 +11,8 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <Search className="w-4 h-4 text-primary-foreground" />
+              <div className="w-8 h-8">
+                <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
               </div>
               <h3 className="text-xl font-bold text-foreground">MARGIX</h3>
             </div>
