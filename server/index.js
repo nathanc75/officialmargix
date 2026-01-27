@@ -399,9 +399,11 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
   
   // Handle client-side routing - serve index.html for all non-API routes
-  app.get('*', (req, res) => {
+  app.use((req, res, next) => {
     if (!req.path.startsWith('/api')) {
       res.sendFile(path.join(__dirname, '../dist/index.html'));
+    } else {
+      next();
     }
   });
 }
