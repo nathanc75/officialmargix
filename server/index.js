@@ -145,12 +145,16 @@ app.get("/api/uploads", (req, res) => {
   res.json(uploadedFiles);
 });
 
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+let supabase = null;
+if (process.env.VITE_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  supabase = createClient(
+    process.env.VITE_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
+}
 
 app.get("/api/metrics", async (req, res) => {
+  if (!supabase) return res.status(503).json({ error: "Database not configured" });
   const { restaurant_id } = req.query;
   if (!restaurant_id) return res.status(400).json({ error: "restaurant_id required" });
 
@@ -390,4 +394,17 @@ Respond in JSON format:
 });
 
 
-app.listen(3001, '0.0.0.0', () => console.log("Backend running on port 3001"));
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  
+  // Handle client-side routing - serve index.html for all non-API routes
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(__dirname, '../dist/index.html'));
+    }
+  });
+}
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => console.log(`Server running on port ${PORT}`));
