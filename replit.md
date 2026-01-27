@@ -1,7 +1,7 @@
-# LeakDetector - AI-Powered Business Leak Detection
+# MARGIX - AI-Powered Business Leak Detection
 
 ## Overview
-LeakDetector is a universal business leak detection platform. Users upload financial documents (bank statements, payment processor exports, invoices, PDFs/CSVs) without needing to connect any accounts. The AI scans for revenue leaks including missing payments, duplicate charges, unused subscriptions, failed payments, and pricing inefficiencies. Free initial scan with optional monthly subscription for ongoing monitoring.
+MARGIX is a universal business leak detection platform. Users upload financial documents (bank statements, payment processor exports, invoices, PDFs/CSVs) without needing to connect any accounts. The AI scans for revenue leaks including missing payments, duplicate charges, unused subscriptions, failed payments, and pricing inefficiencies. Free initial scan with optional monthly subscription for ongoing monitoring.
 
 ## Project Architecture
 - **Frontend**: React 18 + TypeScript with Vite
@@ -77,7 +77,7 @@ API Endpoints:
 - **Monthly Subscription**: Ongoing monitoring for new leaks
 
 ## Recent Changes
-- 2026-01-27: Rebranded from MARGIX restaurant analytics to LeakDetector universal platform
+- 2026-01-27: Pivoted MARGIX from restaurant analytics to universal business leak detection
   - Updated all landing page components for leak detection messaging
   - Created new `/upload` page for financial document uploads
   - Created `/results` page for displaying leak analysis

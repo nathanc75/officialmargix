@@ -13,7 +13,7 @@ const Footer = () => {
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <Search className="w-4 h-4 text-primary-foreground" />
               </div>
-              <h3 className="text-xl font-bold text-foreground">LeakDetector</h3>
+              <h3 className="text-xl font-bold text-foreground">MARGIX</h3>
             </div>
             <p className="text-sm text-muted-foreground max-w-md">
               Upload your financial documents and let AI find where your business is losing money. No account connections needed — just upload and discover hidden revenue leaks.
@@ -68,13 +68,13 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {currentYear} LeakDetector. All rights reserved.
+              © {currentYear} MARGIX. All rights reserved.
             </p>
           </div>
           
           {/* Legal Disclaimer */}
           <p className="mt-4 text-xs text-muted-foreground/60 text-center md:text-left">
-            LeakDetector is a financial analysis tool. Results are based on the documents you upload and should be verified before taking action.
+            MARGIX is a financial analysis tool. Results are based on the documents you upload and should be verified before taking action.
           </p>
         </div>
       </div>

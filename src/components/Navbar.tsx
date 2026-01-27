@@ -32,7 +32,7 @@ const Navbar = () => {
             <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center transition-transform group-hover:scale-105">
               <Search className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold text-foreground tracking-tight">LeakDetector</span>
+            <span className="text-2xl font-bold text-foreground tracking-tight">MARGIX</span>
           </a>
 
           {/* Desktop Navigation */}

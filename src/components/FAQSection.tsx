@@ -7,7 +7,7 @@ import {
 
 const faqs = [
   {
-    question: "How does LeakDetector work?",
+    question: "How does MARGIX work?",
     answer: "Simply upload your financial documents — bank statements, invoices, payment processor exports, or any financial reports. Our AI scans the data to identify missing payments, duplicate charges, unused subscriptions, and other revenue leaks. You get a simple report showing what was found and how to fix it.",
   },
   {
@@ -16,7 +16,7 @@ const faqs = [
   },
   {
     question: "Do I need to connect my bank account?",
-    answer: "No! Unlike other financial tools, LeakDetector works entirely with file uploads. You never need to connect your bank account, POS system, or any third-party platform. Just upload the files you already have.",
+    answer: "No! Unlike other financial tools, MARGIX works entirely with file uploads. You never need to connect your bank account, POS system, or any third-party platform. Just upload the files you already have.",
   },
   {
     question: "Is my data secure?",
