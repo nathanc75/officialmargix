@@ -2,18 +2,30 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Search, Sparkles, AlertCircle, File, Trash2 } from "lucide-react";
+import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Search, Sparkles, AlertCircle, File, Trash2, Building2, Receipt, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAnalysis, LeakAnalysis } from "@/context/AnalysisContext";
 import { useToast } from "@/hooks/use-toast";
+
+type DocumentCategory = "bank" | "invoices" | "payments";
 
 interface UploadedFile {
   id: string;
   name: string;
   size: number;
   type: string;
+  category: DocumentCategory;
   status: "uploading" | "uploaded" | "analyzing" | "analyzed" | "error";
   content?: string;
+}
+
+interface UploadSectionConfig {
+  id: DocumentCategory;
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  accept: string;
+  placeholder: string;
 }
 
 const formatFileSize = (bytes: number): string => {
@@ -25,10 +37,47 @@ const formatFileSize = (bytes: number): string => {
 const Uploads = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const bankInputRef = useRef<HTMLInputElement>(null);
+  const invoicesInputRef = useRef<HTMLInputElement>(null);
+  const paymentsInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { setLeakAnalysis } = useAnalysis();
   const { toast } = useToast();
+
+  const uploadSections: UploadSectionConfig[] = [
+    {
+      id: "bank",
+      title: "Bank Statements",
+      description: "Upload PDF or CSV exports from your bank",
+      icon: <Building2 className="h-5 w-5 text-primary" />,
+      accept: ".csv,.pdf,.txt",
+      placeholder: "Chase, Bank of America, Wells Fargo exports",
+    },
+    {
+      id: "invoices",
+      title: "Invoices & Receipts",
+      description: "Upload invoices and receipts for comparison",
+      icon: <Receipt className="h-5 w-5 text-amber-600" />,
+      accept: ".csv,.pdf,.txt",
+      placeholder: "Vendor invoices, purchase receipts",
+    },
+    {
+      id: "payments",
+      title: "Payment Reports",
+      description: "Upload reports from payment processors",
+      icon: <CreditCard className="h-5 w-5 text-emerald-600" />,
+      accept: ".csv,.pdf,.txt,.tsv",
+      placeholder: "Stripe, PayPal, Square exports",
+    },
+  ];
+
+  const getInputRef = (category: DocumentCategory) => {
+    switch (category) {
+      case "bank": return bankInputRef;
+      case "invoices": return invoicesInputRef;
+      case "payments": return paymentsInputRef;
+    }
+  };
 
   const readFileContent = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -39,7 +88,7 @@ const Uploads = () => {
     });
   };
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>, category: DocumentCategory) => {
     const files = e.target.files;
     if (!files) return;
 
@@ -54,6 +103,7 @@ const Uploads = () => {
         name: file.name,
         size: file.size,
         type: file.type || (file.name.endsWith('.csv') ? 'text/csv' : 'application/pdf'),
+        category,
         status: "uploading",
       };
       
@@ -80,13 +130,18 @@ const Uploads = () => {
     }
     
     // Reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    const inputRef = getInputRef(category);
+    if (inputRef.current) {
+      inputRef.current.value = "";
     }
   };
 
   const removeFile = (fileId: string) => {
     setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
+  };
+
+  const getFilesForCategory = (category: DocumentCategory) => {
+    return uploadedFiles.filter(f => f.category === category);
   };
 
   const handleAnalyze = async () => {
@@ -98,18 +153,24 @@ const Uploads = () => {
     setUploadedFiles(prev => prev.map(f => ({ ...f, status: "analyzing" as const })));
     
     try {
-      // Combine all file contents for analysis
-      const combinedContent = uploadedFiles
-        .filter(f => f.content)
-        .map(f => `=== File: ${f.name} ===\n${f.content}`)
-        .join("\n\n");
+      // Combine all file contents for analysis, grouped by category
+      const categorizedContent = uploadSections.map(section => {
+        const files = getFilesForCategory(section.id);
+        if (files.length === 0) return "";
+        return `=== ${section.title.toUpperCase()} ===\n${files.filter(f => f.content).map(f => `--- ${f.name} ---\n${f.content}`).join("\n\n")}`;
+      }).filter(Boolean).join("\n\n");
       
       const response = await fetch("/api/analyze/leaks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          fileContent: combinedContent,
+          fileContent: categorizedContent,
           fileNames: uploadedFiles.map(f => f.name),
+          categories: {
+            bank: getFilesForCategory("bank").map(f => f.name),
+            invoices: getFilesForCategory("invoices").map(f => f.name),
+            payments: getFilesForCategory("payments").map(f => f.name),
+          },
         }),
       });
       
@@ -138,16 +199,17 @@ const Uploads = () => {
     }
   };
 
+  const totalFiles = uploadedFiles.length;
   const uploadedCount = uploadedFiles.filter(f => f.status === "uploaded" || f.status === "analyzed").length;
-  const hasFiles = uploadedFiles.length > 0;
+  const hasFiles = totalFiles > 0;
   const allUploaded = uploadedFiles.every(f => f.status === "uploaded" || f.status === "analyzed");
 
-  const acceptedFileTypes = [
-    { label: "Bank Statements", desc: "PDF or CSV exports" },
-    { label: "Payment Reports", desc: "Stripe, PayPal, Square" },
-    { label: "Invoices", desc: "PDF invoices and receipts" },
-    { label: "Expense Reports", desc: "CSV or PDF format" },
-  ];
+  const getCategoryStats = () => {
+    return uploadSections.map(section => ({
+      ...section,
+      count: getFilesForCategory(section.id).length,
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -182,7 +244,7 @@ const Uploads = () => {
                   </div>
                   <div>
                     <h1 className="text-lg sm:text-xl font-bold text-foreground">Upload Documents</h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Upload your financial files for analysis</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Scan for missing payments & revenue leaks</p>
                   </div>
                 </div>
               </div>
@@ -194,123 +256,155 @@ const Uploads = () => {
           </div>
         </header>
 
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-          {/* File Types Info */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {acceptedFileTypes.map((type) => (
-              <div key={type.label} className="p-3 rounded-lg bg-secondary/50 border border-border">
-                <p className="text-sm font-medium text-foreground">{type.label}</p>
-                <p className="text-xs text-muted-foreground">{type.desc}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Upload Area */}
-          <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <FileText className="h-5 w-5 text-primary" />
-                <h3 className="font-semibold text-foreground">Financial Documents</h3>
-                {uploadedCount > 0 && (
-                  <Badge variant="secondary" className="ml-auto">
-                    {uploadedCount} file{uploadedCount !== 1 ? 's' : ''} ready
-                  </Badge>
-                )}
-              </div>
-              
-              <div 
-                className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                onClick={() => fileInputRef.current?.click()}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".csv,.pdf,.txt,.tsv"
-                  multiple
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  data-testid="input-file-upload"
-                />
-                <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
-                  <Upload className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <p className="text-lg font-medium text-foreground mb-2">
-                  Drop files here or click to browse
-                </p>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Upload bank statements, invoices, payment reports (PDF, CSV)
-                </p>
-                <Button 
-                  size="default"
-                  className="gap-2" 
-                  onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
-                  data-testid="button-browse-files"
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          {/* Category Stats */}
+          {hasFiles && (
+            <div className="grid grid-cols-3 gap-3">
+              {getCategoryStats().map((stat) => (
+                <div 
+                  key={stat.id} 
+                  className={`p-3 rounded-lg border text-center transition-all ${
+                    stat.count > 0 
+                      ? "bg-primary/5 border-primary/20" 
+                      : "bg-secondary/50 border-border"
+                  }`}
                 >
-                  <Plus className="h-4 w-4" />
-                  Select Files
-                </Button>
-              </div>
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    {stat.icon}
+                    <span className="text-sm font-medium text-foreground">{stat.title}</span>
+                  </div>
+                  <p className={`text-lg font-bold ${stat.count > 0 ? "text-primary" : "text-muted-foreground"}`}>
+                    {stat.count} {stat.count === 1 ? "file" : "files"}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
 
-              {/* Uploaded Files List */}
-              {hasFiles && (
-                <div className="mt-6 space-y-3">
-                  <p className="text-sm font-medium text-foreground">Uploaded Files</p>
-                  {uploadedFiles.map((file) => (
-                    <div 
-                      key={file.id}
-                      className={`flex items-center gap-3 p-3 rounded-lg border ${
-                        file.status === "error" 
-                          ? "bg-destructive/5 border-destructive/20" 
-                          : file.status === "analyzing"
-                            ? "bg-primary/5 border-primary/20"
-                            : "bg-secondary/50 border-border"
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        file.status === "error" 
-                          ? "bg-destructive/10" 
-                          : file.status === "analyzing"
-                            ? "bg-primary/10"
-                            : "bg-secondary"
-                      }`}>
-                        {file.status === "uploading" || file.status === "analyzing" ? (
-                          <Loader2 className="h-5 w-5 text-primary animate-spin" />
-                        ) : file.status === "error" ? (
-                          <AlertCircle className="h-5 w-5 text-destructive" />
-                        ) : file.status === "analyzed" ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-600" />
-                        ) : (
-                          <File className="h-5 w-5 text-muted-foreground" />
-                        )}
+          {/* Upload Sections */}
+          <div className="grid gap-6">
+            {uploadSections.map((section) => {
+              const inputRef = getInputRef(section.id);
+              const categoryFiles = getFilesForCategory(section.id);
+              const categoryFileCount = categoryFiles.length;
+              
+              return (
+                <Card 
+                  key={section.id}
+                  className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        {section.icon}
+                        <div>
+                          <h3 className="font-semibold text-foreground">{section.title}</h3>
+                          <p className="text-xs text-muted-foreground">{section.description}</p>
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {formatFileSize(file.size)} - {
-                            file.status === "uploading" ? "Uploading..." :
-                            file.status === "analyzing" ? "Analyzing..." :
-                            file.status === "analyzed" ? "Analyzed" :
-                            file.status === "error" ? "Error" : "Ready"
-                          }
-                        </p>
-                      </div>
-                      {file.status !== "analyzing" && (
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                          onClick={() => removeFile(file.id)}
-                          data-testid={`button-remove-${file.id}`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                      {categoryFileCount > 0 && (
+                        <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                          {categoryFileCount} file{categoryFileCount !== 1 ? 's' : ''}
+                        </Badge>
                       )}
                     </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+                    
+                    <div 
+                      className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                      onClick={() => inputRef.current?.click()}
+                    >
+                      <input
+                        ref={inputRef}
+                        type="file"
+                        accept={section.accept}
+                        multiple
+                        onChange={(e) => handleFileSelect(e, section.id)}
+                        className="hidden"
+                        data-testid={`input-file-upload-${section.id}`}
+                      />
+                      <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                        <Upload className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                      <p className="text-sm font-medium text-foreground mb-1">
+                        Drop files here or click to browse
+                      </p>
+                      <p className="text-xs text-muted-foreground mb-3">
+                        {section.placeholder}
+                      </p>
+                      <Button 
+                        size="sm"
+                        variant="outline"
+                        className="gap-2" 
+                        onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
+                        data-testid={`button-browse-${section.id}`}
+                      >
+                        <Plus className="h-4 w-4" />
+                        Select Files
+                      </Button>
+                    </div>
+
+                    {/* Uploaded Files List for this category */}
+                    {categoryFileCount > 0 && (
+                      <div className="mt-4 space-y-2">
+                        {categoryFiles.map((file) => (
+                          <div 
+                            key={file.id}
+                            className={`flex items-center gap-3 p-3 rounded-lg border ${
+                              file.status === "error" 
+                                ? "bg-destructive/5 border-destructive/20" 
+                                : file.status === "analyzing"
+                                  ? "bg-primary/5 border-primary/20"
+                                  : "bg-secondary/50 border-border"
+                            }`}
+                          >
+                            <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
+                              file.status === "error" 
+                                ? "bg-destructive/10" 
+                                : file.status === "analyzing"
+                                  ? "bg-primary/10"
+                                  : "bg-secondary"
+                            }`}>
+                              {file.status === "uploading" || file.status === "analyzing" ? (
+                                <Loader2 className="h-4 w-4 text-primary animate-spin" />
+                              ) : file.status === "error" ? (
+                                <AlertCircle className="h-4 w-4 text-destructive" />
+                              ) : file.status === "analyzed" ? (
+                                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                              ) : (
+                                <File className="h-4 w-4 text-muted-foreground" />
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {formatFileSize(file.size)} - {
+                                  file.status === "uploading" ? "Uploading..." :
+                                  file.status === "analyzing" ? "Analyzing..." :
+                                  file.status === "analyzed" ? "Analyzed" :
+                                  file.status === "error" ? "Error" : "Ready"
+                                }
+                              </p>
+                            </div>
+                            {file.status !== "analyzing" && (
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                onClick={() => removeFile(file.id)}
+                                data-testid={`button-remove-${file.id}`}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
 
           {/* Analyze Button */}
           {hasFiles && allUploaded && (
@@ -319,12 +413,11 @@ const Uploads = () => {
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <Sparkles className="h-5 w-5 text-primary" />
                   <p className="text-lg font-semibold text-foreground">
-                    Ready to Scan for Leaks
+                    Ready to Scan {totalFiles} Document{totalFiles !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <p className="text-sm text-muted-foreground mb-6">
-                  Our AI will analyze your {uploadedFiles.length} file{uploadedFiles.length !== 1 ? 's' : ''} 
-                  {' '}to find missing payments, duplicate charges, unused subscriptions, and other revenue leaks.
+                  Our AI will cross-reference your documents to find missing payments, duplicate charges, unused subscriptions, and other revenue leaks.
                 </p>
                 <Button 
                   size="lg"
