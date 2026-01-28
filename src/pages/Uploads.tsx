@@ -471,9 +471,7 @@ const Uploads = () => {
                 <div>
                   <h3 className="font-semibold text-foreground mb-2">Multi-Model AI Analysis</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                    Our advanced pipeline uses <span className="font-medium text-foreground">Gemini Vision</span> for document OCR, 
-                    <span className="font-medium text-foreground"> GPT</span> for smart categorization, and both models for 
-                    <span className="font-medium text-foreground"> cross-validated leak detection</span>.
+                    Our AI reads documents, understands their content, and detects sensitive data with multi-model verification for higher accuracy.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="secondary" className="text-xs gap-1">
