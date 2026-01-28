@@ -781,8 +781,8 @@ const Uploads = () => {
         </main>
       </div>
 
-      {/* AI Chat Widget */}
-      <AIChatWidget documentContext={hasFiles ? chatContext : undefined} />
+      {/* AI Chat Widget - Locked for free scans */}
+      <AIChatWidget documentContext={hasFiles ? chatContext : undefined} locked={true} />
     </div>
   );
 };
