@@ -39,7 +39,7 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-            <Link to="/upload">
+            <Link to="/signup?redirect=/upload">
               <Button 
                 size="lg" 
                 className="h-11 px-6 text-sm font-medium gap-2"

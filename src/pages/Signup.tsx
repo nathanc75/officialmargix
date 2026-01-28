@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUser } from "@/context/UserContext";
 
@@ -14,13 +14,16 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [restaurantName, setRestaurantName] = useState("");
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login } = useUser();
+  
+  const redirectTo = searchParams.get("redirect") || "/uploads-pos";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Create account goes to Free Trial (demo mode with locked POS)
     login(email, "free");
-    navigate("/uploads-pos");
+    navigate(redirectTo);
   };
 
   return (
