@@ -91,7 +91,7 @@ const Signup = () => {
         <div className="w-full max-w-lg mx-auto lg:mx-0">
           {/* Mobile Logo */}
           <div className="lg:hidden mb-10">
-            <Link to="/" className="flex items-center gap-1.5 justify-center group">
+            <Link to="/" className="flex items-center gap-1 justify-center group">
               <div className="w-10 h-10 transition-transform group-hover:scale-105">
                 <img 
                   src={margixLogo} 
