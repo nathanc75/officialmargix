@@ -477,8 +477,8 @@ const LeakResults = () => {
         </main>
       </div>
 
-      {/* AI Chat Widget */}
-      <AIChatWidget documentContext={chatContext} />
+      {/* AI Chat Widget - Locked for free scans */}
+      <AIChatWidget documentContext={chatContext} locked={true} />
     </div>
   );
 };
