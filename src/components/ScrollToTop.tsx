@@ -5,7 +5,11 @@ export function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    // Use instant scroll for better mobile compatibility
+    window.scrollTo(0, 0);
+    // Also scroll document element for mobile browsers
+    document.documentElement.scrollTo(0, 0);
+    document.body.scrollTo(0, 0);
   }, [pathname]);
 
   return null;
