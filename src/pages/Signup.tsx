@@ -123,7 +123,7 @@ const Signup = () => {
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input
                       id="fullName"
-                      placeholder="John Doe"
+                      placeholder="Name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
@@ -132,12 +132,12 @@ const Signup = () => {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <Label htmlFor="restaurantName" className="text-foreground text-base">Restaurant Name</Label>
+                  <Label htmlFor="restaurantName" className="text-foreground text-base">Business Name</Label>
                   <div className="relative">
                     <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <Input
                       id="restaurantName"
-                      placeholder="The Daily Bistro"
+                      placeholder="Your Business"
                       value={restaurantName}
                       onChange={(e) => setRestaurantName(e.target.value)}
                       className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
