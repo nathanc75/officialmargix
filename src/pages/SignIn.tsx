@@ -52,10 +52,10 @@ const SignIn = () => {
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-4">
             Welcome back to your{" "}
-            <span className="text-gradient">AI-powered</span> restaurant analytics
+            <span className="text-gradient">AI-powered</span> leak detection
           </h1>
           <p className="text-muted-foreground text-lg">
-            Access your unified view of dine-in, takeout, and delivery performance — all powered by your POS data.
+            Access your scans for missing payments, duplicate charges, and hidden revenue leaks — no account connections needed.
           </p>
         </div>
       </div>

@@ -54,30 +54,30 @@ const Signup = () => {
             <span className="text-3xl font-bold text-foreground tracking-tight">MARGIX</span>
           </Link>
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Unlock{" "}
-            <span className="text-gradient">AI-powered restaurant insights</span>
+            Find where your business is{" "}
+            <span className="text-gradient">losing money</span>
           </h1>
           <p className="text-muted-foreground text-lg">
-            Connect your POS to get unified analytics across all order channels. No credit card required.
+            Upload bank statements, invoices, or payment reports. Our AI scans for revenue leaks — no account connections needed.
           </p>
           
           <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="w-5 h-5 text-primary" />
-              <p className="text-sm font-medium text-primary">What you'll get</p>
+              <p className="text-sm font-medium text-primary">What we detect</p>
             </div>
             <ul className="space-y-2 text-sm text-foreground">
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Unified dine-in, takeout & delivery analytics
+                Missing payments & duplicate charges
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                AI-driven performance recommendations
+                Unused subscriptions draining your account
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Real data from your POS system
+                Hidden revenue leaks & billing errors
               </li>
             </ul>
           </div>
@@ -109,7 +109,7 @@ const Signup = () => {
             <div className="mb-6">
               <h2 className="text-3xl font-bold text-foreground mb-1">Create your account</h2>
               <p className="text-muted-foreground text-base">
-                Connect your POS and get AI-powered insights — no payment required
+                Start scanning your financial documents for hidden leaks — no credit card required
               </p>
             </div>
 
@@ -208,7 +208,7 @@ const Signup = () => {
 
               <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white mt-2" data-testid="button-run-analysis">
                 <Sparkles className="w-4 h-4 mr-2" />
-                Connect POS & Start
+                Start Free Scan
               </Button>
             </form>
 
