@@ -10,7 +10,7 @@ import { useAnalysis } from "@/context/AnalysisContext";
 
 const TrialDashboard = () => {
   const [dateRange, setDateRange] = useState("30days");
-  const [platform, setPlatform] = useState("all");
+  const [documentType, setDocumentType] = useState("all");
   const { hasData, reportAnalysis, isAnalyzing, analysisStep } = useAnalysis();
 
   return (
@@ -32,8 +32,8 @@ const TrialDashboard = () => {
         <DashboardHeader 
           dateRange={dateRange} 
           setDateRange={setDateRange} 
-          platform={platform} 
-          setPlatform={setPlatform}
+          documentType={documentType} 
+          setDocumentType={setDocumentType}
           isTrial={true}
         />
         

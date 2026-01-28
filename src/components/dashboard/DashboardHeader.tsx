@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, CheckCircle2, Lock, Menu, Upload } from "lucide-react";
+import { ArrowLeft, FileCheck, Menu, Upload } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -15,12 +15,12 @@ import margixLogo from "@/assets/margix-logo.png";
 interface DashboardHeaderProps {
   dateRange: string;
   setDateRange: (value: string) => void;
-  platform: string;
-  setPlatform: (value: string) => void;
+  documentType: string;
+  setDocumentType: (value: string) => void;
   isTrial?: boolean;
 }
 
-const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTrial = false }: DashboardHeaderProps) => {
+const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentType, isTrial = false }: DashboardHeaderProps) => {
   return (
     <header 
       className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
@@ -43,33 +43,29 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTri
               </div>
               <div>
                 <h1 className="text-sm sm:text-base font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
-                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block font-medium">Analytics Dashboard</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block font-medium">Leak Detection Dashboard</p>
               </div>
             </div>
             
             <div className="hidden lg:flex items-center gap-2 ml-4">
-              <Badge variant="secondary" className="gap-1.5 py-1 px-2.5 text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
-                <CheckCircle2 className="h-3 w-3" />
-                Uber Eats
-              </Badge>
-              <Badge variant="secondary" className="gap-1.5 py-1 px-2.5 text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-medium">
-                <CheckCircle2 className="h-3 w-3" />
-                DoorDash
+              <Badge variant="secondary" className="gap-1.5 py-1 px-2.5 text-xs bg-primary/10 text-primary border-primary/20 font-medium">
+                <FileCheck className="h-3 w-3" />
+                AI-Powered Scan
               </Badge>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
             <div className="hidden md:flex items-center gap-2 bg-muted/50 p-1 rounded-lg border">
-              <Select value={platform} onValueChange={setPlatform}>
-                <SelectTrigger className="w-[100px] lg:w-[120px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
-                  <SelectValue placeholder="Platform" />
+              <Select value={documentType} onValueChange={setDocumentType}>
+                <SelectTrigger className="w-[100px] lg:w-[130px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
+                  <SelectValue placeholder="Document" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Platforms</SelectItem>
-                  <SelectItem value="uber-eats">Uber Eats</SelectItem>
-                  <SelectItem value="doordash">DoorDash</SelectItem>
-                  <SelectItem value="grubhub">Grubhub</SelectItem>
+                  <SelectItem value="all">All Documents</SelectItem>
+                  <SelectItem value="bank">Bank Statements</SelectItem>
+                  <SelectItem value="invoices">Invoices</SelectItem>
+                  <SelectItem value="payments">Payment Reports</SelectItem>
                 </SelectContent>
               </Select>
               <div className="w-px h-4 bg-border" />
@@ -95,20 +91,20 @@ const DashboardHeader = ({ dateRange, setDateRange, platform, setPlatform, isTri
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px] z-[100]">
                   <SheetHeader>
-                    <SheetTitle>Filter Analytics</SheetTitle>
+                    <SheetTitle>Filter Analysis</SheetTitle>
                   </SheetHeader>
                   <div className="grid gap-4 py-4">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Platform</label>
-                      <Select value={platform} onValueChange={setPlatform}>
+                      <label className="text-sm font-medium">Document Type</label>
+                      <Select value={documentType} onValueChange={setDocumentType}>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Platform" />
+                          <SelectValue placeholder="Select Type" />
                         </SelectTrigger>
                         <SelectContent className="z-[110]">
-                          <SelectItem value="all">All Platforms</SelectItem>
-                          <SelectItem value="uber-eats">Uber Eats</SelectItem>
-                          <SelectItem value="doordash">DoorDash</SelectItem>
-                          <SelectItem value="grubhub">Grubhub</SelectItem>
+                          <SelectItem value="all">All Documents</SelectItem>
+                          <SelectItem value="bank">Bank Statements</SelectItem>
+                          <SelectItem value="invoices">Invoices</SelectItem>
+                          <SelectItem value="payments">Payment Reports</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

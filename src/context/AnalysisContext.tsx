@@ -9,7 +9,7 @@ export interface AnalysisSummary {
 }
 
 export interface AnalysisIssue {
-  type: "pricing_error" | "missed_refund" | "fee_discrepancy" | "promo_loss";
+  type: "pricing_error" | "missed_refund" | "fee_discrepancy" | "promo_loss" | "duplicate_charge" | "missing_payment" | "unused_subscription";
   description: string;
   potentialRecovery: number;
 }

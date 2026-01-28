@@ -7,15 +7,15 @@ import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
 
 const Analytics = () => {
   const [dateRange, setDateRange] = useState("7days");
-  const [platform, setPlatform] = useState("all");
+  const [documentType, setDocumentType] = useState("all");
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] overflow-x-hidden">
       <DashboardHeader 
         dateRange={dateRange} 
         setDateRange={setDateRange}
-        platform={platform}
-        setPlatform={setPlatform}
+        documentType={documentType}
+        setDocumentType={setDocumentType}
       />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6 lg:space-y-8 overflow-x-hidden">
