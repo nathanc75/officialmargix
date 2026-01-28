@@ -101,7 +101,7 @@ export function AIChatWidget({ documentContext, locked = false }: AIChatWidgetPr
   }
 
   return (
-    <Card className="fixed inset-4 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[380px] sm:h-[520px] shadow-2xl border-border z-50 flex flex-col overflow-hidden">
+    <Card className="fixed bottom-4 right-4 left-4 h-[70vh] max-h-[480px] sm:left-auto sm:bottom-6 sm:right-6 sm:w-[380px] sm:h-[520px] sm:max-h-none shadow-2xl border-border z-50 flex flex-col overflow-hidden">
       {/* Header */}
       <CardHeader className="p-3 sm:p-4 border-b border-border bg-card shrink-0">
         <div className="flex items-center justify-between">
