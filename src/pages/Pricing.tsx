@@ -45,6 +45,20 @@ const plans = [
       "Ongoing monthly monitoring via uploads",
     ],
   },
+  {
+    name: "Custom",
+    price: "Custom",
+    cta: "Contact Sales",
+    purpose: "Tailored to your needs",
+    features: [
+      "Everything in Business",
+      "Custom integrations",
+      "Dedicated account manager",
+      "Custom reporting",
+      "API access",
+      "SLA guarantees",
+    ],
+  },
 ];
 
 const Pricing = () => {
@@ -53,6 +67,10 @@ const Pricing = () => {
   const handleSelectPlan = (planName: string) => {
     if (planName === "Free Scan") {
       window.location.href = "/upload";
+      return;
+    }
+    if (planName === "Custom") {
+      window.location.href = "/#contact";
       return;
     }
     toast({
@@ -94,7 +112,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {plans.map((plan) => (
             <div
               key={plan.name}
@@ -120,11 +138,17 @@ const Pricing = () => {
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-foreground">
-                    ${plan.price}
-                  </span>
-                  {plan.price > 0 && (
-                    <span className="text-muted-foreground">/ month</span>
+                  {typeof plan.price === "number" ? (
+                    <>
+                      <span className="text-4xl font-bold text-foreground">
+                        ${plan.price}
+                      </span>
+                      {plan.price > 0 && (
+                        <span className="text-muted-foreground">/ month</span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                   )}
                 </div>
               </div>

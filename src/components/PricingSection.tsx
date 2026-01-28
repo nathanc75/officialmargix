@@ -43,6 +43,20 @@ const plans = [
       "Ongoing monthly monitoring via uploads",
     ],
   },
+  {
+    name: "Custom",
+    price: "Custom",
+    cta: "Contact Sales",
+    purpose: "Tailored to your needs",
+    features: [
+      "Everything in Business",
+      "Custom integrations",
+      "Dedicated account manager",
+      "Custom reporting",
+      "API access",
+      "SLA guarantees",
+    ],
+  },
 ];
 
 const PricingSection = () => {
@@ -51,6 +65,8 @@ const PricingSection = () => {
   const handlePlanSelect = (planName: string) => {
     if (planName === "Free Scan") {
       navigate('/upload');
+    } else if (planName === "Custom") {
+      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
     } else {
       navigate('/signup');
     }
@@ -77,7 +93,7 @@ const PricingSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 mt-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
           {plans.map((plan) => (
             <div
               key={plan.name}
@@ -105,11 +121,17 @@ const PricingSection = () => {
 
               <div className="mb-6">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-foreground">
-                    ${plan.price}
-                  </span>
-                  {plan.price > 0 && (
-                    <span className="text-muted-foreground">/ month</span>
+                  {typeof plan.price === "number" ? (
+                    <>
+                      <span className="text-4xl font-bold text-foreground">
+                        ${plan.price}
+                      </span>
+                      {plan.price > 0 && (
+                        <span className="text-muted-foreground">/ month</span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                   )}
                 </div>
               </div>
