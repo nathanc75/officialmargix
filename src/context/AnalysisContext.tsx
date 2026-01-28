@@ -68,9 +68,22 @@ export interface LeakAnalysis {
     date?: string;
     severity: "high" | "medium" | "low";
     recommendation: string;
+    confidence?: number;
+    crossValidated?: boolean;
+    modelSource?: "gemini" | "gpt" | "both";
   }[];
   summary: string;
   analyzedAt: string;
+  multiModelAnalysis?: boolean;
+  confidence?: {
+    overallScore: number;
+    crossValidated: number;
+    needsReview: number;
+  };
+  modelContributions?: {
+    gemini: string[];
+    gpt: string[];
+  };
 }
 
 interface AnalysisState {

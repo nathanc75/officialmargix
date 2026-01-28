@@ -332,41 +332,293 @@ Respond in JSON format:
   }
 });
 
-// Universal Business Leak Detection endpoint
+// ============ OCR & Document Extraction Endpoint (Gemini Vision) ============
+app.post("/api/analyze/ocr", async (req, res) => {
+  try {
+    const { imageBase64, imageMimeType, fileName } = req.body;
+    
+    if (!imageBase64) {
+      return res.status(400).json({ error: "Image data is required" });
+    }
+
+    if (!gemini) {
+      return res.status(503).json({ error: "Gemini AI service not available" });
+    }
+
+    const prompt = `You are a document OCR and data extraction specialist. Analyze this document image and extract all text and structured data.
+
+Extract the following:
+1. All raw text content, preserving formatting where possible
+2. Any tables present (as structured data)
+3. Key financial figures: amounts, totals, dates, account numbers, transaction IDs
+4. Document metadata: type, date, issuer/sender
+
+Respond in JSON format:
+{
+  "rawText": "full extracted text content",
+  "tables": [
+    {
+      "headers": ["Column1", "Column2"],
+      "rows": [["val1", "val2"], ["val3", "val4"]]
+    }
+  ],
+  "extractedData": {
+    "amounts": [{ "value": 123.45, "description": "Total amount" }],
+    "dates": ["2024-01-15", "2024-01-20"],
+    "accountNumbers": ["****1234"],
+    "transactionIds": ["TXN-12345"]
+  },
+  "documentType": "bank_statement | invoice | receipt | payment_report | other",
+  "confidence": 0.95
+}`;
+
+    const response = await gemini.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            { text: prompt },
+            {
+              inlineData: {
+                mimeType: imageMimeType || "image/jpeg",
+                data: imageBase64,
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    const text = response.text || "";
+    
+    let ocrResult;
+    try {
+      const jsonMatch = text.match(/```json\n?([\s\S]*?)\n?```/) || text.match(/\{[\s\S]*\}/);
+      ocrResult = JSON.parse(jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : text);
+    } catch {
+      ocrResult = { rawText: text, confidence: 0.5, parseError: true };
+    }
+
+    res.json({
+      success: true,
+      ocrResult,
+      fileName,
+      model: "gemini-2.5-flash",
+      processedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Error in OCR extraction:", error);
+    res.status(500).json({ error: "Failed to extract document content", details: error.message });
+  }
+});
+
+// ============ Smart Document Categorization Endpoint (GPT) ============
+app.post("/api/analyze/categorize", async (req, res) => {
+  try {
+    const { textContent, fileName } = req.body;
+    
+    if (!textContent) {
+      return res.status(400).json({ error: "Text content is required" });
+    }
+
+    if (!openai) {
+      return res.status(503).json({ error: "OpenAI service not available" });
+    }
+
+    const systemPrompt = `You are a document classification expert. Analyze the provided text and classify the document type.
+
+Classify into one of these categories:
+- payment_report: Stripe, PayPal, Square, delivery platform payouts
+- bank_statement: Bank transactions, account statements
+- invoice: Vendor invoices, bills
+- receipt: Purchase receipts, order confirmations
+- pricing_list: Menu, product catalog, price list
+- refund_record: Refund documentation, chargeback records
+- other: Unclassified documents
+
+Provide a confidence score (0-1) and explain your reasoning.
+
+Respond in JSON:
+{
+  "category": "payment_report",
+  "confidence": 0.92,
+  "reasoning": "Contains Stripe payout references, transaction IDs, and fee breakdowns",
+  "suggestedSection": "payments"
+}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: `Classify this document:\n\nFilename: ${fileName}\n\nContent:\n${textContent.slice(0, 4000)}` }
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.2,
+    });
+
+    const result = JSON.parse(response.choices[0].message.content);
+
+    res.json({
+      success: true,
+      classification: result,
+      fileName,
+      model: "gpt-4o-mini",
+      processedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Error categorizing document:", error);
+    res.status(500).json({ error: "Failed to categorize document", details: error.message });
+  }
+});
+
+// ============ Document Chat Assistant Endpoint (Streaming) ============
+app.post("/api/chat/document", async (req, res) => {
+  try {
+    const { message, context, history } = req.body;
+    
+    if (!message) {
+      return res.status(400).json({ error: "Message is required" });
+    }
+
+    if (!openai) {
+      return res.status(503).json({ error: "OpenAI service not available" });
+    }
+
+    const systemPrompt = `You are MARGIX, an AI assistant specialized in helping businesses understand their financial documents and analysis results.
+
+${context ? `
+DOCUMENT CONTEXT:
+- Files analyzed: ${context.fileNames?.join(', ') || 'None'}
+- Categories: ${JSON.stringify(context.categories || {})}
+${context.analysisResults ? `
+- Analysis Results:
+  - Total leaks found: ${context.analysisResults.totalLeaks}
+  - Total recoverable: $${context.analysisResults.totalRecoverable}
+  - Summary: ${context.analysisResults.summary}
+` : ''}
+` : 'No document context available yet.'}
+
+Guidelines:
+1. Be helpful and specific about the documents analyzed
+2. Reference actual findings when available
+3. Provide actionable recommendations
+4. If asked about data not in context, say so clearly
+5. Keep responses concise but informative`;
+
+    const messages = [
+      { role: "system", content: systemPrompt },
+      ...(history || []),
+      { role: "user", content: message }
+    ];
+
+    // Set up streaming response
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    const stream = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages,
+      stream: true,
+      temperature: 0.7,
+    });
+
+    for await (const chunk of stream) {
+      const content = chunk.choices[0]?.delta?.content || "";
+      if (content) {
+        res.write(`data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\n`);
+      }
+    }
+
+    res.write("data: [DONE]\n\n");
+    res.end();
+  } catch (error) {
+    console.error("Error in document chat:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ error: "Failed to process chat message", details: error.message });
+    } else {
+      res.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
+      res.end();
+    }
+  }
+});
+
+// ============ Enhanced Multi-Model Leak Detection Endpoint ============
 app.post("/api/analyze/leaks", async (req, res) => {
   try {
-    const { fileContent, fileNames } = req.body;
+    const { fileContent, fileNames, categories, ocrResults } = req.body;
     
     if (!fileContent) {
       return res.status(400).json({ error: "File content is required" });
     }
 
-    if (!openai) {
-      return res.status(503).json({ error: "AI service not available" });
+    if (!openai || !gemini) {
+      return res.status(503).json({ error: "AI services not fully available" });
     }
 
-    const systemPrompt = `You are an expert financial analyst specializing in detecting revenue leaks and financial inefficiencies for businesses. Analyze the provided financial documents (bank statements, payment reports, invoices, etc.) to identify money leaks.
+    // STEP 1: Gemini Pattern Detection
+    const geminiPrompt = `You are a financial pattern detection AI. Analyze these documents for patterns that might indicate revenue leaks:
 
-Look for these types of leaks:
-1. MISSING PAYMENTS - Expected income that never arrived, unpaid invoices, failed transactions
-2. DUPLICATE CHARGES - Being charged twice for the same service, double payments
-3. UNUSED SUBSCRIPTIONS - Subscriptions being paid for but not used, forgotten recurring charges
-4. FAILED PAYMENTS - Transactions that failed but weren't retried, declined payments not followed up
-5. PRICING INEFFICIENCIES - Being overcharged vs market rates, unnecessary fees
-6. BILLING ERRORS - Incorrect amounts, math errors, wrong quantities
+1. Recurring charges on specific dates
+2. Duplicate amounts across transactions
+3. Unusual fee patterns
+4. Subscription patterns
+5. Refund patterns
 
-For each leak found, provide:
-- A unique ID
-- Type of leak (missing_payment, duplicate_charge, unused_subscription, failed_payment, pricing_inefficiency, billing_error, other)
-- Clear description of the issue
-- Amount involved (best estimate)
-- Date if identifiable
-- Severity (high = >$100 or recurring, medium = $20-$100, low = <$20)
-- Specific recommendation to recover or prevent this leak
+Documents analyzed: ${fileNames.join(', ')}
 
-Be thorough but realistic. Only flag issues with clear evidence in the data.
+Content:
+${fileContent}
 
-Respond in JSON format:
+Respond in JSON:
+{
+  "patterns": [
+    { "type": "duplicate_pattern", "description": "Found $49.99 charges on the 3rd of each month", "confidence": 0.9, "amounts": [49.99] },
+    { "type": "fee_pattern", "description": "Processing fees averaging 3.2%, higher than industry standard", "confidence": 0.85 }
+  ],
+  "anomalies": [
+    { "description": "Unusual spike in refunds on March 15", "severity": "medium" }
+  ],
+  "summary": "Brief pattern summary"
+}`;
+
+    const geminiResponse = await gemini.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [{ role: "user", parts: [{ text: geminiPrompt }] }],
+    });
+
+    let geminiFindings;
+    try {
+      const geminiText = geminiResponse.text || "";
+      const jsonMatch = geminiText.match(/```json\n?([\s\S]*?)\n?```/) || geminiText.match(/\{[\s\S]*\}/);
+      geminiFindings = JSON.parse(jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : geminiText);
+    } catch {
+      geminiFindings = { patterns: [], anomalies: [], summary: "Unable to parse Gemini response" };
+    }
+
+    // STEP 2: GPT Deep Reasoning Analysis
+    const gptSystemPrompt = `You are an expert financial analyst specializing in detecting revenue leaks. You have received pattern analysis from a first-pass AI. Now provide deep reasoning and actionable recommendations.
+
+Pattern Analysis Results:
+${JSON.stringify(geminiFindings, null, 2)}
+
+Your task:
+1. Validate and enhance the pattern findings with deeper reasoning
+2. Identify additional leaks that pattern matching might miss
+3. Provide specific, actionable recommendations
+4. Calculate potential recovery amounts
+5. Cross-validate findings for accuracy
+
+Look for these leak types:
+- MISSING PAYMENTS - Expected income that never arrived
+- DUPLICATE CHARGES - Being charged twice for same service
+- UNUSED SUBSCRIPTIONS - Paying for unused services
+- FAILED PAYMENTS - Transactions that failed but weren't retried
+- PRICING INEFFICIENCIES - Overcharges vs market rates
+- BILLING ERRORS - Incorrect amounts, math errors
+
+Respond in JSON:
 {
   "totalLeaks": number,
   "totalRecoverable": number,
@@ -374,34 +626,47 @@ Respond in JSON format:
     {
       "id": "leak-1",
       "type": "duplicate_charge",
-      "description": "Clear description of the issue",
+      "description": "Clear description",
       "amount": 49.99,
       "date": "2024-01-15",
       "severity": "high",
-      "recommendation": "Contact vendor to request refund for duplicate charge"
+      "recommendation": "Specific action to take",
+      "confidence": 0.92,
+      "crossValidated": true,
+      "modelSource": "both"
     }
   ],
-  "summary": "Brief executive summary of findings",
-  "analyzedAt": "ISO timestamp"
+  "summary": "Executive summary",
+  "confidence": {
+    "overallScore": 0.92,
+    "crossValidated": 4,
+    "needsReview": 1
+  },
+  "modelContributions": {
+    "gemini": ["Pattern findings"],
+    "gpt": ["Deep reasoning findings"]
+  }
 }`;
 
-    const response = await openai.chat.completions.create({
+    const gptResponse = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: `Analyze these financial documents for revenue leaks:\n\nFiles analyzed: ${fileNames.join(', ')}\n\n${fileContent}` }
+        { role: "system", content: gptSystemPrompt },
+        { role: "user", content: `Analyze these financial documents:\n\nFiles: ${fileNames.join(', ')}\n\n${fileContent}` }
       ],
       response_format: { type: "json_object" },
       temperature: 0.3,
     });
 
-    const analysis = JSON.parse(response.choices[0].message.content);
+    const analysis = JSON.parse(gptResponse.choices[0].message.content);
     analysis.analyzedAt = new Date().toISOString();
+    analysis.multiModelAnalysis = true;
     
     res.json({
       success: true,
       analysis,
-      model: "gpt-4o-mini",
+      models: ["gemini-2.5-flash", "gpt-4o-mini"],
+      geminiFindings: geminiFindings,
     });
   } catch (error) {
     console.error("Error analyzing for leaks:", error);
