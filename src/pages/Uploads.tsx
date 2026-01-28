@@ -2,7 +2,8 @@ import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Upload, FileText, CheckCircle2, Plus, Loader2, Search, Sparkles, AlertCircle, File, Trash2, CreditCard, ListOrdered, Lock, Building2, Receipt, ReceiptText, ArrowRight } from "lucide-react";
+import { ArrowLeft, Upload, CheckCircle2, Plus, Loader2, Search, Sparkles, AlertCircle, File, Trash2, CreditCard, ListOrdered, Lock, Building2, Receipt, ReceiptText, ArrowRight } from "lucide-react";
+import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import { useAnalysis, LeakAnalysis } from "@/context/AnalysisContext";
 import { useToast } from "@/hooks/use-toast";
@@ -238,7 +239,10 @@ const Uploads = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      
+      {/* Abstract Background Elements - matching landing page */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-primary/3 blur-3xl" />
@@ -253,46 +257,35 @@ const Uploads = () => {
       </div>
 
       <div className="relative">
-        <header className="border-b border-border/50 bg-white/80 dark:bg-background/80 backdrop-blur-xl sticky top-0 z-50">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Link to="/">
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <ArrowLeft className="h-4 w-4" />
-                    <span className="hidden sm:inline">Back</span>
-                  </Button>
-                </Link>
-                <div className="h-6 w-px bg-border" />
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                    <Search className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                  <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Free MARGIX Scan</h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Get a high-level snapshot of revenue leaks</p>
-                  </div>
-                </div>
+        {/* Page Header - matching landing page hero style */}
+        <section className="pt-32 pb-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
+                <Sparkles className="h-3.5 w-3.5 text-primary" />
+                <span className="text-xs font-medium text-primary">Free Scan</span>
               </div>
-              <Badge variant="secondary" className="gap-1.5 py-1 text-xs bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-                <Sparkles className="h-3 w-3" />
-                Free Scan
-              </Badge>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+                Free <span className="text-gradient">MARGIX</span> Scan
+              </h1>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Get a high-level snapshot of your business performance and uncover potential revenue leaks
+              </p>
             </div>
           </div>
-        </header>
+        </section>
 
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-8">
           {/* Free Scan Info Banner */}
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-background overflow-hidden">
-            <CardContent className="p-4 sm:p-5">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 shrink-0">
-                  <Sparkles className="h-5 w-5 text-primary" />
+          <Card className="border-border bg-card shadow-sm">
+            <CardContent className="p-5 sm:p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-12 h-12 rounded-xl brand-gradient flex items-center justify-center shrink-0">
+                  <Search className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground mb-1">What the Free Scan Includes</h3>
-                  <p className="text-sm text-muted-foreground">
+                  <h3 className="font-semibold text-foreground mb-2">What the Free Scan Includes</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     Upload a <span className="font-medium text-foreground">payment or payout report</span> and your <span className="font-medium text-foreground">pricing, menu, or product list</span>. 
                     We'll highlight potential revenue leaks, fee impact, and pricing risks so you can see where issues may exist.
                   </p>
@@ -326,9 +319,13 @@ const Uploads = () => {
           )}
 
           {/* Free Upload Sections */}
-          <div className="space-y-4">
-            <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Upload Your Documents</h2>
-            <div className="grid gap-4">
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-border" />
+              <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Upload Your Documents</h2>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+            <div className="grid gap-5">
               {freeSections.map((section) => {
                 const inputRef = getInputRef(section.id);
                 const categoryFiles = getFilesForCategory(section.id);
@@ -337,7 +334,7 @@ const Uploads = () => {
                 return (
                   <Card 
                     key={section.id}
-                    className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+                    className="border-border bg-card shadow-sm hover:shadow-md transition-shadow"
                   >
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between mb-4">
@@ -356,7 +353,7 @@ const Uploads = () => {
                       </div>
                       
                       <div 
-                        className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                        className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer group"
                         onClick={() => inputRef?.current?.click()}
                       >
                         <input
@@ -368,18 +365,17 @@ const Uploads = () => {
                           className="hidden"
                           data-testid={`input-file-upload-${section.id}`}
                         />
-                        <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                          <Upload className="h-6 w-6 text-muted-foreground" />
+                        <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
+                          <Upload className="h-7 w-7 text-primary" />
                         </div>
-                        <p className="text-sm font-medium text-foreground mb-1">
+                        <p className="text-base font-medium text-foreground mb-1">
                           Drop files here or click to browse
                         </p>
-                        <p className="text-xs text-muted-foreground mb-3">
+                        <p className="text-sm text-muted-foreground mb-4">
                           {section.placeholder}
                         </p>
                         <Button 
-                          size="sm"
-                          variant="outline"
+                          size="default"
                           className="gap-2" 
                           onClick={(e) => { e.stopPropagation(); inputRef?.current?.click(); }}
                           data-testid={`button-browse-${section.id}`}
@@ -453,64 +449,70 @@ const Uploads = () => {
             </div>
           </div>
 
-          {/* Premium Locked Sections */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Unlock Deeper Analysis</h2>
-              <Badge variant="outline" className="gap-1 text-amber-600 border-amber-500/30 bg-amber-500/5">
-                <Lock className="h-3 w-3" />
-                Pro Feature
-              </Badge>
+          {/* Premium Sections - Locked */}
+          <div className="space-y-6 mt-12">
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-border" />
+              <div className="flex items-center gap-2">
+                <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Unlock with Pro</h2>
+              </div>
+              <div className="h-px flex-1 bg-border" />
             </div>
-            <Card className="border-dashed border-2 border-muted bg-muted/20">
-              <CardContent className="p-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-foreground mb-2">
-                      Upgrade to analyze additional documents:
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {premiumSections.map((section) => (
-                        <div 
-                          key={section.id}
-                          className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-secondary/50 border border-border text-xs text-muted-foreground"
-                        >
+            <p className="text-sm text-muted-foreground text-center">
+              Upgrade to access deeper, more accurate insights using additional documents.
+            </p>
+            <div className="grid gap-4 opacity-60">
+              {premiumSections.map((section) => (
+                <Card 
+                  key={section.id}
+                  className="border-border bg-muted/30"
+                >
+                  <CardContent className="p-5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
                           {section.icon}
-                          <span>{section.title}</span>
                         </div>
-                      ))}
+                        <div>
+                          <h3 className="font-medium text-muted-foreground">{section.title}</h3>
+                          <p className="text-xs text-muted-foreground/70">{section.description}</p>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30">
+                        <Lock className="h-3 w-3 mr-1" />
+                        Pro
+                      </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-3">
-                      Get detailed breakdowns, ongoing analysis, and actionable recommendations.
-                    </p>
-                  </div>
-                  <Link to="/pricing" className="shrink-0">
-                    <Button variant="outline" className="gap-2 border-primary/30 text-primary hover:bg-primary/5">
-                      View Plans
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <Link to="/pricing" className="block mt-6">
+              <Button variant="outline" size="lg" className="w-full gap-2 border-primary/30 text-primary hover:bg-primary/5">
+                <Sparkles className="h-4 w-4" />
+                View Plans & Unlock Pro Features
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
           </div>
 
           {/* Analyze Button */}
           {hasFiles && allUploaded && (
-            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-              <CardContent className="p-6 text-center">
+            <Card className="border-border bg-card shadow-sm mt-8">
+              <CardContent className="p-8 text-center">
                 <div className="flex items-center justify-center gap-2 mb-4">
                   <Sparkles className="h-5 w-5 text-primary" />
                   <p className="text-lg font-semibold text-foreground">
                     Ready to Scan {totalFiles} Document{totalFiles !== 1 ? 's' : ''}
                   </p>
                 </div>
-                <p className="text-sm text-muted-foreground mb-6">
+                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
                   Our AI will analyze your documents to highlight potential revenue leaks, fee impact, and pricing risks.
                 </p>
                 <Button 
                   size="lg"
-                  className="gap-2 brand-gradient border-0 text-white" 
+                  className="gap-2 px-8" 
                   onClick={handleAnalyze}
                   disabled={isAnalyzing}
                   data-testid="button-analyze"
