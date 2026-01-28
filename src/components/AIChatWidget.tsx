@@ -85,33 +85,33 @@ export function AIChatWidget({ documentContext, locked = false }: AIChatWidgetPr
       <Button
         onClick={() => setIsOpen(true)}
         className={cn(
-          "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg border-0 z-50",
+          "fixed bottom-4 right-4 sm:bottom-6 sm:right-6 h-12 w-12 sm:h-14 sm:w-14 rounded-full shadow-lg border-0 z-50",
           locked ? "bg-muted hover:bg-muted/80" : "brand-gradient"
         )}
         size="icon"
         data-testid="chat-widget-button"
       >
         {locked ? (
-          <Lock className="h-6 w-6 text-muted-foreground" />
+          <Lock className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
         ) : (
-          <MessageCircle className="h-6 w-6 text-white" />
+          <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
         )}
       </Button>
     );
   }
 
   return (
-    <Card className="fixed bottom-6 right-6 w-[380px] h-[520px] shadow-2xl border-border z-50 flex flex-col overflow-hidden">
+    <Card className="fixed inset-4 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-[380px] sm:h-[520px] shadow-2xl border-border z-50 flex flex-col overflow-hidden">
       {/* Header */}
-      <CardHeader className="p-4 border-b border-border bg-card shrink-0">
+      <CardHeader className="p-3 sm:p-4 border-b border-border bg-card shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full brand-gradient flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-white" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full brand-gradient flex items-center justify-center">
+              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">MARGIX Assistant</h3>
-              <p className="text-xs text-muted-foreground">
+              <h3 className="font-semibold text-foreground text-sm sm:text-base">MARGIX Assistant</h3>
+              <p className="text-xs text-muted-foreground hidden sm:block">
                 {hasContext ? "Ready to help with your analysis" : "Upload documents to get started"}
               </p>
             </div>
@@ -139,35 +139,35 @@ export function AIChatWidget({ documentContext, locked = false }: AIChatWidgetPr
 
       {/* Messages */}
       <CardContent className="flex-1 p-0 overflow-hidden">
-        <ScrollArea className="h-full p-4">
+        <ScrollArea className="h-full p-3 sm:p-4">
           {locked ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
-                <Crown className="h-8 w-8 text-amber-500" />
+            <div className="text-center py-6 sm:py-8">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                <Crown className="h-6 w-6 sm:h-8 sm:w-8 text-amber-500" />
               </div>
-              <h4 className="font-medium text-foreground mb-2">
+              <h4 className="font-medium text-foreground mb-2 text-sm sm:text-base">
                 AI Assistant is a Premium Feature
               </h4>
-              <p className="text-sm text-muted-foreground max-w-[280px] mx-auto mb-4">
+              <p className="text-xs sm:text-sm text-muted-foreground max-w-[280px] mx-auto mb-3 sm:mb-4">
                 Upgrade to get personalized insights, ask questions about your documents, and get AI-powered recommendations.
               </p>
-              <Button className="brand-gradient border-0" asChild>
+              <Button className="brand-gradient border-0 text-sm" size="sm" asChild>
                 <a href="/pricing">
-                  <Lock className="h-4 w-4 mr-2" />
+                  <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-2" />
                   Unlock with Premium
                 </a>
               </Button>
             </div>
           ) : messages.length === 0 ? (
-            <div className="space-y-4">
-              <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                  <Bot className="h-8 w-8 text-primary" />
+            <div className="space-y-3 sm:space-y-4">
+              <div className="text-center py-6 sm:py-8">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 sm:mb-4">
+                  <Bot className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
                 </div>
-                <h4 className="font-medium text-foreground mb-2">
+                <h4 className="font-medium text-foreground mb-2 text-sm sm:text-base">
                   Hi! I'm your AI assistant
                 </h4>
-                <p className="text-sm text-muted-foreground max-w-[280px] mx-auto">
+                <p className="text-xs sm:text-sm text-muted-foreground max-w-[280px] mx-auto">
                   {hasContext 
                     ? "Ask me anything about your uploaded documents or analysis results."
                     : "Upload some documents first, then I can help you understand your financial data."}
@@ -211,10 +211,10 @@ export function AIChatWidget({ documentContext, locked = false }: AIChatWidgetPr
       </CardContent>
 
       {/* Input */}
-      <div className="p-4 border-t border-border bg-card shrink-0">
+      <div className="p-3 sm:p-4 border-t border-border bg-card shrink-0">
         {locked ? (
-          <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2.5">
-            <Lock className="h-4 w-4" />
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2 sm:py-2.5">
+            <Lock className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
             <span>Upgrade to Premium to chat with AI</span>
           </div>
         ) : (
@@ -225,7 +225,7 @@ export function AIChatWidget({ documentContext, locked = false }: AIChatWidgetPr
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={hasContext ? "Ask about your documents..." : "Upload documents to chat..."}
-              className="min-h-[44px] max-h-[120px] resize-none"
+              className="min-h-[40px] sm:min-h-[44px] max-h-[100px] sm:max-h-[120px] resize-none text-sm"
               disabled={!hasContext || isLoading}
               rows={1}
             />
@@ -233,7 +233,7 @@ export function AIChatWidget({ documentContext, locked = false }: AIChatWidgetPr
               onClick={handleSend}
               disabled={!input.trim() || !hasContext || isLoading}
               size="icon"
-              className="h-11 w-11 shrink-0"
+              className="h-10 w-10 sm:h-11 sm:w-11 shrink-0"
             >
               {isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
