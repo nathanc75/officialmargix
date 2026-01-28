@@ -64,16 +64,16 @@ const Uploads = () => {
       title: "Payment or Payout Report",
       description: "Upload your payment processor or payout report",
       icon: <CreditCard className="h-5 w-5 text-primary" />,
-      accept: ".csv,.pdf,.txt,.tsv,.xlsx,.jpg,.jpeg,.png",
+      accept: ".csv,.pdf,.txt,.tsv,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic",
       placeholder: "Stripe, PayPal, Square, DoorDash, Uber Eats payouts",
     },
     {
       id: "pricing",
-      title: "Pricing, Menu, or Product List",
-      description: "Upload your pricing structure or product catalog",
+      title: "Menu, Product List, or Pricing",
+      description: "Upload screenshots, photos, or files of your menu or product catalog",
       icon: <ListOrdered className="h-5 w-5 text-emerald-600" />,
-      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png",
-      placeholder: "Menu PDF, price list, product catalog",
+      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
+      placeholder: "Menu screenshots, product photos, price lists, catalog images",
     },
   ];
 
