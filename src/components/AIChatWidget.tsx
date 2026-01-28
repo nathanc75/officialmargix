@@ -11,7 +11,9 @@ import {
   Sparkles,
   Bot,
   User,
-  Minimize2
+  Minimize2,
+  Lock,
+  Crown
 } from "lucide-react";
 import { useDocumentChat, ChatMessage } from "@/hooks/useDocumentChat";
 import { cn } from "@/lib/utils";
@@ -26,6 +28,7 @@ interface AIChatWidgetProps {
       summary: string;
     };
   };
+  locked?: boolean;
 }
 
 const quickSuggestions = [
@@ -35,7 +38,7 @@ const quickSuggestions = [
   "What should I prioritize first?",
 ];
 
-export function AIChatWidget({ documentContext }: AIChatWidgetProps) {
+export function AIChatWidget({ documentContext, locked = false }: AIChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -60,7 +63,7 @@ export function AIChatWidget({ documentContext }: AIChatWidgetProps) {
   }, [isOpen]);
 
   const handleSend = () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || locked) return;
     sendMessage(input);
     setInput("");
   };
@@ -73,6 +76,7 @@ export function AIChatWidget({ documentContext }: AIChatWidgetProps) {
   };
 
   const handleQuickSuggestion = (suggestion: string) => {
+    if (locked) return;
     sendMessage(suggestion);
   };
 
@@ -80,11 +84,18 @@ export function AIChatWidget({ documentContext }: AIChatWidgetProps) {
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg brand-gradient border-0 z-50"
+        className={cn(
+          "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg border-0 z-50",
+          locked ? "bg-muted hover:bg-muted/80" : "brand-gradient"
+        )}
         size="icon"
         data-testid="chat-widget-button"
       >
-        <MessageCircle className="h-6 w-6 text-white" />
+        {locked ? (
+          <Lock className="h-6 w-6 text-muted-foreground" />
+        ) : (
+          <MessageCircle className="h-6 w-6 text-white" />
+        )}
       </Button>
     );
   }
@@ -129,7 +140,25 @@ export function AIChatWidget({ documentContext }: AIChatWidgetProps) {
       {/* Messages */}
       <CardContent className="flex-1 p-0 overflow-hidden">
         <ScrollArea className="h-full p-4">
-          {messages.length === 0 ? (
+          {locked ? (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 rounded-full bg-amber-500/10 flex items-center justify-center mx-auto mb-4">
+                <Crown className="h-8 w-8 text-amber-500" />
+              </div>
+              <h4 className="font-medium text-foreground mb-2">
+                AI Assistant is a Premium Feature
+              </h4>
+              <p className="text-sm text-muted-foreground max-w-[280px] mx-auto mb-4">
+                Upgrade to get personalized insights, ask questions about your documents, and get AI-powered recommendations.
+              </p>
+              <Button className="brand-gradient border-0" asChild>
+                <a href="/pricing">
+                  <Lock className="h-4 w-4 mr-2" />
+                  Unlock with Premium
+                </a>
+              </Button>
+            </div>
+          ) : messages.length === 0 ? (
             <div className="space-y-4">
               <div className="text-center py-8">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
@@ -183,30 +212,37 @@ export function AIChatWidget({ documentContext }: AIChatWidgetProps) {
 
       {/* Input */}
       <div className="p-4 border-t border-border bg-card shrink-0">
-        <div className="flex gap-2">
-          <Textarea
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={hasContext ? "Ask about your documents..." : "Upload documents to chat..."}
-            className="min-h-[44px] max-h-[120px] resize-none"
-            disabled={!hasContext || isLoading}
-            rows={1}
-          />
-          <Button
-            onClick={handleSend}
-            disabled={!input.trim() || !hasContext || isLoading}
-            size="icon"
-            className="h-11 w-11 shrink-0"
-          >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
+        {locked ? (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-lg px-3 py-2.5">
+            <Lock className="h-4 w-4" />
+            <span>Upgrade to Premium to chat with AI</span>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <Textarea
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={hasContext ? "Ask about your documents..." : "Upload documents to chat..."}
+              className="min-h-[44px] max-h-[120px] resize-none"
+              disabled={!hasContext || isLoading}
+              rows={1}
+            />
+            <Button
+              onClick={handleSend}
+              disabled={!input.trim() || !hasContext || isLoading}
+              size="icon"
+              className="h-11 w-11 shrink-0"
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );
