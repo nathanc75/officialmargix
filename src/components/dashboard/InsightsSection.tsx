@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AlertTriangle, TrendingDown, Percent, ChevronDown, ChevronUp, DollarSign, RefreshCw } from "lucide-react";
+import { AlertTriangle, CreditCard, Receipt, Repeat, ChevronDown, ChevronUp, DollarSign, RefreshCw } from "lucide-react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,8 +22,11 @@ const InsightsSection = ({ isTrial = false, hasData = false, reportAnalysis }: I
   const issueTypeToIcon = {
     pricing_error: DollarSign,
     missed_refund: RefreshCw,
-    fee_discrepancy: Percent,
-    promo_loss: TrendingDown,
+    fee_discrepancy: Receipt,
+    promo_loss: Repeat,
+    duplicate_charge: CreditCard,
+    missing_payment: DollarSign,
+    unused_subscription: Repeat,
   };
 
   const insights = reportAnalysis.issues.map(issue => ({
@@ -47,13 +50,13 @@ const InsightsSection = ({ isTrial = false, hasData = false, reportAnalysis }: I
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-bold text-red-900 dark:text-red-100 flex flex-wrap items-center gap-2">
-                  {criticalCount > 0 ? criticalCount : insights.length} Revenue Insight{insights.length !== 1 ? 's' : ''} Found
+                  {criticalCount > 0 ? criticalCount : insights.length} Revenue Leak{insights.length !== 1 ? 's' : ''} Detected
                   {criticalCount > 0 && (
                     <Badge variant="destructive" className="h-4 px-1.5 text-[9px] uppercase font-bold shrink-0">Action Required</Badge>
                   )}
                 </h3>
                 <p className="text-xs text-red-700/70 dark:text-red-300/70">
-                  From your uploaded data — Optimization potential: <span className="font-bold">${totalRecovery.toLocaleString()}</span>
+                  From your uploaded documents — Potential recovery: <span className="font-bold">${totalRecovery.toLocaleString()}</span>
                 </p>
               </div>
             </div>

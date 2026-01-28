@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { DollarSign, Percent, Tag, TrendingUp, Upload, RefreshCw } from "lucide-react";
+import { DollarSign, AlertTriangle, CreditCard, TrendingUp, Upload, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import type { ReportAnalysis } from "@/context/AnalysisContext";
@@ -25,31 +25,31 @@ const ProfitOverview = ({ isTrial = false, hasData = false, reportAnalysis }: Pr
 
   const metrics = hasData && summary ? [
     {
-      label: "Gross Sales",
+      label: "Total Scanned",
       value: formatCurrency(summary.totalRevenue.value, summary.totalRevenue.isEstimate),
       icon: DollarSign,
-      color: "text-emerald-600",
-      iconBg: "bg-emerald-500",
-      iconColor: "text-emerald-600",
+      color: "text-foreground",
+      iconBg: "bg-primary",
+      iconColor: "text-primary",
     },
     {
-      label: "Platform Fees",
+      label: "Leaks Detected",
       value: formatCurrency(summary.totalFees.value, summary.totalFees.isEstimate),
-      icon: Percent,
+      icon: AlertTriangle,
       color: "text-red-600",
       iconBg: "bg-red-500",
       iconColor: "text-red-600",
     },
     {
-      label: "Promo Discounts",
+      label: "Duplicate Charges",
       value: formatCurrency(summary.totalPromos.value, summary.totalPromos.isEstimate),
-      icon: Tag,
+      icon: CreditCard,
       color: "text-amber-600",
       iconBg: "bg-amber-500",
       iconColor: "text-amber-600",
     },
     {
-      label: "Est. Net Profit",
+      label: "Recoverable Amount",
       value: formatCurrency(summary.netProfit.value, summary.netProfit.isEstimate),
       icon: TrendingUp,
       color: summary.netProfit.value >= 0 ? "text-emerald-600" : "text-red-600",
@@ -58,7 +58,7 @@ const ProfitOverview = ({ isTrial = false, hasData = false, reportAnalysis }: Pr
     },
   ] : [
     {
-      label: "Gross Sales",
+      label: "Total Scanned",
       value: "--",
       icon: DollarSign,
       color: "text-muted-foreground",
@@ -66,23 +66,23 @@ const ProfitOverview = ({ isTrial = false, hasData = false, reportAnalysis }: Pr
       iconColor: "text-muted-foreground",
     },
     {
-      label: "Platform Fees",
+      label: "Leaks Detected",
       value: "--",
-      icon: Percent,
+      icon: AlertTriangle,
       color: "text-muted-foreground",
       iconBg: "bg-secondary",
       iconColor: "text-muted-foreground",
     },
     {
-      label: "Promo Discounts",
+      label: "Duplicate Charges",
       value: "--",
-      icon: Tag,
+      icon: CreditCard,
       color: "text-muted-foreground",
       iconBg: "bg-secondary",
       iconColor: "text-muted-foreground",
     },
     {
-      label: "Est. Net Profit",
+      label: "Recoverable Amount",
       value: "--",
       icon: TrendingUp,
       color: "text-muted-foreground",
@@ -94,14 +94,12 @@ const ProfitOverview = ({ isTrial = false, hasData = false, reportAnalysis }: Pr
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">Profit Overview</h2>
+        <h2 className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-muted-foreground">Financial Overview</h2>
         {hasData ? (
           !isTrial ? (
-            <div className="flex flex-col items-end gap-0.5 shrink-0">
-              <div className="text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-1 rounded-md border border-emerald-200 dark:border-emerald-800" data-testid="badge-realtime">
-                Real-time
-              </div>
-              <span className="text-[8px] text-muted-foreground" data-testid="text-pos-requirement-overview">POS-connected stores only</span>
+            <div className="flex items-center gap-1 text-[10px] text-emerald-600 bg-emerald-50 dark:bg-emerald-950/30 px-2 py-1 rounded-md border border-emerald-200 dark:border-emerald-800 shrink-0" data-testid="badge-analysis-complete">
+              <RefreshCw className="w-3 h-3" />
+              Analysis Complete
             </div>
           ) : (
             <div className="flex items-center gap-1 text-[10px] text-amber-600 bg-amber-50 dark:bg-amber-950/30 px-2 py-1 rounded-md border border-amber-200 dark:border-amber-800 shrink-0">
@@ -122,14 +120,14 @@ const ProfitOverview = ({ isTrial = false, hasData = false, reportAnalysis }: Pr
             <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
               <Upload className="h-6 w-6 text-muted-foreground" />
             </div>
-            <h3 className="font-semibold text-foreground mb-2">No Data Yet</h3>
+            <h3 className="font-semibold text-foreground mb-2">No Documents Scanned</h3>
             <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-              Connect your POS to see profit metrics across all order channels
+              Upload bank statements, invoices, or payment reports to detect revenue leaks
             </p>
             <Link to="/uploads-pos">
-              <Button className="gap-2" data-testid="button-connect-pos">
+              <Button className="gap-2" data-testid="button-upload-documents">
                 <Upload className="h-4 w-4" />
-                Connect POS
+                Upload Documents
               </Button>
             </Link>
           </CardContent>
