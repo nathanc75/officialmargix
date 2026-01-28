@@ -29,7 +29,7 @@ const Navbar = () => {
       <div className="px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-3 group">
+          <a href="/" className="flex items-center gap-1.5 group">
             <div className="w-10 h-10 transition-transform group-hover:scale-105">
               <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
             </div>
