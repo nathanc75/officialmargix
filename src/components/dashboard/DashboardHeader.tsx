@@ -127,17 +127,6 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
               </Sheet>
             </div>
 
-            <Link to="/uploads">
-              <Button 
-                variant="default" 
-                size="sm"
-                className="h-9 px-4 sm:px-5 text-sm font-medium gap-2 shadow-sm"
-                data-testid="button-upload"
-              >
-                <Upload className="h-4 w-4" />
-                <span>Upload</span>
-              </Button>
-            </Link>
           </div>
         </div>
       </div>
