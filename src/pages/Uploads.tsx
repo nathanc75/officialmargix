@@ -718,6 +718,18 @@ const Uploads = () => {
                         </div>
                       </div>
                     ))}
+                    {/* AI Assistant Feature */}
+                    <div 
+                      className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10 hover:-translate-y-0.5 cursor-pointer group"
+                    >
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 transition-colors duration-200 group-hover:bg-primary/20">
+                        <Brain className="h-5 w-5 text-primary" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-foreground truncate transition-colors duration-200 group-hover:text-primary">AI Chat Assistant</p>
+                        <p className="text-xs text-muted-foreground truncate">Ask questions about your data</p>
+                      </div>
+                    </div>
                   </div>
 
                   {/* CTA */}
