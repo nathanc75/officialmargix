@@ -682,61 +682,57 @@ const Uploads = () => {
 
           {/* Premium Sections - Locked */}
           {!isAnalyzing && (
-            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-amber-500/5 overflow-hidden mt-10">
-              <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-amber-500/10 via-amber-500/5 to-transparent pointer-events-none" />
-              <CardContent className="relative p-6 sm:p-8">
+            <Card className="border border-border/50 shadow-lg bg-card overflow-hidden mt-10">
+              <CardContent className="p-6 sm:p-8">
                 <div className="flex flex-col gap-6">
                   {/* Header */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="space-y-2">
-                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-                        <Lock className="h-3.5 w-3.5 text-amber-600" />
-                        <span className="text-xs font-medium text-amber-600">Pro Features</span>
-                      </div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-foreground">
-                        Unlock deeper analysis
+                  <div className="space-y-3">
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border">
+                      <Lock className="h-3 w-3 text-muted-foreground" />
+                      <span className="text-xs font-medium text-muted-foreground">Pro</span>
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-lg sm:text-xl font-semibold text-foreground">
+                        Unlock full analysis capabilities
                       </h3>
-                      <p className="text-sm text-muted-foreground max-w-lg">
-                        Upgrade to access premium features for more accurate, comprehensive leak detection.
+                      <p className="text-sm text-muted-foreground">
+                        Access additional document types and AI-powered insights.
                       </p>
                     </div>
                   </div>
 
-                  {/* Premium Document Types Grid */}
-                  <div className="grid sm:grid-cols-2 gap-3">
+                  {/* Premium Features Grid */}
+                  <div className="grid sm:grid-cols-2 gap-2.5">
                     {premiumSections.map((section) => (
                       <div 
                         key={section.id}
-                        className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border/50 transition-all duration-200 hover:bg-muted/80 hover:border-amber-500/30 hover:shadow-md hover:shadow-amber-500/10 hover:-translate-y-0.5 cursor-pointer group"
+                        className="flex items-center gap-3 p-3.5 rounded-lg bg-muted/30 border border-border/50"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center shrink-0 transition-colors duration-200 group-hover:bg-amber-500/10">
+                        <div className="w-9 h-9 rounded-md bg-muted flex items-center justify-center shrink-0">
                           {section.icon}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate transition-colors duration-200 group-hover:text-amber-600">{section.title}</p>
-                          <p className="text-xs text-muted-foreground truncate">{section.description}</p>
+                          <p className="text-sm font-medium text-foreground">{section.title}</p>
+                          <p className="text-xs text-muted-foreground">{section.description}</p>
                         </div>
                       </div>
                     ))}
                     {/* AI Assistant Feature */}
-                    <div 
-                      className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:shadow-primary/10 hover:-translate-y-0.5 cursor-pointer group"
-                    >
-                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 transition-colors duration-200 group-hover:bg-primary/20">
-                        <Brain className="h-5 w-5 text-primary" />
+                    <div className="flex items-center gap-3 p-3.5 rounded-lg bg-primary/5 border border-primary/20">
+                      <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                        <Brain className="h-4.5 w-4.5 text-primary" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate transition-colors duration-200 group-hover:text-primary">AI Chat Assistant</p>
-                        <p className="text-xs text-muted-foreground truncate">Ask questions about your data</p>
+                        <p className="text-sm font-medium text-foreground">AI Assistant</p>
+                        <p className="text-xs text-muted-foreground">Ask questions about your data</p>
                       </div>
                     </div>
                   </div>
 
                   {/* CTA */}
                   <Link to="/pricing" className="block">
-                    <Button size="lg" className="w-full gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg shadow-amber-500/25">
-                      <Sparkles className="h-4 w-4" />
-                      Upgrade to Pro
+                    <Button size="default" className="w-full gap-2">
+                      View Plans
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </Link>
