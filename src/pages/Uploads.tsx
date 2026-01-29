@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { DocumentPreview, OCRResult } from "@/components/DocumentPreview";
 import { AnalysisProgress, AnalysisStep } from "@/components/AnalysisProgress";
+import { supabase } from "@/integrations/supabase/client";
 
 type DocumentCategory = "payments" | "pricing" | "bank" | "invoices" | "refunds" | "promos";
 
@@ -148,30 +149,26 @@ const Uploads = () => {
     ));
 
     try {
-      const response = await fetch("/api/analyze/ocr", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke("analyze-ocr", {
+        body: {
           imageBase64: base64Data,
           imageMimeType: mimeType,
           fileName,
-        }),
+        },
       });
 
-      if (!response.ok) throw new Error("OCR failed");
-
-      const result = await response.json();
+      if (error) throw new Error(error.message || "OCR failed");
       
       setUploadedFiles(prev => prev.map(f => 
         f.id === fileId ? { 
           ...f, 
-          ocrResult: result.ocrResult,
-          content: result.ocrResult.rawText,
+          ocrResult: data.ocrResult,
+          content: data.ocrResult.rawText,
           status: "uploaded" as const 
         } : f
       ));
 
-      return result.ocrResult;
+      return data.ocrResult;
     } catch (error) {
       console.error("OCR error:", error);
       setUploadedFiles(prev => prev.map(f => 
@@ -188,26 +185,22 @@ const Uploads = () => {
     ));
 
     try {
-      const response = await fetch("/api/analyze/categorize", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ textContent: content, fileName }),
+      const { data, error } = await supabase.functions.invoke("analyze-categorize", {
+        body: { textContent: content, fileName },
       });
 
-      if (!response.ok) throw new Error("Categorization failed");
-
-      const result = await response.json();
+      if (error) throw new Error(error.message || "Categorization failed");
       
       setUploadedFiles(prev => prev.map(f => 
         f.id === fileId ? { 
           ...f, 
-          detectedCategory: result.classification.category,
-          categoryConfidence: result.classification.confidence,
+          detectedCategory: data.classification.category,
+          categoryConfidence: data.classification.confidence,
           status: "uploaded" as const 
         } : f
       ));
 
-      return result.classification;
+      return data.classification;
     } catch (error) {
       console.error("Categorization error:", error);
       setUploadedFiles(prev => prev.map(f => 
@@ -343,10 +336,8 @@ const Uploads = () => {
         return `=== ${section.title.toUpperCase()} ===\n${files.filter(f => f.content).map(f => `--- ${f.name} ---\n${f.content}`).join("\n\n")}`;
       }).filter(Boolean).join("\n\n");
       
-      const response = await fetch("/api/analyze/leaks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+      const { data: leakData, error: leakError } = await supabase.functions.invoke("analyze-leaks", {
+        body: { 
           fileContent: categorizedContent,
           fileNames: uploadedFiles.map(f => f.name),
           categories: {
@@ -358,18 +349,18 @@ const Uploads = () => {
             ocrResult: f.ocrResult,
           })),
           scanType: "free",
-        }),
+        },
       });
       
-      if (!response.ok) {
-        throw new Error("Analysis failed");
+      if (leakError) {
+        throw new Error(leakError.message || "Analysis failed");
       }
       
       // Step 5: Cross-validation
       setAnalysisStep("cross_validation");
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      const result = await response.json();
+      const result = leakData;
       
       // Complete
       setAnalysisStep("complete");
