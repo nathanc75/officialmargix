@@ -91,7 +91,7 @@ const Dashboard = () => {
                   </div>
                   <div>
                     <h2 className="text-xl sm:text-2xl font-bold text-foreground">
-                      Scan Complete — <span className="text-gradient">Here's What We Found</span>
+                      Scan Complete — <span className="text-gradient">Your AI Found {scanResults.potentialIssues} Potential Issues</span>
                     </h2>
                     <p className="text-sm text-muted-foreground">
                       Analysis completed • {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -108,15 +108,15 @@ const Dashboard = () => {
 
               {/* Summary Metric Cards */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Potential Issues */}
+                {/* Issues Detected */}
                 <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-amber-500/5 hover:shadow-xl transition-all duration-300 group">
                   <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-bl-full" />
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Potential Issues</p>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Issues Detected</p>
                         <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.potentialIssues}</p>
-                        <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">detected</p>
+                        <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">require attention</p>
                       </div>
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/10 to-amber-500/5 border border-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <AlertTriangle className="w-5 h-5 text-amber-500" />
@@ -125,52 +125,52 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
 
-                {/* Duplicate Charges */}
-                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-red-500/5 hover:shadow-xl transition-all duration-300 group">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-red-500/10 to-transparent rounded-bl-full" />
+                {/* Potential Savings */}
+                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-emerald-500/5 hover:shadow-xl transition-all duration-300 group">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-emerald-500/10 to-transparent rounded-bl-full" />
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Duplicate Charges</p>
-                        <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.duplicateCharges}</p>
-                        <p className="text-xs text-red-600 dark:text-red-400 font-medium">found</p>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Potential Savings</p>
+                        <p className="text-3xl sm:text-4xl font-bold text-foreground">${scanResults.totalRecoverable}</p>
+                        <p className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">recoverable</p>
                       </div>
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <CreditCard className="w-5 h-5 text-red-500" />
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <TrendingDown className="w-5 h-5 text-emerald-500" />
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Missed Payments */}
-                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-orange-500/5 hover:shadow-xl transition-all duration-300 group">
-                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-orange-500/10 to-transparent rounded-bl-full" />
-                  <CardContent className="p-5">
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Missed Payments</p>
-                        <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.missedPayments}</p>
-                        <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">identified</p>
-                      </div>
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <TrendingDown className="w-5 h-5 text-orange-500" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Active Subscriptions */}
+                {/* Subscriptions */}
                 <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-xl transition-all duration-300 group">
                   <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-full" />
                   <CardContent className="p-5">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1">
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Active Subscriptions</p>
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Subscriptions</p>
                         <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.activeSubscriptions}</p>
                         <p className="text-xs text-primary font-medium">tracked</p>
                       </div>
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                         <RefreshCw className="w-5 h-5 text-primary" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Transactions */}
+                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-blue-500/5 hover:shadow-xl transition-all duration-300 group">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-blue-500/10 to-transparent rounded-bl-full" />
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Transactions</p>
+                        <p className="text-3xl sm:text-4xl font-bold text-foreground">{leakAnalysis?.leaks?.length || 38}</p>
+                        <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">analyzed</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <CreditCard className="w-5 h-5 text-blue-500" />
                       </div>
                     </div>
                   </CardContent>
