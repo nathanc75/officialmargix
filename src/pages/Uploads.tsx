@@ -53,12 +53,11 @@ const Uploads = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState<AnalysisStep | null>(null);
   const paymentsInputRef = useRef<HTMLInputElement>(null);
-  const pricingInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { setLeakAnalysis, leakAnalysis } = useAnalysis();
   const { toast } = useToast();
 
-  // Free scan sections - available to all users
+  // Free scan sections - only payment reports
   const freeSections: UploadSectionConfig[] = [
     {
       id: "payments",
@@ -68,18 +67,19 @@ const Uploads = () => {
       accept: ".csv,.pdf,.txt,.tsv,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic",
       placeholder: "Stripe, PayPal, Square, DoorDash, Uber Eats payouts",
     },
-    {
-      id: "pricing",
-      title: "Menu, Product List, or Pricing",
-      description: "Upload screenshots, photos, or files of your menu or product catalog",
-      icon: <ListOrdered className="h-5 w-5 text-emerald-600" />,
-      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
-      placeholder: "Menu screenshots, product photos, price lists, catalog images",
-    },
   ];
 
   // Premium sections - locked for free users
   const premiumSections: UploadSectionConfig[] = [
+    {
+      id: "pricing",
+      title: "Menu, Product List, or Pricing",
+      description: "Upload screenshots, photos, or files of your menu or product catalog",
+      icon: <ListOrdered className="h-5 w-5 text-muted-foreground" />,
+      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
+      placeholder: "Menu screenshots, product photos, price lists",
+      locked: true,
+    },
     {
       id: "bank",
       title: "Bank Statements",
@@ -114,7 +114,6 @@ const Uploads = () => {
   const getInputRef = (category: DocumentCategory) => {
     switch (category) {
       case "payments": return paymentsInputRef;
-      case "pricing": return pricingInputRef;
       default: return null;
     }
   };
@@ -342,7 +341,6 @@ const Uploads = () => {
           fileNames: uploadedFiles.map(f => f.name),
           categories: {
             payments: getFilesForCategory("payments").map(f => f.name),
-            pricing: getFilesForCategory("pricing").map(f => f.name),
           },
           ocrResults: uploadedFiles.filter(f => f.ocrResult).map(f => ({
             fileName: f.name,
@@ -405,7 +403,6 @@ const Uploads = () => {
     fileNames: uploadedFiles.map(f => f.name),
     categories: {
       payments: getFilesForCategory("payments").map(f => f.name),
-      pricing: getFilesForCategory("pricing").map(f => f.name),
     },
     analysisResults: leakAnalysis ? {
       totalLeaks: leakAnalysis.totalLeaks,
@@ -477,27 +474,18 @@ const Uploads = () => {
             <AnalysisProgress currentStep={analysisStep} />
           )}
 
-          {/* Category Stats */}
+          {/* File Count Indicator */}
           {hasFiles && !isAnalyzing && (
-            <div className="grid grid-cols-2 gap-3">
-              {getCategoryStats().map((stat) => (
-                <div 
-                  key={stat.id} 
-                  className={`p-3 rounded-lg border text-center transition-all ${
-                    stat.count > 0 
-                      ? "bg-primary/5 border-primary/20" 
-                      : "bg-secondary/50 border-border"
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-2 mb-1">
-                    {stat.icon}
-                    <span className="text-sm font-medium text-foreground">{stat.title}</span>
-                  </div>
-                  <p className={`text-lg font-bold ${stat.count > 0 ? "text-primary" : "text-muted-foreground"}`}>
-                    {stat.count} {stat.count === 1 ? "file" : "files"}
-                  </p>
-                </div>
-              ))}
+            <div className="flex items-center justify-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20">
+              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                <CreditCard className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-foreground">Payment Reports</p>
+                <p className="text-lg font-bold text-primary">
+                  {totalFiles} {totalFiles === 1 ? "file" : "files"} ready
+                </p>
+              </div>
             </div>
           )}
 
