@@ -43,9 +43,9 @@ const InsightsAnalysisTabs = ({ isTrial = false, hasData = false, reportAnalysis
                 <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                   <CreditCard className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="font-semibold text-foreground mb-2">No Subscription Data</h3>
+                <h3 className="font-semibold text-foreground mb-2">Subscription Analysis Awaiting Data</h3>
                 <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-                  Upload bank statements to detect unused subscriptions and duplicate charges
+                  We scan statements to uncover forgotten subscriptions, duplicate billing, and recurring charges you might be missing.
                 </p>
                 <Link to="/uploads-pos">
                   <Button variant="outline" className="gap-2" data-testid="button-upload-for-subscriptions">
@@ -132,7 +132,7 @@ const InsightsAnalysisTabs = ({ isTrial = false, hasData = false, reportAnalysis
             ) : (
               <div className="py-8 text-center">
                 <CheckCircle className="h-8 w-8 text-emerald-600 mx-auto mb-3" />
-                <p className="text-sm text-muted-foreground">No duplicate charges or unused subscriptions detected</p>
+                <p className="text-sm text-muted-foreground">No forgotten subscriptions, duplicate billing, or suspicious recurring charges found</p>
               </div>
             )}
           </TabsContent>

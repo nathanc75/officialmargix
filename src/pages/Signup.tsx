@@ -60,7 +60,7 @@ const Signup = () => {
             <span className="text-gradient">losing money</span>
           </h1>
           <p className="text-muted-foreground text-lg">
-            Upload bank statements, invoices, or payment reports. Our AI scans for revenue leaks — no account connections needed.
+            Upload financial documents and our AI will extract transactions, categorize spending, and detect missed revenue.
           </p>
           
           <div className="mt-8 p-4 rounded-xl bg-primary/10 border border-primary/20 backdrop-blur-sm">
@@ -71,15 +71,15 @@ const Signup = () => {
             <ul className="space-y-2 text-sm text-foreground">
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Missing payments & duplicate charges
+                Extract all transactions automatically
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Unused subscriptions draining your account
+                Forgotten subscriptions & duplicate billing
               </li>
               <li className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                Hidden revenue leaks & billing errors
+                Missed revenue & recurring charges you're missing
               </li>
             </ul>
           </div>

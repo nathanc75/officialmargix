@@ -32,10 +32,23 @@ const HeroSection = () => {
           </h1>
 
           {/* Subheadline */}
-          <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-            Upload your bank statements, invoices, or payment reports. Our AI scans for missing payments, 
-            duplicate charges, unused subscriptions, and hidden revenue leaks — no account connections needed.
-          </p>
+          <div className="mt-6 text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+            <p className="mb-3">Upload financial documents and our AI will automatically:</p>
+            <ul className="space-y-1.5 text-left max-w-md mx-auto">
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                Extract all transactions
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                Categorize spending & income
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
+                Detect missed revenue and billing leaks
+              </li>
+            </ul>
+          </div>
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">

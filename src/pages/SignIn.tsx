@@ -54,8 +54,8 @@ const SignIn = () => {
             Welcome back to your{" "}
             <span className="text-gradient">AI-powered</span> leak detection
           </h1>
-          <p className="text-muted-foreground text-lg">
-            Access your scans for missing payments, duplicate charges, and hidden revenue leaks — no account connections needed.
+          <p className="text-muted-foreground text-lg mb-6">
+            Upload financial documents and our AI will extract transactions, categorize spending, and detect missed revenue.
           </p>
         </div>
       </div>
