@@ -84,45 +84,45 @@ const Dashboard = () => {
 
               {/* AI Intelligence Preview - Ghost State */}
               <Card className="border-dashed border-muted-foreground/20 bg-muted/30">
-                <CardContent className="p-5">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Brain className="w-5 h-5 text-primary" />
-                    <h4 className="font-semibold text-foreground text-sm">What Our AI Typically Finds</h4>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-2.5 mb-5">
+                    <Brain className="w-6 h-6 text-primary" />
+                    <h4 className="font-semibold text-foreground text-base">What Our AI Typically Finds</h4>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50 border border-border/50">
-                      <div className="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
-                        <TrendingDown className="w-4 h-4 text-red-500" />
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="flex items-start gap-4 p-4 rounded-xl bg-background/50 border border-border/50">
+                      <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0">
+                        <TrendingDown className="w-5 h-5 text-red-500" />
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-foreground">Missed Payments</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Invoices paid late or unpaid</p>
+                        <p className="text-sm font-medium text-foreground">Missed Payments</p>
+                        <p className="text-xs text-muted-foreground mt-1">Invoices paid late or unpaid</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50 border border-border/50">
-                      <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
-                        <CreditCard className="w-4 h-4 text-amber-500" />
+                    <div className="flex items-start gap-4 p-4 rounded-xl bg-background/50 border border-border/50">
+                      <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0">
+                        <CreditCard className="w-5 h-5 text-amber-500" />
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-foreground">Duplicate Charges</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Same SaaS billed twice</p>
+                        <p className="text-sm font-medium text-foreground">Duplicate Charges</p>
+                        <p className="text-xs text-muted-foreground mt-1">Same SaaS billed twice</p>
                       </div>
                     </div>
                     
-                    <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50 border border-border/50">
-                      <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
-                        <AlertTriangle className="w-4 h-4 text-orange-500" />
+                    <div className="flex items-start gap-4 p-4 rounded-xl bg-background/50 border border-border/50">
+                      <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
+                        <AlertTriangle className="w-5 h-5 text-orange-500" />
                       </div>
                       <div>
-                        <p className="text-xs font-medium text-foreground">Forgotten Subscriptions</p>
-                        <p className="text-[10px] text-muted-foreground mt-0.5">Services you no longer use</p>
+                        <p className="text-sm font-medium text-foreground">Forgotten Subscriptions</p>
+                        <p className="text-xs text-muted-foreground mt-1">Services you no longer use</p>
                       </div>
                     </div>
                   </div>
                   
-                  <p className="text-[10px] text-muted-foreground mt-4 text-center">
+                  <p className="text-xs text-muted-foreground mt-5 text-center">
                     Average user finds <span className="font-semibold text-primary">$847</span> in recoverable revenue
                   </p>
                 </CardContent>
