@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Upload, Sparkles, Brain, AlertTriangle, TrendingDown, CreditCard } from "lucide-react";
+import { Upload, Brain, AlertTriangle, TrendingDown, CreditCard, ArrowRight, Sparkles } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
@@ -20,12 +20,14 @@ const Dashboard = () => {
   const hasData = user.connectedPlatforms.length > 0;
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-secondary/30 via-background to-background relative overflow-hidden">
+      {/* Background Elements - Matching Landing Page */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
         <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-primary/3 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] rounded-full bg-gradient-to-br from-primary/3 to-purple-500/3 blur-3xl" />
         <div 
-          className="absolute inset-0 opacity-[0.02]"
+          className="absolute inset-0 opacity-[0.015]"
           style={{
             backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
                               linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
@@ -34,7 +36,7 @@ const Dashboard = () => {
         />
       </div>
 
-      <div className="relative pt-4">
+      <div className="relative">
         <DashboardHeader 
           dateRange={dateRange} 
           setDateRange={setDateRange} 
@@ -43,57 +45,105 @@ const Dashboard = () => {
           isTrial={false}
         />
         
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           
-          
-          {/* AI Intelligence Preview - Ghost State */}
+          {/* AI Intelligence Preview - Premium Empty State */}
           {!hasData && (
-            <Card className="border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-background animate-fade-in overflow-hidden">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2.5 mb-5">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+            <div className="space-y-6 animate-fade-in">
+              {/* Hero Card */}
+              <Card className="relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-card via-card to-primary/5">
+                {/* Decorative gradient overlay */}
+                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 via-primary/5 to-transparent pointer-events-none" />
+                <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gradient-to-br from-primary/20 to-purple-500/20 blur-3xl" />
+                
+                <CardContent className="relative p-6 sm:p-8">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+                    <div className="flex items-start gap-4">
+                      <div className="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
+                        <Sparkles className="w-7 h-7 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">
+                          Ready to Find Your <span className="text-gradient">Hidden Revenue</span>
+                        </h2>
+                        <p className="text-muted-foreground text-sm sm:text-base max-w-xl">
+                          Upload your financial documents and our AI will automatically extract transactions, 
+                          categorize spending, and detect missed revenue opportunities.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <Link to="/uploads-pos" className="shrink-0">
+                      <Button size="lg" className="w-full lg:w-auto gap-2 shadow-lg shadow-primary/25 h-12 px-6">
+                        <Upload className="w-5 h-5" />
+                        Upload Documents
+                        <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* What AI Finds Section */}
+              <div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-8 h-8 rounded-lg brand-gradient flex items-center justify-center">
                     <Brain className="w-4 h-4 text-white" />
                   </div>
-                  <h4 className="font-semibold text-foreground text-base">What Our AI Typically Finds</h4>
+                  <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">What Our AI Typically Finds</h3>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="flex items-start gap-4 p-4 rounded-xl bg-background/50 border border-border/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md hover:border-red-500/30 group">
-                    <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
-                      <TrendingDown className="w-5 h-5 text-red-500" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Missed Payments</p>
-                      <p className="text-xs text-muted-foreground mt-1">Invoices paid late or unpaid</p>
-                    </div>
-                  </div>
+                  <Card className="group border border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-lg hover:shadow-red-500/5 hover:border-red-500/30 transition-all duration-300">
+                    <CardContent className="p-5">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                          <TrendingDown className="w-6 h-6 text-red-500" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground mb-1">Missed Payments</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">Invoices paid late, short-paid, or completely unpaid</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                   
-                  <div className="flex items-start gap-4 p-4 rounded-xl bg-background/50 border border-border/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md hover:border-amber-500/30 group">
-                    <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
-                      <CreditCard className="w-5 h-5 text-amber-500" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Duplicate Charges</p>
-                      <p className="text-xs text-muted-foreground mt-1">Same SaaS billed twice</p>
-                    </div>
-                  </div>
+                  <Card className="group border border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-lg hover:shadow-amber-500/5 hover:border-amber-500/30 transition-all duration-300">
+                    <CardContent className="p-5">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/10 to-amber-500/5 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                          <CreditCard className="w-6 h-6 text-amber-500" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground mb-1">Duplicate Charges</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">Same vendor or SaaS billed multiple times</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                   
-                  <div className="flex items-start gap-4 p-4 rounded-xl bg-background/50 border border-border/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-md hover:border-orange-500/30 group">
-                    <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
-                      <AlertTriangle className="w-5 h-5 text-orange-500" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">Forgotten Subscriptions</p>
-                      <p className="text-xs text-muted-foreground mt-1">Services you no longer use</p>
-                    </div>
-                  </div>
+                  <Card className="group border border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-lg hover:shadow-orange-500/5 hover:border-orange-500/30 transition-all duration-300">
+                    <CardContent className="p-5">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                          <AlertTriangle className="w-6 h-6 text-orange-500" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground mb-1">Forgotten Subscriptions</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">Recurring services you no longer use</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
                 
-                <p className="text-xs text-muted-foreground mt-5 text-center">
-                  Average user finds <span className="font-semibold text-primary animate-pulse">$847</span> in recoverable revenue
-                </p>
-              </CardContent>
-            </Card>
+                <div className="mt-6 text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Average user finds <span className="font-bold text-gradient text-base">$847</span> in recoverable revenue
+                  </p>
+                </div>
+              </div>
+            </div>
           )}
           
           <InsightsSection isTrial={false} hasData={hasData} />
