@@ -36,6 +36,7 @@ interface UploadSectionConfig {
   accept: string;
   placeholder: string;
   locked?: boolean;
+  optional?: boolean;
 }
 
 const formatFileSize = (bytes: number): string => {
@@ -53,11 +54,12 @@ const Uploads = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStep, setAnalysisStep] = useState<AnalysisStep | null>(null);
   const paymentsInputRef = useRef<HTMLInputElement>(null);
+  const pricingInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { setLeakAnalysis, leakAnalysis } = useAnalysis();
   const { toast } = useToast();
 
-  // Free scan sections - only payment reports
+  // Free scan sections - payment reports + optional pricing
   const freeSections: UploadSectionConfig[] = [
     {
       id: "payments",
@@ -67,19 +69,19 @@ const Uploads = () => {
       accept: ".csv,.pdf,.txt,.tsv,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic",
       placeholder: "Stripe, PayPal, Square, DoorDash, Uber Eats payouts",
     },
+    {
+      id: "pricing",
+      title: "What you charge",
+      description: "Helps detect pricing gaps and undercharging",
+      icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
+      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
+      placeholder: "Menu screenshots, product photos, price lists",
+      optional: true,
+    },
   ];
 
   // Premium sections - locked for free users
   const premiumSections: UploadSectionConfig[] = [
-    {
-      id: "pricing",
-      title: "Menu, Product List, or Pricing",
-      description: "Upload screenshots, photos, or files of your menu or product catalog",
-      icon: <ListOrdered className="h-5 w-5 text-muted-foreground" />,
-      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
-      placeholder: "Menu screenshots, product photos, price lists",
-      locked: true,
-    },
     {
       id: "bank",
       title: "Bank Statements",
@@ -114,6 +116,7 @@ const Uploads = () => {
   const getInputRef = (category: DocumentCategory) => {
     switch (category) {
       case "payments": return paymentsInputRef;
+      case "pricing": return pricingInputRef;
       default: return null;
     }
   };
@@ -516,7 +519,14 @@ const Uploads = () => {
                           <div className="flex items-center gap-2">
                             {section.icon}
                             <div>
-                              <h3 className="font-semibold text-foreground">{section.title}</h3>
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-semibold text-foreground">{section.title}</h3>
+                                {section.optional && (
+                                  <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 border-emerald-500/30 text-emerald-600 bg-emerald-500/10">
+                                    Optional • Improves results
+                                  </Badge>
+                                )}
+                              </div>
                               <p className="text-xs text-muted-foreground">{section.description}</p>
                             </div>
                           </div>
