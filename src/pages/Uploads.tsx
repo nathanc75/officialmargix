@@ -439,7 +439,7 @@ const Uploads = () => {
                 <div className="flex flex-col gap-5">
                   <div className="space-y-3">
                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-                      Find your missed revenue <span className="text-muted-foreground font-normal">(free scan)</span>
+                      Find your missed revenue <span className="text-primary/80 font-medium">— complimentary analysis</span>
                     </h1>
                     <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
                       Upload 1–2 documents and we'll scan for revenue leaks like failed payments, missing payouts, and pricing gaps. Results in minutes.
