@@ -1,206 +1,158 @@
 
-## Multi-AI Integration for MARGIX Upload Page
 
-### Summary
-Integrate four advanced AI capabilities into the uploads page: Document OCR & Extraction, Smart Categorization, Real-time Chat Assistant, and Enhanced Multi-Model Leak Detection. These features will use the existing Replit AI integrations (OpenAI and Gemini) that are already configured in your backend.
+# Migration Plan: Replit AI Integrations to Lovable AI Gateway
 
-### What You'll Get
+## Overview
 
-1. **Document OCR & Extraction** - AI automatically reads PDFs and images, extracting text, tables, and financial data
-2. **Smart Categorization** - AI auto-detects document types (bank statement vs invoice vs receipt) and routes them correctly
-3. **Real-time Chat Assistant** - A chat widget where users can ask questions about their uploaded documents and analysis results
-4. **Enhanced Leak Detection** - Multiple AI models working together for deeper, cross-validated analysis
+This plan migrates your AI backend from Replit's AI Integrations (GPT-4o-mini + Gemini 2.5 Flash) to Lovable AI Gateway with access to newer models (GPT-5, Gemini 3).
 
-### User Experience Flow
+## Current State
+
+Your app has 6 AI-powered endpoints running on an Express server (`server/index.js`):
+
+| Endpoint | Current Model | Purpose |
+|----------|---------------|---------|
+| `/api/analyze/report` | GPT-4o-mini | Delivery report analysis |
+| `/api/analyze/menu` | Gemini 2.5 Flash | Menu image OCR |
+| `/api/analyze/ocr` | Gemini 2.5 Flash | Document text extraction |
+| `/api/analyze/categorize` | GPT-4o-mini | Document classification |
+| `/api/chat/document` | GPT-4o-mini | Streaming chat assistant |
+| `/api/analyze/leaks` | Both (cross-validation) | Multi-model leak detection |
+| `/api/analyze/compare` | GPT-4o-mini | Price comparison |
+
+## Target Architecture
+
+Move all AI logic to Supabase Edge Functions calling the Lovable AI Gateway:
 
 ```text
-Upload Document
-      │
-      ▼
-┌─────────────────────────────────────┐
-│     AI Processing Pipeline           │
-├─────────────────────────────────────┤
-│ 1. OCR Extract (Gemini Vision)      │
-│    ↓                                 │
-│ 2. Smart Categorize (GPT-4o-mini)   │
-│    ↓                                 │
-│ 3. Multi-Model Analysis              │
-│    • Gemini: Pattern Detection       │
-│    • GPT: Deep Reasoning             │
-│    • Combined: Cross-validation      │
-└─────────────────────────────────────┘
-      │
-      ▼
-Results Dashboard + Chat Assistant
+Frontend (React)
+    |
+    v
+Supabase Edge Functions
+    |
+    v
+Lovable AI Gateway (https://ai.gateway.lovable.dev)
+    |
+    +--> google/gemini-3-flash-preview (OCR, patterns)
+    +--> openai/gpt-5-mini (reasoning, chat)
 ```
 
+## Migration Steps
+
+### Phase 1: Enable Lovable Cloud + Lovable AI
+
+1. Enable Lovable Cloud (Supabase backend)
+2. Enable Lovable AI integration to provision `LOVABLE_API_KEY`
+
+### Phase 2: Create Edge Functions (6 total)
+
+Each current Express endpoint becomes a Supabase Edge Function:
+
+| Function Name | Model | Replaces |
+|---------------|-------|----------|
+| `analyze-report` | `openai/gpt-5-mini` | `/api/analyze/report` |
+| `analyze-menu` | `google/gemini-3-flash-preview` | `/api/analyze/menu` |
+| `analyze-ocr` | `google/gemini-3-flash-preview` | `/api/analyze/ocr` |
+| `analyze-categorize` | `openai/gpt-5-mini` | `/api/analyze/categorize` |
+| `chat-document` | `openai/gpt-5-mini` | `/api/chat/document` (streaming) |
+| `analyze-leaks` | Both models | `/api/analyze/leaks` |
+
+### Phase 3: Update Frontend Calls
+
+Update 4 files to call Edge Functions instead of Express server:
+- `src/hooks/useDocumentChat.ts` - Chat streaming
+- `src/context/AnalysisContext.tsx` - Analysis endpoints
+- `src/pages/Uploads.tsx` - OCR/categorization
+- `src/components/AIChatWidget.tsx` - Chat interface
+
+### Phase 4: Remove Express AI Code
+
+Clean up `server/index.js`:
+- Remove OpenAI and Gemini client initialization
+- Remove all `/api/analyze/*` and `/api/chat/*` endpoints
+- Keep object storage and other non-AI endpoints
+
+## Model Upgrades
+
+| Old Model | New Model | Improvement |
+|-----------|-----------|-------------|
+| GPT-4o-mini | openai/gpt-5-mini | Better reasoning, longer context |
+| Gemini 2.5 Flash | google/gemini-3-flash-preview | Faster, improved accuracy |
+
+For cross-validation (leak detection), we'll use:
+- `google/gemini-3-flash-preview` for pattern detection (first pass)
+- `openai/gpt-5-mini` for deep reasoning (validation pass)
+
+## Files to Create
+
+```text
+supabase/
+  config.toml
+  functions/
+    analyze-report/index.ts
+    analyze-menu/index.ts
+    analyze-ocr/index.ts
+    analyze-categorize/index.ts
+    chat-document/index.ts
+    analyze-leaks/index.ts
+```
+
+## Files to Modify
+
+- `src/hooks/useDocumentChat.ts` - Update to call Edge Function
+- `src/context/AnalysisContext.tsx` - Update all fetch URLs
+- `src/pages/Uploads.tsx` - Update analysis calls
+- `server/index.js` - Remove AI endpoints
+
+## Benefits
+
+1. **Newer models**: Access to GPT-5 and Gemini 3 series
+2. **Unified billing**: All AI usage through Lovable credits
+3. **Better rate limits**: Lovable Gateway handles limits gracefully
+4. **No API keys to manage**: `LOVABLE_API_KEY` is auto-provisioned
+5. **Edge performance**: Functions run closer to users
+
 ---
 
-### Technical Implementation
+## Technical Details
 
-#### Part 1: Document OCR & Extraction
+### Edge Function Template
 
-**New Backend Endpoint:** `POST /api/analyze/ocr`
+Each function will follow this pattern:
 
-Uses Gemini Vision to extract text and structured data from uploaded documents (PDFs, images). This processes files before the main leak analysis.
+```typescript
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-**File: `server/index.js`**
-- Add new `/api/analyze/ocr` endpoint
-- Accept base64 image/PDF data
-- Use Gemini Vision to extract:
-  - Raw text content
-  - Tables as structured JSON
-  - Key financial figures (amounts, dates, account numbers)
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
-**File: `src/pages/Uploads.tsx`**
-- Modify `handleFileSelect` to detect image/PDF files
-- For PDFs/images: call OCR endpoint first before storing content
-- Show "Extracting text..." status during OCR processing
-
----
-
-#### Part 2: Smart Categorization
-
-**New Backend Endpoint:** `POST /api/analyze/categorize`
-
-AI automatically detects the document type from its content.
-
-**File: `server/index.js`**
-- Add `/api/analyze/categorize` endpoint
-- Uses GPT-4o-mini to classify documents into:
-  - `payment_report` - Stripe, PayPal, Square payouts
-  - `bank_statement` - Bank transactions
-  - `invoice` - Vendor invoices
-  - `receipt` - Purchase receipts
-  - `pricing_list` - Product/menu pricing
-  - `refund_record` - Refund documentation
-- Returns suggested category with confidence score
-
-**File: `src/pages/Uploads.tsx`**
-- Add "Auto-Detect" button in each upload section
-- When files are uploaded to wrong section, suggest moving them
-- Show detected category badge on each file
-- Add option to bulk-categorize all files
-
----
-
-#### Part 3: Real-time Chat Assistant
-
-**New Component:** `src/components/AIChatWidget.tsx`
-
-A floating chat widget for document Q&A.
-
-**New Backend Endpoint:** `POST /api/chat/document`
-- Streaming chat endpoint using GPT-4o-mini
-- Context-aware: knows about uploaded documents and analysis results
-- Can answer questions like:
-  - "What's my largest recurring charge?"
-  - "Explain this duplicate charge"
-  - "How can I reduce my fees?"
-
-**File: `src/pages/Uploads.tsx` & `src/pages/LeakResults.tsx`**
-- Add floating chat button (bottom-right corner)
-- Opens chat panel with message history
-- Passes document context to AI
-
-**Chat Widget Features:**
-- Collapsible sidebar panel
-- Message history during session
-- Typing indicator during AI response
-- Quick action suggestions
-
----
-
-#### Part 4: Enhanced Multi-Model Leak Detection
-
-**Updated Backend Endpoint:** `POST /api/analyze/leaks`
-
-Uses multiple AI models for cross-validated, deeper analysis.
-
-**File: `server/index.js`**
-- Modify `/api/analyze/leaks` to use multi-model approach:
-
-  **Step 1: Gemini Analysis**
-  - Pattern detection and anomaly identification
-  - Good at spotting visual patterns in data
-  
-  **Step 2: GPT Analysis**
-  - Deep reasoning on financial implications
-  - Better at contextual understanding
-  
-  **Step 3: Cross-Validation**
-  - Compare findings from both models
-  - Increase confidence for matched findings
-  - Flag discrepancies for human review
-
-**Enhanced Response Format:**
-```json
-{
-  "totalLeaks": 5,
-  "totalRecoverable": 847.50,
-  "leaks": [...],
-  "confidence": {
-    "overallScore": 0.92,
-    "crossValidated": 4,
-    "needsReview": 1
-  },
-  "modelContributions": {
-    "gemini": ["Pattern: duplicate $49.99 charges on 3rd of month"],
-    "gpt": ["Context: Subscription likely double-billing"]
+serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
   }
-}
+
+  const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+  // ... function logic
+});
 ```
 
----
+### Frontend Call Pattern
 
-### New Files to Create
+```typescript
+const { data, error } = await supabase.functions.invoke('analyze-ocr', {
+  body: { imageBase64, imageMimeType, fileName }
+});
+```
 
-| File | Purpose |
-|------|---------|
-| `src/components/AIChatWidget.tsx` | Floating chat assistant component |
-| `src/components/DocumentPreview.tsx` | Shows OCR-extracted content preview |
-| `src/hooks/useDocumentChat.ts` | Chat state management hook |
+### Streaming Pattern (for chat)
 
-### Files to Modify
+The chat function will return SSE stream directly, with frontend parsing tokens line-by-line.
 
-| File | Changes |
-|------|---------|
-| `server/index.js` | Add OCR, categorize, chat, and enhanced leak endpoints |
-| `src/pages/Uploads.tsx` | Integrate OCR, categorization, and chat widget |
-| `src/pages/LeakResults.tsx` | Add chat widget and confidence indicators |
-| `src/context/AnalysisContext.tsx` | Add chat history and OCR state |
+### Error Handling
 
----
+All functions will handle:
+- 429 (Rate limited) - Display "Please try again in a moment"
+- 402 (Credits exhausted) - Display "Please add credits to continue"
 
-### UI Enhancements
-
-1. **Upload Cards**
-   - New "Auto-Detect Type" button
-   - Category badge on each file
-   - "Extracting..." progress for OCR
-
-2. **Analysis Progress**
-   - Multi-step progress indicator:
-     - Step 1: Extracting text (OCR)
-     - Step 2: Categorizing documents
-     - Step 3: Gemini analysis
-     - Step 4: GPT analysis
-     - Step 5: Cross-validation
-
-3. **Results Page**
-   - Confidence score badge on each finding
-   - "Verified by 2 models" indicator
-   - Expandable "AI reasoning" section
-
-4. **Chat Widget**
-   - Floating button in bottom-right
-   - Slide-out panel
-   - Context-aware suggestions
-
----
-
-### Considerations
-
-- **Processing Time**: Multi-model analysis takes longer (~10-15 seconds vs ~5 seconds). The UI will show detailed progress steps to keep users informed.
-- **File Types**: OCR works best with clear, readable documents. Handwritten or low-quality scans may have reduced accuracy.
-- **Chat Context**: Chat assistant only knows about documents uploaded in the current session. Previous scans aren't included unless user re-uploads.
