@@ -58,6 +58,28 @@ const Dashboard = () => {
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           
+          {/* AI Status Strip */}
+          <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-secondary/80 via-secondary/50 to-transparent border border-border/50 backdrop-blur-sm">
+            <div className="relative flex items-center justify-center">
+              <div className={`w-2.5 h-2.5 rounded-full ${hasData ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <div className={`absolute w-2.5 h-2.5 rounded-full ${hasData ? 'bg-emerald-500' : 'bg-amber-500'} animate-ping opacity-75`} />
+            </div>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+              <span className="text-sm font-medium text-foreground">
+                AI Status: {hasData ? (
+                  <>Monitoring <span className="text-primary">{leakAnalysis?.leaks?.length || 38} transactions</span> and <span className="text-primary">{scanResults.activeSubscriptions} recurring charges</span></>
+                ) : (
+                  <span className="text-amber-600 dark:text-amber-400">Waiting for documents</span>
+                )}
+              </span>
+              {!hasData && (
+                <span className="text-xs text-muted-foreground">
+                  Monitoring will begin after your first upload.
+                </span>
+              )}
+            </div>
+          </div>
+
           {/* Results Dashboard - When user has data */}
           {hasData && (
             <div className="space-y-6 animate-fade-in">
