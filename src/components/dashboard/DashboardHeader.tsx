@@ -26,15 +26,15 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
       className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+        <div className="flex h-20 sm:h-24 items-center justify-between gap-4">
+          <div className="flex items-center gap-3 sm:gap-5 shrink-0">
             <Link to="/">
-              <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-10 w-10 sm:h-11 sm:w-11 text-muted-foreground hover:text-foreground">
+                <ArrowLeft className="h-5 w-5" />
               </Button>
             </Link>
-            <div className="flex items-center gap-2 sm:gap-3 group">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 transition-transform group-hover:scale-105">
+            <div className="flex items-center gap-2.5 sm:gap-3 group">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 transition-transform group-hover:scale-105">
                 <img 
                   src={margixLogo} 
                   alt="MARGIX" 
@@ -42,23 +42,23 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
                 />
               </div>
               <div>
-                <h1 className="text-sm sm:text-base font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
-                <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block font-medium">Leak Detection Dashboard</p>
+                <h1 className="text-base sm:text-xl font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 hidden sm:block font-medium">Leak Detection Dashboard</p>
               </div>
             </div>
             
             <div className="hidden lg:flex items-center gap-2 ml-4">
-              <Badge variant="secondary" className="gap-1.5 py-1 px-2.5 text-xs bg-primary/10 text-primary border-primary/20 font-medium">
-                <FileCheck className="h-3 w-3" />
+              <Badge variant="secondary" className="gap-1.5 py-1.5 px-3 text-sm bg-primary/10 text-primary border-primary/20 font-medium">
+                <FileCheck className="h-3.5 w-3.5" />
                 AI-Powered Scan
               </Badge>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="hidden md:flex items-center gap-2 bg-muted/50 p-1 rounded-lg border">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden md:flex items-center gap-2 bg-muted/50 p-1.5 rounded-lg border">
               <Select value={documentType} onValueChange={setDocumentType}>
-                <SelectTrigger className="w-[100px] lg:w-[130px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
+                <SelectTrigger className="w-[110px] lg:w-[140px] h-9 text-sm border-0 bg-transparent focus:ring-0 font-medium">
                   <SelectValue placeholder="Document" />
                 </SelectTrigger>
                 <SelectContent>
@@ -68,9 +68,9 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
                   <SelectItem value="payments">Payment Reports</SelectItem>
                 </SelectContent>
               </Select>
-              <div className="w-px h-4 bg-border" />
+              <div className="w-px h-5 bg-border" />
               <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger className="w-[100px] lg:w-[120px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
+                <SelectTrigger className="w-[110px] lg:w-[130px] h-9 text-sm border-0 bg-transparent focus:ring-0 font-medium">
                   <SelectValue placeholder="Period" />
                 </SelectTrigger>
                 <SelectContent>
@@ -85,8 +85,8 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
             <div className="md:hidden">
               <Sheet>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="h-8 w-8">
-                    <Menu className="h-4 w-4" />
+                  <Button variant="outline" size="icon" className="h-10 w-10">
+                    <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="right" className="w-[300px] sm:w-[400px] z-[100]">
@@ -130,13 +130,12 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
             <Link to="/uploads">
               <Button 
                 variant="default" 
-                size="sm"
-                className="h-8 sm:h-9 px-3 sm:px-6 text-xs sm:text-sm font-medium gap-2 shadow-sm"
+                size="default"
+                className="h-10 sm:h-11 px-4 sm:px-6 text-sm font-medium gap-2 shadow-md"
                 data-testid="button-upload"
               >
-                <Upload className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Upload</span>
-                <span className="sm:hidden">Upload</span>
+                <Upload className="h-4 w-4 sm:h-5 sm:w-5" />
+                <span>Upload</span>
               </Button>
             </Link>
           </div>
