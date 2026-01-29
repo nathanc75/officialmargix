@@ -2,44 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
-/* MARGIX Design System - Professional Monochrome Theme
+/* MARGIX Design System - Premium Clean Theme
    All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 8%;
+    --background: 0 0% 99%;
+    --foreground: 220 9% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 220 9% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 220 9% 12%;
 
     --primary: 221 83% 53%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 96%;
-    --secondary-foreground: 0 0% 8%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 9% 12%;
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 0 0% 96%;
-    --accent-foreground: 0 0% 8%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 9% 12%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 221 83% 53%;
 
-    --radius: 0.5rem;
+    --radius: 0.625rem;
 
     /* Custom tokens */
-    --hero-gradient-start: 221 83% 97%;
+    --hero-gradient-start: 220 30% 98%;
     --hero-gradient-end: 0 0% 100%;
     
     /* Brand gradient */
@@ -52,7 +52,6 @@
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 8%;
   }
-
 }
 
 @layer base {
@@ -62,14 +61,26 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 400;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    letter-spacing: -0.011em;
+    line-height: 1.6;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  h1 {
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    line-height: 1.65;
   }
 
   table, th, td, .font-mono {
@@ -81,7 +92,7 @@
 @layer utilities {
   .hero-gradient {
     background: linear-gradient(
-      135deg,
+      180deg,
       hsl(var(--hero-gradient-start)) 0%,
       hsl(var(--hero-gradient-end)) 100%
     );
@@ -104,5 +115,21 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* Premium shadow utilities */
+  .shadow-soft {
+    box-shadow: 0 1px 2px 0 hsl(220 9% 12% / 0.03),
+                0 1px 3px 0 hsl(220 9% 12% / 0.06);
+  }
+
+  .shadow-soft-md {
+    box-shadow: 0 2px 4px -1px hsl(220 9% 12% / 0.04),
+                0 4px 6px -1px hsl(220 9% 12% / 0.08);
+  }
+
+  .shadow-soft-lg {
+    box-shadow: 0 4px 6px -2px hsl(220 9% 12% / 0.03),
+                0 10px 15px -3px hsl(220 9% 12% / 0.08);
   }
 }

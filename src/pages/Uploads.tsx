@@ -434,43 +434,38 @@ const Uploads = () => {
 
       <div className="relative">
         {/* Header Card */}
-        <section className="pt-28 pb-6">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-primary/5 overflow-hidden">
-              <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/10 via-primary/5 to-transparent pointer-events-none" />
-              <CardContent className="relative p-6 sm:p-8">
-                <div className="flex flex-col gap-5">
-                  <div className="space-y-3">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-                      Find your missed revenue <span className="text-primary/80 font-medium">— complimentary analysis</span>
-                    </h1>
-                    <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
-                      Upload 1–2 documents and we'll scan for revenue leaks like failed payments, missing payouts, and pricing gaps. Results in minutes.
-                    </p>
-                  </div>
-                  
-                  {/* Feature Pills */}
-                  <div className="flex flex-wrap gap-2">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                      <Search className="h-3.5 w-3.5 text-primary" />
-                      <span className="text-xs font-medium text-primary">Revenue leak detection</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                      <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
-                      <span className="text-xs font-medium text-emerald-600">Accurate data extraction</span>
-                    </div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
-                      <CheckCircle2 className="h-3.5 w-3.5 text-amber-600" />
-                      <span className="text-xs font-medium text-amber-600">Double-checked results</span>
-                    </div>
-                  </div>
+        <section className="pt-28 pb-8">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+                  Find your missed revenue
+                </h1>
+                <p className="text-base text-muted-foreground max-w-xl leading-relaxed">
+                  Upload your documents and we'll scan for revenue leaks like failed payments and pricing gaps. Results in minutes.
+                </p>
+              </div>
+              
+              {/* Feature Pills */}
+              <div className="flex flex-wrap gap-2">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border/50">
+                  <Search className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">Leak detection</span>
                 </div>
-              </CardContent>
-            </Card>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border/50">
+                  <Sparkles className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">AI-powered extraction</span>
+                </div>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border/50">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-xs font-medium text-muted-foreground">Verified results</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-8">
+        <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-8">
 
           {/* Analysis Progress (shown during analysis) */}
           {isAnalyzing && analysisStep && (
@@ -479,14 +474,14 @@ const Uploads = () => {
 
           {/* File Count Indicator */}
           {hasFiles && !isAnalyzing && (
-            <div className="flex items-center justify-center gap-3 p-4 rounded-xl bg-primary/5 border border-primary/20">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <CreditCard className="h-5 w-5 text-primary" />
+            <div className="flex items-center gap-3 p-4 rounded-xl bg-muted border border-border/50">
+              <div className="w-9 h-9 rounded-lg bg-background flex items-center justify-center border border-border/50">
+                <CreditCard className="h-4 w-4 text-foreground" />
               </div>
               <div>
-                <p className="text-sm font-medium text-foreground">Payment Reports</p>
-                <p className="text-lg font-bold text-primary">
-                  {totalFiles} {totalFiles === 1 ? "file" : "files"} ready
+                <p className="text-xs text-muted-foreground">Ready for analysis</p>
+                <p className="text-sm font-medium text-foreground">
+                  {totalFiles} {totalFiles === 1 ? "file" : "files"} uploaded
                 </p>
               </div>
             </div>
@@ -494,16 +489,16 @@ const Uploads = () => {
 
           {/* Free Upload Sections */}
           {!isAnalyzing && (
-            <div className="space-y-6">
-              <div className="text-center sm:text-left">
-                <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-1">
-                  Upload what we need to scan for lost revenue
+            <div className="space-y-5">
+              <div>
+                <h2 className="text-base font-medium text-foreground mb-1">
+                  Upload your documents
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  Most businesses have hidden revenue leaks — these files help us find yours.
+                  These files help us detect hidden revenue leaks in your business.
                 </p>
               </div>
-              <div className="grid gap-5">
+              <div className="grid gap-4">
                 {freeSections.map((section) => {
                   const inputRef = getInputRef(section.id);
                   const categoryFiles = getFilesForCategory(section.id);
@@ -512,18 +507,20 @@ const Uploads = () => {
                   return (
                     <Card 
                       key={section.id}
-                      className="border-border bg-card shadow-sm hover:shadow-md transition-shadow"
+                      className="transition-shadow hover:shadow-soft-md"
                     >
-                      <CardContent className="p-6">
+                      <CardContent className="p-5">
                         <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center gap-2">
-                            {section.icon}
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center">
+                              {section.icon}
+                            </div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="font-semibold text-foreground">{section.title}</h3>
+                                <h3 className="text-sm font-medium text-foreground">{section.title}</h3>
                                 {section.optional && (
-                                  <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 border-emerald-500/30 text-emerald-600 bg-emerald-500/10">
-                                    Optional • Improves results
+                                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">
+                                    Optional
                                   </Badge>
                                 )}
                               </div>
@@ -531,14 +528,14 @@ const Uploads = () => {
                             </div>
                           </div>
                           {categoryFileCount > 0 && (
-                            <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                              {categoryFileCount} file{categoryFileCount !== 1 ? 's' : ''}
+                            <Badge variant="default">
+                              {categoryFileCount} {categoryFileCount === 1 ? 'file' : 'files'}
                             </Badge>
                           )}
                         </div>
                         
                         <div 
-                          className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer group"
+                          className="border border-dashed border-border rounded-lg p-6 text-center hover:border-muted-foreground/30 hover:bg-muted/50 transition-all cursor-pointer group"
                           onClick={() => inputRef?.current?.click()}
                         >
                           <input
@@ -550,22 +547,23 @@ const Uploads = () => {
                             className="hidden"
                             data-testid={`input-file-upload-${section.id}`}
                           />
-                          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
-                            <Upload className="h-7 w-7 text-primary" />
+                          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mx-auto mb-3 group-hover:bg-muted/80 transition-colors">
+                            <Upload className="h-5 w-5 text-muted-foreground" />
                           </div>
-                          <p className="text-base font-medium text-foreground mb-1">
+                          <p className="text-sm font-medium text-foreground mb-0.5">
                             Drop files here or click to browse
                           </p>
-                          <p className="text-sm text-muted-foreground mb-4">
+                          <p className="text-xs text-muted-foreground mb-3">
                             {section.placeholder}
                           </p>
                           <Button 
-                            size="default"
-                            className="gap-2" 
+                            variant="outline"
+                            size="sm"
+                            className="gap-1.5" 
                             onClick={(e) => { e.stopPropagation(); inputRef?.current?.click(); }}
                             data-testid={`button-browse-${section.id}`}
                           >
-                            <Plus className="h-4 w-4" />
+                            <Plus className="h-3.5 w-3.5" />
                             Select Files
                           </Button>
                         </div>
@@ -682,58 +680,60 @@ const Uploads = () => {
 
           {/* Premium Sections - Locked */}
           {!isAnalyzing && (
-            <Card className="border border-border/50 shadow-lg bg-card overflow-hidden mt-10">
-              <CardContent className="p-6 sm:p-8">
-                <div className="flex flex-col gap-6">
+            <Card className="mt-8">
+              <CardContent className="p-5 sm:p-6">
+                <div className="flex flex-col gap-5">
                   {/* Header */}
-                  <div className="space-y-3">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted border border-border">
-                      <Lock className="h-3 w-3 text-muted-foreground" />
-                      <span className="text-xs font-medium text-muted-foreground">Pro</span>
-                    </div>
+                  <div className="flex items-start justify-between">
                     <div className="space-y-1">
-                      <h3 className="text-lg sm:text-xl font-semibold text-foreground">
-                        Unlock full analysis capabilities
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Access additional document types and AI-powered insights.
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-sm font-medium text-foreground">
+                          Pro features
+                        </h3>
+                        <Badge variant="secondary" className="text-[10px]">
+                          <Lock className="h-2.5 w-2.5 mr-1" />
+                          Upgrade
+                        </Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Unlock additional document types and AI-powered insights.
                       </p>
                     </div>
                   </div>
 
                   {/* Premium Features Grid */}
-                  <div className="grid sm:grid-cols-2 gap-2.5">
+                  <div className="grid sm:grid-cols-2 gap-2">
                     {premiumSections.map((section) => (
                       <div 
                         key={section.id}
-                        className="flex items-center gap-3 p-3.5 rounded-lg bg-muted/30 border border-border/50"
+                        className="flex items-center gap-2.5 p-3 rounded-lg bg-muted/50 border border-border/30"
                       >
-                        <div className="w-9 h-9 rounded-md bg-muted flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 rounded-md bg-background flex items-center justify-center shrink-0 border border-border/50">
                           {section.icon}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground">{section.title}</p>
-                          <p className="text-xs text-muted-foreground">{section.description}</p>
+                          <p className="text-xs font-medium text-foreground">{section.title}</p>
+                          <p className="text-[11px] text-muted-foreground">{section.description}</p>
                         </div>
                       </div>
                     ))}
                     {/* AI Assistant Feature */}
-                    <div className="flex items-center gap-3 p-3.5 rounded-lg bg-primary/5 border border-primary/20">
-                      <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
-                        <Brain className="h-4.5 w-4.5 text-primary" />
+                    <div className="flex items-center gap-2.5 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                      <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                        <Brain className="h-4 w-4 text-primary" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-foreground">AI Assistant</p>
-                        <p className="text-xs text-muted-foreground">Ask questions about your data</p>
+                        <p className="text-xs font-medium text-foreground">AI Assistant</p>
+                        <p className="text-[11px] text-muted-foreground">Ask questions about your data</p>
                       </div>
                     </div>
                   </div>
 
                   {/* CTA */}
                   <Link to="/pricing" className="block">
-                    <Button size="default" className="w-full gap-2">
+                    <Button variant="outline" size="sm" className="w-full gap-1.5">
                       View Plans
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   </Link>
                 </div>
@@ -743,32 +743,31 @@ const Uploads = () => {
 
           {/* Analyze Button */}
           {hasFiles && allUploaded && !isAnalyzing && (
-            <Card className="border-border bg-card shadow-sm mt-8">
-              <CardContent className="p-8 text-center">
-                <div className="flex items-center justify-center gap-2 mb-4">
-                  <Brain className="h-5 w-5 text-primary" />
-                  <p className="text-lg font-semibold text-foreground">
-                    Ready for Multi-Model Analysis
+            <div className="mt-6 pt-6 border-t border-border">
+              <div className="text-center space-y-4">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">
+                    Ready to analyze {totalFiles} {totalFiles === 1 ? 'document' : 'documents'}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    AI-powered scan using Gemini + GPT for cross-validated results
                   </p>
                 </div>
-                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-                  {totalFiles} document{totalFiles !== 1 ? 's' : ''} will be analyzed using Gemini + GPT for cross-validated leak detection.
-                </p>
                 <Button 
                   size="lg"
-                  className="gap-2 px-8" 
+                  className="gap-2" 
                   onClick={handleAnalyze}
                   disabled={isAnalyzing}
                   data-testid="button-analyze"
                 >
-                  <Search className="h-5 w-5" />
-                  Start AI-Powered Scan
+                  <Search className="h-4 w-4" />
+                  Start Analysis
                 </Button>
-                <p className="text-xs text-muted-foreground mt-4">
+                <p className="text-[11px] text-muted-foreground">
                   Files are processed securely and never stored permanently
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           )}
         </main>
       </div>

@@ -25,78 +25,78 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-4 left-4 right-4 z-50 mx-auto max-w-7xl backdrop-blur-2xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08),0_0_60px_-15px_hsl(221,83%,53%,0.3)] border border-white/20" style={{ background: 'linear-gradient(135deg, hsl(var(--hero-gradient-start) / 0.4) 0%, hsl(var(--hero-gradient-end) / 0.3) 100%)' }}>
-      <div className="px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="fixed top-4 left-4 right-4 z-50 mx-auto max-w-6xl bg-background/80 backdrop-blur-xl rounded-2xl shadow-soft-lg border border-border/50">
+      <div className="px-5 lg:px-6">
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
           <a href="/" className="flex items-center gap-1.5 group">
-            <div className="w-10 h-10 transition-transform group-hover:scale-105">
+            <div className="w-8 h-8 transition-transform group-hover:scale-105">
               <img src={margixLogo} alt="MARGIX" className="w-full h-full object-contain" />
             </div>
-            <span className="text-2xl font-bold text-foreground tracking-tight">MARGIX</span>
+            <span className="text-xl font-semibold text-foreground tracking-tight">MARGIX</span>
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6 xl:gap-10">
+          <div className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-sm xl:text-base font-medium text-foreground hover:text-primary transition-colors whitespace-nowrap"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          <div className="hidden lg:flex items-center gap-2 xl:gap-4">
+          <div className="hidden lg:flex items-center gap-3">
             <Link to="/signin">
-              <Button variant="link" size="sm" className="text-muted-foreground hover:text-foreground">
+              <Button variant="ghost" size="sm" className="text-muted-foreground">
                 Sign in
               </Button>
             </Link>
             <Link to="/signup">
-              <Button size="sm" className="xl:text-base xl:px-4 xl:py-2">Get Started</Button>
+              <Button size="sm">Get Started</Button>
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="lg:hidden p-2"
+            className="lg:hidden p-2 -mr-2 hover:bg-muted rounded-lg transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
-              <X className="h-6 w-6 text-foreground" />
+              <X className="h-5 w-5 text-foreground" />
             ) : (
-              <Menu className="h-6 w-6 text-foreground" />
+              <Menu className="h-5 w-5 text-foreground" />
             )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border">
-            <div className="flex flex-col gap-4">
+          <div className="lg:hidden py-4 border-t border-border/50">
+            <div className="flex flex-col gap-1">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="text-base font-medium text-foreground hover:text-primary transition-colors px-2"
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors px-3 py-2 rounded-lg"
                   onClick={(e) => handleNavClick(e, link.href)}
                 >
                   {link.label}
                 </a>
               ))}
-              <div className="flex items-center gap-3 pt-4 border-t border-border">
+              <div className="flex items-center gap-2 pt-4 mt-2 border-t border-border/50">
                 <Link to="/signin" className="flex-1">
-                  <Button variant="outline" size="default" className="w-full justify-center">
+                  <Button variant="outline" size="default" className="w-full">
                     Sign in
                   </Button>
                 </Link>
                 <Link to="/signup" className="flex-1">
-                  <Button size="default" className="w-full justify-center">Get Started</Button>
+                  <Button size="default" className="w-full">Get Started</Button>
                 </Link>
               </div>
             </div>
