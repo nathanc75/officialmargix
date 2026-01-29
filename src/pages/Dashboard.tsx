@@ -196,13 +196,12 @@ const Dashboard = () => {
                         <Sparkles className="w-7 h-7 text-white" />
                       </div>
                       <div className="space-y-3">
+                        <p className="text-sm font-medium text-muted-foreground">No documents yet</p>
                         <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
-                          We scan your financial documents and uncover <span className="text-gradient">money you didn't know you were losing.</span>
+                          Your AI Financial Monitor is <span className="text-gradient">Ready</span>
                         </h2>
                         <p className="text-muted-foreground text-sm sm:text-base max-w-2xl leading-relaxed">
-                          Upload bank statements, invoices, receipts, or payment reports. Our AI reads every transaction, 
-                          understands your spending patterns, and automatically flags missed payments, duplicate charges, 
-                          and hidden revenue leaks.
+                          Upload financial documents and your AI will begin analyzing transactions, detecting billing issues, and monitoring for revenue leaks.
                         </p>
                         <p className="text-xs text-muted-foreground/70 flex items-center gap-1.5">
                           <span className="w-1 h-1 rounded-full bg-emerald-500" />
