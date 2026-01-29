@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, Brain, AlertTriangle, TrendingDown, CreditCard, ArrowRight, Sparkles } from "lucide-react";
+import { Upload, Brain, AlertTriangle, TrendingDown, CreditCard, ArrowRight, Sparkles, CheckCircle2, RefreshCw } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
@@ -10,14 +10,25 @@ import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
 import { useUser } from "@/context/UserContext";
+import { useAnalysis } from "@/context/AnalysisContext";
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("7days");
   const [documentType, setDocumentType] = useState("all");
   const { user } = useUser();
+  const { leakAnalysis, hasData: hasAnalysisData } = useAnalysis();
   
   // Check if user has uploaded any documents
-  const hasData = user.connectedPlatforms.length > 0;
+  const hasData = user.connectedPlatforms.length > 0 || hasAnalysisData;
+
+  // Mock data for demo - in production this would come from analysis
+  const scanResults = {
+    potentialIssues: leakAnalysis?.leaks?.length || 4,
+    duplicateCharges: leakAnalysis?.leaks?.filter(l => l.type === "duplicate_charge").length || 2,
+    missedPayments: leakAnalysis?.leaks?.filter(l => l.type === "missing_payment" || l.type === "missed_refund").length || 1,
+    activeSubscriptions: leakAnalysis?.leaks?.filter(l => l.type === "unused_subscription").length || 9,
+    totalRecoverable: leakAnalysis?.totalRecoverable || 847,
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-secondary/30 via-background to-background relative overflow-hidden">
@@ -47,6 +58,128 @@ const Dashboard = () => {
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           
+          {/* Results Dashboard - When user has data */}
+          {hasData && (
+            <div className="space-y-6 animate-fade-in">
+              {/* Scan Complete Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+                    <CheckCircle2 className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-foreground">
+                      Scan Complete — <span className="text-gradient">Here's What We Found</span>
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Analysis completed • {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+                <Link to="/uploads-pos">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <RefreshCw className="w-4 h-4" />
+                    New Scan
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Summary Metric Cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Potential Issues */}
+                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-amber-500/5 hover:shadow-xl transition-all duration-300 group">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-bl-full" />
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Potential Issues</p>
+                        <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.potentialIssues}</p>
+                        <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">detected</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/10 to-amber-500/5 border border-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <AlertTriangle className="w-5 h-5 text-amber-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Duplicate Charges */}
+                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-red-500/5 hover:shadow-xl transition-all duration-300 group">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-red-500/10 to-transparent rounded-bl-full" />
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Duplicate Charges</p>
+                        <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.duplicateCharges}</p>
+                        <p className="text-xs text-red-600 dark:text-red-400 font-medium">found</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <CreditCard className="w-5 h-5 text-red-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Missed Payments */}
+                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-orange-500/5 hover:shadow-xl transition-all duration-300 group">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-orange-500/10 to-transparent rounded-bl-full" />
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Missed Payments</p>
+                        <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.missedPayments}</p>
+                        <p className="text-xs text-orange-600 dark:text-orange-400 font-medium">identified</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <TrendingDown className="w-5 h-5 text-orange-500" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Active Subscriptions */}
+                <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card via-card to-primary/5 hover:shadow-xl transition-all duration-300 group">
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-full" />
+                  <CardContent className="p-5">
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-1">
+                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Active Subscriptions</p>
+                        <p className="text-3xl sm:text-4xl font-bold text-foreground">{scanResults.activeSubscriptions}</p>
+                        <p className="text-xs text-primary font-medium">tracked</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <RefreshCw className="w-5 h-5 text-primary" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Total Recoverable Banner */}
+              <Card className="border-0 shadow-xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent">
+                <CardContent className="p-5 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-2xl brand-gradient flex items-center justify-center shadow-lg shadow-primary/25">
+                        <Sparkles className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Total Recoverable Amount</p>
+                        <p className="text-2xl sm:text-3xl font-bold text-gradient">${scanResults.totalRecoverable.toLocaleString()}</p>
+                      </div>
+                    </div>
+                    <Link to="/leak-results">
+                      <Button className="gap-2 shadow-lg shadow-primary/25">
+                        View Detailed Report
+                        <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
           {/* AI Intelligence Preview - Premium Empty State */}
           {!hasData && (
             <div className="space-y-6 animate-fade-in">
