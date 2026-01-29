@@ -298,7 +298,7 @@ const Dashboard = () => {
                 
                 <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
-                    Average user finds <span className="font-bold text-gradient text-base">$847</span> in recoverable revenue
+                    The average account has <span className="font-bold text-gradient text-base">$847</span> in recoverable revenue
                   </p>
                 </div>
               </div>
