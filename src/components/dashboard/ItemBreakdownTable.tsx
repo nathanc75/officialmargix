@@ -38,9 +38,9 @@ const ItemBreakdownTable = ({ isTrial = false, hasData = false, reportAnalysis }
             <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
               <FileText className="h-6 w-6 text-muted-foreground" />
             </div>
-            <h3 className="font-semibold text-foreground mb-2">No Transactions to Display</h3>
+            <h3 className="font-semibold text-foreground mb-2">Transaction Analysis Awaiting Documents</h3>
             <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-              Upload your financial documents to see transaction-level analysis
+              Once uploaded, AI will break down every transaction, flag anomalies, and surface potential issues automatically.
             </p>
             <Link to="/uploads-pos">
               <Button variant="outline" className="gap-2" data-testid="button-upload-for-analysis">

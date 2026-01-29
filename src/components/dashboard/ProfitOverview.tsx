@@ -120,9 +120,9 @@ const ProfitOverview = ({ isTrial = false, hasData = false, reportAnalysis }: Pr
             <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
               <Upload className="h-6 w-6 text-muted-foreground" />
             </div>
-            <h3 className="font-semibold text-foreground mb-2">No Documents Scanned</h3>
+            <h3 className="font-semibold text-foreground mb-2">No Documents Scanned Yet</h3>
             <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-              Upload bank statements, invoices, or payment reports to detect revenue leaks
+              Upload financial documents and our AI will extract transactions, categorize spending, and detect missed revenue.
             </p>
             <Link to="/uploads-pos">
               <Button className="gap-2" data-testid="button-upload-documents">

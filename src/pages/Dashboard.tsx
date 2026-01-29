@@ -58,7 +58,7 @@ const Dashboard = () => {
                     <div>
                       <h3 className="font-semibold text-foreground text-lg">Start Scanning for Revenue Leaks</h3>
                       <p className="text-muted-foreground text-sm mt-1">
-                        Upload bank statements, invoices, or payment reports. Our AI scans for missing payments, duplicate charges, and hidden leaks.
+                        Upload financial documents and our AI will extract transactions, categorize spending, and detect missed revenue.
                       </p>
                     </div>
                   </div>
