@@ -305,10 +305,15 @@ const Dashboard = () => {
             </div>
           )}
           
-          <InsightsSection isTrial={false} hasData={hasData} />
-          <ProfitOverview isTrial={false} hasData={hasData} />
-          <ItemBreakdownTable isTrial={false} hasData={hasData} />
-          <InsightsAnalysisTabs isTrial={false} hasData={hasData} />
+          {/* Only show detailed sections when there's data */}
+          {hasData && (
+            <>
+              <InsightsSection isTrial={false} hasData={hasData} />
+              <ProfitOverview isTrial={false} hasData={hasData} />
+              <ItemBreakdownTable isTrial={false} hasData={hasData} />
+              <InsightsAnalysisTabs isTrial={false} hasData={hasData} />
+            </>
+          )}
         </main>
       </div>
     </div>
