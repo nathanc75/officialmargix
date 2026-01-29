@@ -697,7 +697,7 @@ const Uploads = () => {
                         Unlock deeper analysis
                       </h3>
                       <p className="text-sm text-muted-foreground max-w-lg">
-                        Upgrade to scan additional document types and get access to your AI assistant for real-time insights.
+                        Upgrade to access premium features for more accurate, comprehensive leak detection.
                       </p>
                     </div>
                   </div>
