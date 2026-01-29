@@ -107,7 +107,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1">Missed Payments</p>
-                          <p className="text-sm text-muted-foreground leading-relaxed">Invoices paid late, short-paid, or completely unpaid</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">Invoices that were underpaid, paid late, or never paid at all — revenue you've earned but haven't fully received.</p>
                         </div>
                       </div>
                     </CardContent>
@@ -121,7 +121,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1">Duplicate Charges</p>
-                          <p className="text-sm text-muted-foreground leading-relaxed">Same vendor or SaaS billed multiple times</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">Services or vendors that charged you more than once, including repeated SaaS billing and processing errors.</p>
                         </div>
                       </div>
                     </CardContent>
@@ -135,7 +135,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1">Forgotten Subscriptions</p>
-                          <p className="text-sm text-muted-foreground leading-relaxed">Recurring services you no longer use</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">Recurring subscriptions you're still paying for but no longer use, creating silent monthly spending.</p>
                         </div>
                       </div>
                     </CardContent>
