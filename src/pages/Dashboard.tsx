@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, Upload, Sparkles } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import PaidSubscriberBanner from "@/components/dashboard/PaidSubscriberBanner";
+
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
 import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
@@ -44,7 +44,7 @@ const Dashboard = () => {
         />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-          <PaidSubscriberBanner />
+          
           
           {/* Upload Documents Card */}
           {!hasData && (
