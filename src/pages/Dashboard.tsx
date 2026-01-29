@@ -218,12 +218,12 @@ const Dashboard = () => {
                         <Sparkles className="w-7 h-7 text-white" />
                       </div>
                       <div className="space-y-3">
-                        <p className="text-sm font-medium text-muted-foreground">No documents yet</p>
+                        <p className="text-sm font-medium text-muted-foreground">No data yet — your AI is standing by.</p>
                         <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
                           Your AI Financial Monitor is <span className="text-gradient">Ready</span>
                         </h2>
                         <p className="text-muted-foreground text-sm sm:text-base max-w-2xl leading-relaxed">
-                          Upload financial documents and your AI will begin analyzing transactions, detecting billing issues, and monitoring for revenue leaks.
+                          Upload financial documents to activate transaction analysis and issue detection.
                         </p>
                         <p className="text-xs text-muted-foreground/70 flex items-center gap-1.5">
                           <span className="w-1 h-1 rounded-full bg-emerald-500" />
