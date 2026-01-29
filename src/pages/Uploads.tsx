@@ -697,13 +697,13 @@ const Uploads = () => {
                     {premiumSections.map((section) => (
                       <div 
                         key={section.id}
-                        className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border/50"
+                        className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border/50 transition-all duration-200 hover:bg-muted/80 hover:border-amber-500/30 hover:shadow-md hover:shadow-amber-500/10 hover:-translate-y-0.5 cursor-pointer group"
                       >
-                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center shrink-0 transition-colors duration-200 group-hover:bg-amber-500/10">
                           {section.icon}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-foreground truncate">{section.title}</p>
+                          <p className="text-sm font-medium text-foreground truncate transition-colors duration-200 group-hover:text-amber-600">{section.title}</p>
                           <p className="text-xs text-muted-foreground truncate">{section.description}</p>
                         </div>
                       </div>
