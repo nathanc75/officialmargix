@@ -672,52 +672,55 @@ const Uploads = () => {
 
           {/* Premium Sections - Locked */}
           {!isAnalyzing && (
-            <div className="space-y-6 mt-12">
-              <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-border" />
-                <div className="flex items-center gap-2">
-                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
-                  <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Unlock with Pro</h2>
-                </div>
-                <div className="h-px flex-1 bg-border" />
-              </div>
-              <p className="text-sm text-muted-foreground text-center">
-                Upgrade to access deeper, more accurate insights using additional documents.
-              </p>
-              <div className="grid gap-4 opacity-60">
-                {premiumSections.map((section) => (
-                  <Card 
-                    key={section.id}
-                    className="border-border bg-muted/30"
-                  >
-                    <CardContent className="p-5">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
-                            {section.icon}
-                          </div>
-                          <div>
-                            <h3 className="font-medium text-muted-foreground">{section.title}</h3>
-                            <p className="text-xs text-muted-foreground/70">{section.description}</p>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30">
-                          <Lock className="h-3 w-3 mr-1" />
-                          Pro
-                        </Badge>
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-amber-500/5 overflow-hidden mt-10">
+              <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-amber-500/10 via-amber-500/5 to-transparent pointer-events-none" />
+              <CardContent className="relative p-6 sm:p-8">
+                <div className="flex flex-col gap-6">
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-2">
+                      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                        <Lock className="h-3.5 w-3.5 text-amber-600" />
+                        <span className="text-xs font-medium text-amber-600">Pro Features</span>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-              <Link to="/pricing" className="block mt-6">
-                <Button variant="outline" size="lg" className="w-full gap-2 border-primary/30 text-primary hover:bg-primary/5">
-                  <Sparkles className="h-4 w-4" />
-                  View Plans & Unlock Pro Features
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </div>
+                      <h3 className="text-xl sm:text-2xl font-bold text-foreground">
+                        Unlock deeper analysis
+                      </h3>
+                      <p className="text-sm text-muted-foreground max-w-lg">
+                        Upgrade to scan additional document types for more accurate, comprehensive leak detection.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Premium Document Types Grid */}
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {premiumSections.map((section) => (
+                      <div 
+                        key={section.id}
+                        className="flex items-center gap-3 p-4 rounded-xl bg-muted/50 border border-border/50"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center shrink-0">
+                          {section.icon}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-foreground truncate">{section.title}</p>
+                          <p className="text-xs text-muted-foreground truncate">{section.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* CTA */}
+                  <Link to="/pricing" className="block">
+                    <Button size="lg" className="w-full gap-2 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white border-0 shadow-lg shadow-amber-500/25">
+                      <Sparkles className="h-4 w-4" />
+                      Upgrade to Pro
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
           {/* Analyze Button */}
