@@ -95,7 +95,7 @@ const HowItWorksSection = () => {
             <p className="text-muted-foreground leading-relaxed">
               {currentStep.description}
             </p>
-            <Link to="/signup">
+            <Link to="/signup" className="inline-block mt-4">
               <Button className="gap-2">
                 Start Free Scan
                 <ArrowRight className="w-4 h-4" />
