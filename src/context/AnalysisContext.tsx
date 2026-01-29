@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export interface AnalysisSummary {
   totalRevenue: { value: number; isEstimate: boolean };
@@ -122,17 +123,14 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, isAnalyzing: true, analysisStep: "Analyzing delivery report...", error: null }));
     
     try {
-      const response = await fetch("/api/analyze/report", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportContent, reportType }),
+      const { data, error } = await supabase.functions.invoke("analyze-report", {
+        body: { reportContent, reportType },
       });
       
-      if (!response.ok) {
-        throw new Error("Failed to analyze report");
+      if (error) {
+        throw new Error(error.message || "Failed to analyze report");
       }
       
-      const data = await response.json();
       const analysis = data.analysis as ReportAnalysis;
       
       setState(prev => ({
@@ -154,17 +152,14 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, isAnalyzing: true, analysisStep: "Reading menu prices...", error: null }));
     
     try {
-      const response = await fetch("/api/analyze/menu", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64, imageMimeType }),
+      const { data, error } = await supabase.functions.invoke("analyze-menu", {
+        body: { imageBase64, imageMimeType },
       });
       
-      if (!response.ok) {
-        throw new Error("Failed to analyze menu");
+      if (error) {
+        throw new Error(error.message || "Failed to analyze menu");
       }
       
-      const data = await response.json();
       const menuData = data.menuData as MenuAnalysis;
       
       setState(prev => ({
@@ -190,20 +185,17 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, isAnalyzing: true, analysisStep: "Comparing data for discrepancies...", error: null }));
     
     try {
-      const response = await fetch("/api/analyze/compare", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { data, error } = await supabase.functions.invoke("analyze-compare", {
+        body: {
           reportAnalysis: state.reportAnalysis,
           menuData: state.menuAnalysis,
-        }),
+        },
       });
       
-      if (!response.ok) {
-        throw new Error("Failed to compare data");
+      if (error) {
+        throw new Error(error.message || "Failed to compare data");
       }
       
-      const data = await response.json();
       const comparison = data.comparison as ComparisonResult;
       
       setState(prev => ({
