@@ -48,10 +48,12 @@ const Dashboard = () => {
           
           {/* AI Intelligence Preview - Ghost State */}
           {!hasData && (
-            <Card className="border-dashed border-muted-foreground/20 bg-muted/30 animate-fade-in">
+            <Card className="border-primary/20 bg-gradient-to-r from-primary/10 via-primary/5 to-background animate-fade-in overflow-hidden">
               <CardContent className="p-6">
                 <div className="flex items-center gap-2.5 mb-5">
-                  <Brain className="w-6 h-6 text-primary animate-pulse" />
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
+                    <Brain className="w-4 h-4 text-white" />
+                  </div>
                   <h4 className="font-semibold text-foreground text-base">What Our AI Typically Finds</h4>
                 </div>
                 
