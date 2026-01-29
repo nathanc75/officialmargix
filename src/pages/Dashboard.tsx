@@ -11,6 +11,7 @@ import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
 import { useUser } from "@/context/UserContext";
 import { useAnalysis } from "@/context/AnalysisContext";
+import { AIChatWidget } from "@/components/AIChatWidget";
 
 const Dashboard = () => {
   const [dateRange, setDateRange] = useState("7days");
@@ -316,6 +317,20 @@ const Dashboard = () => {
           )}
         </main>
       </div>
+      
+      {/* AI Chat Widget - Unlocked for paid users */}
+      <AIChatWidget 
+        documentContext={hasAnalysisData ? {
+          fileNames: leakAnalysis?.leaks?.map(l => l.description) || [],
+          categories: {},
+          analysisResults: {
+            totalLeaks: leakAnalysis?.leaks?.length || 0,
+            totalRecoverable: leakAnalysis?.totalRecoverable || 0,
+            summary: leakAnalysis?.summary || "",
+          }
+        } : undefined}
+        locked={false}
+      />
     </div>
   );
 };
