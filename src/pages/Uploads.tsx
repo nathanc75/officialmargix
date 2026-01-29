@@ -433,55 +433,44 @@ const Uploads = () => {
       </div>
 
       <div className="relative">
-        {/* Page Header - matching landing page hero style */}
-        <section className="pt-32 pb-8">
+        {/* Header Card */}
+        <section className="pt-28 pb-6">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
-                <Sparkles className="h-3.5 w-3.5 text-primary" />
-                <span className="text-xs font-medium text-primary">AI-Powered Analysis</span>
-              </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
-                Free <span className="text-gradient">MARGIX</span> Scan
-              </h1>
-              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Multi-model AI analysis with OCR extraction, smart categorization, and cross-validated leak detection
-              </p>
-            </div>
+            <Card className="border-0 shadow-xl bg-gradient-to-br from-card via-card to-primary/5 overflow-hidden">
+              <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/10 via-primary/5 to-transparent pointer-events-none" />
+              <CardContent className="relative p-6 sm:p-8">
+                <div className="flex flex-col gap-5">
+                  <div className="space-y-3">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
+                      Find your missed revenue <span className="text-muted-foreground font-normal">(free scan)</span>
+                    </h1>
+                    <p className="text-base sm:text-lg text-muted-foreground max-w-2xl leading-relaxed">
+                      Upload 1–2 documents and we'll scan for revenue leaks like failed payments, missing payouts, and pricing gaps. Results in minutes.
+                    </p>
+                  </div>
+                  
+                  {/* Feature Pills */}
+                  <div className="flex flex-wrap gap-2">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
+                      <Search className="h-3.5 w-3.5 text-primary" />
+                      <span className="text-xs font-medium text-primary">Revenue leak detection</span>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+                      <Sparkles className="h-3.5 w-3.5 text-emerald-600" />
+                      <span className="text-xs font-medium text-emerald-600">Accurate data extraction</span>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-amber-600" />
+                      <span className="text-xs font-medium text-amber-600">Double-checked results</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </section>
 
         <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-8">
-          {/* AI Features Banner */}
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-background">
-            <CardContent className="p-5 sm:p-6">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-xl brand-gradient flex items-center justify-center shrink-0">
-                  <Brain className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground mb-2">Multi-Model AI Analysis</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                    Our AI reads documents, understands their content, and detects sensitive data with multi-model verification for higher accuracy.
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    <Badge variant="secondary" className="text-xs gap-1">
-                      <Wand2 className="h-3 w-3" />
-                      Auto OCR
-                    </Badge>
-                    <Badge variant="secondary" className="text-xs gap-1">
-                      <Sparkles className="h-3 w-3" />
-                      Smart Categorization
-                    </Badge>
-                    <Badge variant="secondary" className="text-xs gap-1">
-                      <Brain className="h-3 w-3" />
-                      Dual-Model Analysis
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Analysis Progress (shown during analysis) */}
           {isAnalyzing && analysisStep && (
@@ -515,10 +504,13 @@ const Uploads = () => {
           {/* Free Upload Sections */}
           {!isAnalyzing && (
             <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="h-px flex-1 bg-border" />
-                <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Upload Your Documents</h2>
-                <div className="h-px flex-1 bg-border" />
+              <div className="text-center sm:text-left">
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-1">
+                  Upload what we need to scan for lost revenue
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  Most businesses have hidden revenue leaks — these files help us find yours.
+                </p>
               </div>
               <div className="grid gap-5">
                 {freeSections.map((section) => {
