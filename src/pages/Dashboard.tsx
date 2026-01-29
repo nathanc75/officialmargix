@@ -195,28 +195,16 @@ const Dashboard = () => {
                       <div className="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
                         <Sparkles className="w-7 h-7 text-white" />
                       </div>
-                        <div className="space-y-4">
+                      <div className="space-y-3">
                         <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
                           We scan your financial documents and uncover <span className="text-gradient">money you didn't know you were losing.</span>
                         </h2>
-                        <p className="text-muted-foreground text-sm sm:text-base">
-                          Upload financial documents and our AI will automatically:
+                        <p className="text-muted-foreground text-sm sm:text-base max-w-2xl leading-relaxed">
+                          Upload bank statements, invoices, receipts, or payment reports. Our AI reads every transaction, 
+                          understands your spending patterns, and automatically flags missed payments, duplicate charges, 
+                          and hidden revenue leaks.
                         </p>
-                        <ul className="space-y-2 text-sm sm:text-base text-foreground">
-                          <li className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                            Extract all transactions
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                            Categorize spending & income
-                          </li>
-                          <li className="flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                            Detect missed revenue and billing leaks
-                          </li>
-                        </ul>
-                        <p className="text-xs text-muted-foreground/70 flex items-center gap-1.5 pt-1">
+                        <p className="text-xs text-muted-foreground/70 flex items-center gap-1.5">
                           <span className="w-1 h-1 rounded-full bg-emerald-500" />
                           Your documents are encrypted and processed securely.
                         </p>
