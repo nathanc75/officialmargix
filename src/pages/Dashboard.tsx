@@ -227,7 +227,7 @@ const Dashboard = () => {
                   <div className="w-8 h-8 rounded-lg brand-gradient flex items-center justify-center">
                     <Brain className="w-4 h-4 text-white" />
                   </div>
-                  <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">What Our AI Typically Finds</h3>
+                  <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">What Your AI Will Monitor</h3>
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -239,7 +239,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1">Missed Payments</p>
-                          <p className="text-sm text-muted-foreground leading-relaxed">Invoices that were underpaid, paid late, or never paid at all — revenue you've earned but haven't fully received.</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">AI checks invoices and payments to detect underpaid, late, or unpaid revenue.</p>
                         </div>
                       </div>
                     </CardContent>
@@ -253,7 +253,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1">Duplicate Charges</p>
-                          <p className="text-sm text-muted-foreground leading-relaxed">Services or vendors that charged you more than once, including repeated SaaS billing and processing errors.</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">AI looks for vendors or services charging more than once.</p>
                         </div>
                       </div>
                     </CardContent>
@@ -267,7 +267,7 @@ const Dashboard = () => {
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1">Forgotten Subscriptions</p>
-                          <p className="text-sm text-muted-foreground leading-relaxed">Recurring subscriptions you're still paying for but no longer use, creating silent monthly spending.</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">AI tracks recurring charges and flags subscriptions that appear unused.</p>
                         </div>
                       </div>
                     </CardContent>
