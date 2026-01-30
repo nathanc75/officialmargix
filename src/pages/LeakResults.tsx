@@ -34,6 +34,7 @@ const getLeakTypeLabel = (type: string) => {
     pricing_inefficiency: "You're Being Overcharged",
     billing_error: "Billing Mistakes",
     churn_permanent_loss: "Customers You've Lost",
+    refund_fee_loss: "Refund Fees You're Eating",
     other: "Other Problems",
   };
   return labels[type] || type;
