@@ -66,16 +66,16 @@ export function UploadDialog({ children }: UploadDialogProps) {
   const baseSections: UploadSectionConfig[] = [
     {
       id: "payments",
-      title: "Payment or Payout Report",
-      description: "Upload your payment processor or payout report",
+      title: "Money In & Payouts",
+      description: "Shows how much you earned and what fees were taken.",
       icon: <CreditCard className="h-5 w-5 text-primary" />,
       accept: ".csv,.pdf,.txt,.tsv,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic",
       placeholder: "Stripe, PayPal, Square, DoorDash, Uber Eats payouts",
     },
     {
       id: "pricing",
-      title: "What you charge",
-      description: "Helps detect pricing gaps and undercharging",
+      title: "Your Listed Prices",
+      description: "What you plan to charge customers (menus, rate sheets, price lists).",
       icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
       accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
       placeholder: "Menu screenshots, product photos, price lists",
@@ -86,16 +86,16 @@ export function UploadDialog({ children }: UploadDialogProps) {
   const premiumSections: UploadSectionConfig[] = [
     {
       id: "pricing",
-      title: "Your Prices / Menu / Service Rates",
-      description: "Upload your menu, price list, service rates, or product pricing. Helps detect underpricing and missed revenue.",
+      title: "Your Listed Prices",
+      description: "What you plan to charge customers (menus, rate sheets, price lists).",
       icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
       accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
       placeholder: "PDFs, images/screenshots, price lists, menus, website pricing exports",
     },
     {
       id: "orders",
-      title: "Orders / Sales Report",
-      description: "Upload itemized sales or order reports from your POS, store, or invoicing system.",
+      title: "What Customers Purchased",
+      description: "Itemized orders or services sold. Helps find best-sellers and missed upsells.",
       icon: <ShoppingCart className="h-5 w-5 text-blue-500" />,
       accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
       placeholder: "POS sales export, product-level sales CSV, order breakdown report",
@@ -103,8 +103,8 @@ export function UploadDialog({ children }: UploadDialogProps) {
     },
     {
       id: "costs",
-      title: "Costs / Expenses",
-      description: "Upload cost data (ingredients, product costs, contractor payments, software, etc.) to calculate real profit.",
+      title: "Your Costs",
+      description: "What it costs you to deliver products or services.",
       icon: <DollarSign className="h-5 w-5 text-orange-500" />,
       accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
       placeholder: "Ingredient costs, product costs, contractor payments, software expenses",
