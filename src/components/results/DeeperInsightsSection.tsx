@@ -11,6 +11,7 @@ interface InsightCardConfig {
   title: string;
   description: string;
   buttonText: string;
+  hint: string;
   icon: React.ReactNode;
   iconBgClass: string;
   iconColorClass: string;
@@ -19,27 +20,30 @@ interface InsightCardConfig {
 const insightCards: InsightCardConfig[] = [
   {
     id: "pricing",
-    title: "Find Underpriced Services & Products",
-    description: "Upload your menu or price list to see where you may be charging too little and leaving money on the table.",
+    title: "🏷 Your Listed Prices",
+    description: "Share your menu or price list so we can spot underpricing and missed revenue opportunities.",
     buttonText: "Upload Prices",
+    hint: "Even a screenshot works.",
     icon: <Tag className="h-5 w-5" />,
     iconBgClass: "bg-emerald-500/10",
     iconColorClass: "text-emerald-500",
   },
   {
     id: "orders",
-    title: "See What Actually Makes You Money",
-    description: "Upload itemized sales or order reports to discover your best sellers, low performers, and upsell opportunities.",
+    title: "🛒 What Customers Purchased",
+    description: "Upload a sales or order report to see your best-selling services/products and upsell opportunities.",
     buttonText: "Upload Sales Report",
+    hint: "Just one recent report is enough.",
     icon: <ShoppingCart className="h-5 w-5" />,
     iconBgClass: "bg-blue-500/10",
     iconColorClass: "text-blue-500",
   },
   {
     id: "costs",
-    title: "Calculate Your Real Profit",
-    description: "Add your costs and expenses to see which products or services are truly profitable — not just high revenue.",
+    title: "📉 Your Business Costs",
+    description: "Add a few example costs so we can estimate real profit. This doesn't need to be perfect.",
     buttonText: "Upload Costs",
+    hint: "Even 2–3 example expenses help.",
     icon: <TrendingDown className="h-5 w-5" />,
     iconBgClass: "bg-orange-500/10",
     iconColorClass: "text-orange-500",
@@ -105,6 +109,9 @@ export function DeeperInsightsSection({
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {card.description}
+                </p>
+                <p className="text-xs text-primary/80 font-medium">
+                  {card.hint}
                 </p>
               </div>
 

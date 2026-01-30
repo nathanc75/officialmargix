@@ -26,29 +26,33 @@ interface CategoryConfig {
   icon: React.ReactNode;
   accept: string;
   placeholder: string;
+  hint: string;
 }
 
 const categoryConfigs: Record<InsightCategory, CategoryConfig> = {
   pricing: {
-    title: "Your Listed Prices",
-    description: "Upload your menu, rate sheet, or price list so we can spot underpricing and missed revenue opportunities.",
+    title: "🏷 Your Listed Prices",
+    description: "Share your menu or price list so we can spot underpricing and missed revenue opportunities.",
     icon: <Tag className="h-5 w-5 text-emerald-500" />,
     accept: ".csv,.pdf,.txt,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
-    placeholder: "Menu (PDF or photo), service rate sheet, product price list, website pricing screenshots",
+    placeholder: "Menu photo, service rate sheet, product price list, website pricing screenshot",
+    hint: "Even a screenshot works.",
   },
   orders: {
-    title: "What Customers Purchased",
-    description: "Shows what customers actually bought. This helps identify best-selling items, low performers, and upsell opportunities.",
+    title: "🛒 What Customers Purchased",
+    description: "Upload a sales or order report to see your best-selling services/products and upsell opportunities.",
     icon: <ShoppingCart className="h-5 w-5 text-blue-500" />,
     accept: ".csv,.pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic",
-    placeholder: "POS sales export, Shopify product sales, invoice breakdown, itemized order report",
+    placeholder: "POS sales export, Shopify sales report, invoice breakdown, itemized order report",
+    hint: "Just one recent report is enough.",
   },
   costs: {
-    title: "Your Costs",
-    description: "What it costs you to deliver your products or services. This allows us to estimate real profit, not just revenue.",
+    title: "📉 Your Business Costs",
+    description: "Add a few example costs so we can estimate real profit. This doesn't need to be perfect.",
     icon: <DollarSign className="h-5 w-5 text-orange-500" />,
     accept: ".csv,.pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic",
-    placeholder: "Ingredient/product cost sheet, contractor payments, software expenses, operating costs",
+    placeholder: "One supplier invoice, payroll summary, software bill, rent or equipment payment",
+    hint: "Even 2–3 example expenses help.",
   },
 };
 
@@ -409,6 +413,9 @@ export function InsightUploadDialog({ category, open, onOpenChange, onComplete }
                     </p>
                     <p className="text-xs text-muted-foreground mt-1 opacity-70">
                       {config.placeholder}
+                    </p>
+                    <p className="text-xs text-primary/80 font-medium mt-1">
+                      {config.hint}
                     </p>
                   </div>
                 </div>
