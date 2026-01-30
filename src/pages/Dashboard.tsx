@@ -256,42 +256,45 @@ const Dashboard = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <Card className="group border border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-lg hover:shadow-red-500/5 hover:border-red-500/30 transition-all duration-300">
-                    <CardContent className="p-5">
+                  <Card className="group relative overflow-hidden border border-red-500/20 bg-gradient-to-br from-card via-card to-red-500/5 hover:shadow-xl hover:shadow-red-500/10 hover:border-red-500/40 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-500/10 to-transparent rounded-bl-full" />
+                    <CardContent className="relative p-5">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/10 to-red-500/5 border border-red-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/10">
                           <TrendingDown className="w-6 h-6 text-red-500" />
                         </div>
                         <div>
-                          <p className="font-semibold text-foreground mb-1">Missed Payments</p>
+                          <p className="font-semibold text-foreground mb-1.5">Missed Payments</p>
                           <p className="text-sm text-muted-foreground leading-relaxed">AI checks invoices and payments to detect underpaid, late, or unpaid revenue.</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="group border border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-lg hover:shadow-amber-500/5 hover:border-amber-500/30 transition-all duration-300">
-                    <CardContent className="p-5">
+                  <Card className="group relative overflow-hidden border border-amber-500/20 bg-gradient-to-br from-card via-card to-amber-500/5 hover:shadow-xl hover:shadow-amber-500/10 hover:border-amber-500/40 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-bl-full" />
+                    <CardContent className="relative p-5">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/10 to-amber-500/5 border border-amber-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/10">
                           <CreditCard className="w-6 h-6 text-amber-500" />
                         </div>
                         <div>
-                          <p className="font-semibold text-foreground mb-1">Duplicate Charges</p>
+                          <p className="font-semibold text-foreground mb-1.5">Duplicate Charges</p>
                           <p className="text-sm text-muted-foreground leading-relaxed">AI looks for vendors or services charging more than once.</p>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                   
-                  <Card className="group border border-border/50 bg-card/80 backdrop-blur-sm hover:shadow-lg hover:shadow-orange-500/5 hover:border-orange-500/30 transition-all duration-300">
-                    <CardContent className="p-5">
+                  <Card className="group relative overflow-hidden border border-orange-500/20 bg-gradient-to-br from-card via-card to-orange-500/5 hover:shadow-xl hover:shadow-orange-500/10 hover:border-orange-500/40 transition-all duration-300">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-orange-500/10 to-transparent rounded-bl-full" />
+                    <CardContent className="relative p-5">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/10 to-orange-500/5 border border-orange-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-600/10 border border-orange-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-orange-500/10">
                           <AlertTriangle className="w-6 h-6 text-orange-500" />
                         </div>
                         <div>
-                          <p className="font-semibold text-foreground mb-1">Forgotten Subscriptions</p>
+                          <p className="font-semibold text-foreground mb-1.5">Forgotten Subscriptions</p>
                           <p className="text-sm text-muted-foreground leading-relaxed">AI tracks recurring charges and flags subscriptions that appear unused.</p>
                         </div>
                       </div>
@@ -300,9 +303,12 @@ const Dashboard = () => {
                 </div>
                 
                 <div className="mt-6 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    The average account has <span className="font-bold text-gradient text-base">$847</span> in recoverable revenue
-                  </p>
+                  <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
+                    <Sparkles className="w-4 h-4 text-primary" />
+                    <p className="text-sm text-muted-foreground">
+                      The average account has <span className="font-bold text-primary text-base">$847</span> in recoverable revenue
+                    </p>
+                  </div>
                 </div>
               </div>
 
