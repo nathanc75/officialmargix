@@ -11,6 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 
 export type AnalysisStep = 
+  | "starting"
   | "ocr" 
   | "categorize" 
   | "gemini_analysis" 
@@ -24,6 +25,7 @@ interface AnalysisProgressProps {
 }
 
 const steps = [
+  { id: "starting", label: "Preparing Analysis", icon: FileSearch, description: "Initializing AI engines" },
   { id: "ocr", label: "Extracting Text", icon: FileSearch, description: "Reading document content with OCR" },
   { id: "categorize", label: "Categorizing", icon: Tags, description: "Detecting document types" },
   { id: "gemini_analysis", label: "Pattern Detection", icon: Sparkles, description: "Gemini AI finding patterns" },
