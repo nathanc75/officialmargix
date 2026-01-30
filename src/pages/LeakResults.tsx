@@ -27,13 +27,13 @@ const formatCurrency = (amount: number) => {
 
 const getLeakTypeLabel = (type: string) => {
   const labels: Record<string, string> = {
-    missing_payment: "Missing Payments",
-    duplicate_charge: "Duplicate Charges",
-    unused_subscription: "Unused Subscriptions",
-    failed_payment: "Failed Payments",
-    pricing_inefficiency: "Pricing Mismatches",
-    billing_error: "Billing Errors",
-    other: "Other Issues",
+    missing_payment: "Money That Never Arrived",
+    duplicate_charge: "You Got Charged Twice",
+    unused_subscription: "Paying for Things You Don't Use",
+    failed_payment: "Payments That Didn't Go Through",
+    pricing_inefficiency: "You're Being Overcharged",
+    billing_error: "Billing Mistakes",
+    other: "Other Problems",
   };
   return labels[type] || type;
 };
@@ -309,9 +309,9 @@ const LeakResults = () => {
               <Sparkles className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <p className="font-medium text-foreground">Analysis Complete</p>
+              <p className="font-medium text-foreground">All done — we've finished checking your documents</p>
               <p className="text-sm text-muted-foreground">
-                We found {leakAnalysis.totalLeaks} potential issue{leakAnalysis.totalLeaks !== 1 ? 's' : ''} worth investigating
+                We found {leakAnalysis.totalLeaks} thing{leakAnalysis.totalLeaks !== 1 ? 's' : ''} that might be costing you money
               </p>
             </div>
           </div>
@@ -322,7 +322,7 @@ const LeakResults = () => {
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Issues Found</p>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Problems Found</p>
                     <p className="text-3xl font-bold text-foreground mt-1.5 tabular-nums" data-testid="text-total-leaks">
                       {leakAnalysis.totalLeaks}
                     </p>
@@ -354,7 +354,7 @@ const LeakResults = () => {
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Confidence</p>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">How Sure We Are</p>
                     <p className="text-3xl font-bold text-foreground mt-1.5 tabular-nums">
                       {Math.round(overallConfidence * 100)}%
                     </p>
@@ -365,7 +365,7 @@ const LeakResults = () => {
                 </div>
                 {(leakAnalysis as any).confidence?.crossValidated > 0 && (
                   <Badge variant="outline" className="mt-3 text-xs text-emerald-700 bg-emerald-50 border-emerald-200">
-                    {(leakAnalysis as any).confidence.crossValidated} cross-verified
+                    {(leakAnalysis as any).confidence.crossValidated} double-checked
                   </Badge>
                 )}
               </CardContent>
