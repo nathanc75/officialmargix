@@ -547,14 +547,14 @@ const Uploads = () => {
                             </div>
                             <div>
                               <div className="flex items-center gap-2">
-                                <h3 className="text-sm font-medium text-foreground">{section.title}</h3>
+                                <h3 className="text-base font-semibold text-foreground">{section.title}</h3>
                                 {section.optional && (
                                   <Badge variant="secondary" className="text-[10px] px-1.5 py-0.5">
                                     Optional
                                   </Badge>
                                 )}
                               </div>
-                              <p className="text-xs text-muted-foreground">{section.description}</p>
+                              <p className="text-sm text-muted-foreground">{section.description}</p>
                             </div>
                           </div>
                           {categoryFileCount > 0 && (
@@ -580,10 +580,10 @@ const Uploads = () => {
                           <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center mx-auto mb-3 group-hover:bg-muted/80 transition-colors">
                             <Upload className="h-5 w-5 text-muted-foreground" />
                           </div>
-                          <p className="text-sm font-medium text-foreground mb-0.5">
-                            Drop files here or click to browse
+                          <p className="text-base font-medium text-foreground mb-1">
+                            Drop files here or click to upload
                           </p>
-                          <p className="text-xs text-muted-foreground mb-3">
+                          <p className="text-sm text-muted-foreground mb-3">
                             {section.placeholder}
                           </p>
                           <Button 
