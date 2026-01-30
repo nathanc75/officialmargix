@@ -10,6 +10,7 @@ import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
 import POSConnectSection from "@/components/dashboard/POSConnectSection";
+import { UploadDialog } from "@/components/dashboard/UploadDialog";
 import { useUser } from "@/context/UserContext";
 import { useAnalysis } from "@/context/AnalysisContext";
 import { AIChatWidget } from "@/components/AIChatWidget";
@@ -100,12 +101,12 @@ const Dashboard = () => {
                     </p>
                   </div>
                 </div>
-                <Link to="/uploads-pos">
+                <UploadDialog>
                   <Button variant="outline" size="sm" className="gap-2">
                     <RefreshCw className="w-4 h-4" />
                     New Scan
                   </Button>
-                </Link>
+                </UploadDialog>
               </div>
 
               {/* Summary Metric Cards */}
@@ -234,13 +235,13 @@ const Dashboard = () => {
                       </div>
                     </div>
                     
-                    <Link to="/uploads-pos" className="shrink-0">
+                    <UploadDialog>
                       <Button size="lg" className="w-full lg:w-auto gap-2 shadow-lg shadow-primary/25 h-12 px-6">
                         <Upload className="w-5 h-5" />
                         Upload Documents
                         <ArrowRight className="w-4 h-4" />
                       </Button>
-                    </Link>
+                    </UploadDialog>
                   </div>
                 </CardContent>
               </Card>
