@@ -1,4 +1,6 @@
-import { createContext, useContext, useState, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User, Session } from "@supabase/supabase-js";
 
 export type PlanTier = "free" | "starter" | "pro";
 
@@ -13,12 +15,17 @@ export interface UserState {
   planTier: PlanTier;
   connectedPlatforms: ConnectedPlatform[];
   email?: string;
+  userId?: string;
+  displayName?: string;
 }
 
 interface UserContextType {
   user: UserState;
-  login: (email: string, planTier: PlanTier) => void;
-  logout: () => void;
+  session: Session | null;
+  isLoading: boolean;
+  signUp: (email: string, password: string, metadata?: { full_name?: string; business_name?: string }) => Promise<{ error: Error | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signOut: () => Promise<void>;
   upgradePlan: (tier: PlanTier) => void;
   connectPlatform: (platformId: string, platformName: string) => boolean;
   disconnectPlatform: (platformId: string) => void;
@@ -37,18 +44,81 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserState>(defaultUserState);
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const login = useCallback((email: string, planTier: PlanTier) => {
-    setUser({
-      isAuthenticated: true,
-      planTier,
-      connectedPlatforms: [],
-      email,
+  useEffect(() => {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        setSession(currentSession);
+        
+        if (currentSession?.user) {
+          setUser({
+            isAuthenticated: true,
+            planTier: "free", // Default, can be updated from profile
+            connectedPlatforms: [],
+            email: currentSession.user.email,
+            userId: currentSession.user.id,
+            displayName: currentSession.user.user_metadata?.full_name,
+          });
+        } else {
+          setUser(defaultUserState);
+        }
+        
+        setIsLoading(false);
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+      if (existingSession?.user) {
+        setSession(existingSession);
+        setUser({
+          isAuthenticated: true,
+          planTier: "free",
+          connectedPlatforms: [],
+          email: existingSession.user.email,
+          userId: existingSession.user.id,
+          displayName: existingSession.user.user_metadata?.full_name,
+        });
+      }
+      setIsLoading(false);
     });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const logout = useCallback(() => {
+  const signUp = useCallback(async (
+    email: string, 
+    password: string, 
+    metadata?: { full_name?: string; business_name?: string }
+  ): Promise<{ error: Error | null }> => {
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+        data: metadata,
+      },
+    });
+    return { error };
+  }, []);
+
+  const signIn = useCallback(async (email: string, password: string): Promise<{ error: Error | null }> => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    return { error };
+  }, []);
+
+  const signOut = useCallback(async () => {
+    await supabase.auth.signOut();
     setUser(defaultUserState);
+    setSession(null);
   }, []);
 
   const upgradePlan = useCallback((tier: PlanTier) => {
@@ -104,8 +174,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
   return (
     <UserContext.Provider value={{
       user,
-      login,
-      logout,
+      session,
+      isLoading,
+      signUp,
+      signIn,
+      signOut,
       upgradePlan,
       connectPlatform,
       disconnectPlatform,
