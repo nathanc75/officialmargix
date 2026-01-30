@@ -41,8 +41,45 @@ const formatFileSize = (bytes: number): string => {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 };
 
+const getMimeType = (fileName: string): string => {
+  const extension = fileName.toLowerCase().split(".").pop();
+  const mimeTypes: Record<string, string> = {
+    doc: "application/msword",
+    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    xls: "application/vnd.ms-excel",
+    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    pdf: "application/pdf",
+    csv: "text/csv",
+    txt: "text/plain",
+    jpg: "image/jpeg",
+    jpeg: "image/jpeg",
+    png: "image/png",
+    webp: "image/webp",
+    gif: "image/gif",
+    heic: "image/heic",
+    bmp: "image/bmp",
+    tiff: "image/tiff",
+  };
+  return mimeTypes[extension || ""] || "application/octet-stream";
+};
+
 const isImageOrPdf = (file: File): boolean => {
   return file.type.startsWith("image/") || file.type === "application/pdf";
+};
+
+const isOfficeDocument = (file: File): boolean => {
+  const officeTypes = [
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    "application/msword", // .doc
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+    "application/vnd.ms-excel", // .xls
+  ];
+  const extension = file.name.toLowerCase().split(".").pop();
+  return officeTypes.includes(file.type) || ["doc", "docx", "xls", "xlsx"].includes(extension || "");
+};
+
+const needsOCRProcessing = (file: File): boolean => {
+  return isImageOrPdf(file) || isOfficeDocument(file);
 };
 
 interface UploadDialogProps {
@@ -69,7 +106,7 @@ export function UploadDialog({ children }: UploadDialogProps) {
       title: "Money In & Payouts",
       description: "Shows how much money you received and what fees were taken. This helps us understand your revenue, refunds, and payout trends.",
       icon: <CreditCard className="h-5 w-5 text-primary" />,
-      accept: ".csv,.pdf,.txt,.tsv,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic",
+      accept: ".csv,.pdf,.txt,.tsv,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic",
       placeholder: "Stripe payout export, PayPal activity, Square payments, Uber Eats/DoorDash earnings",
     },
     {
@@ -77,7 +114,7 @@ export function UploadDialog({ children }: UploadDialogProps) {
       title: "Your Listed Prices",
       description: "What you intend to charge customers. Upload your menu, rate sheet, or price list so we can spot underpricing and missed revenue opportunities.",
       icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
-      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
+      accept: ".csv,.pdf,.txt,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
       placeholder: "Menu (PDF or photo), service rate sheet, product price list, website pricing screenshots",
       optional: true,
     },
@@ -89,7 +126,7 @@ export function UploadDialog({ children }: UploadDialogProps) {
       title: "Your Listed Prices",
       description: "What you intend to charge customers. Upload your menu, rate sheet, or price list so we can spot underpricing and missed revenue opportunities.",
       icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
-      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
+      accept: ".csv,.pdf,.txt,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
       placeholder: "Menu (PDF or photo), service rate sheet, product price list, website pricing screenshots",
     },
     {
@@ -97,7 +134,7 @@ export function UploadDialog({ children }: UploadDialogProps) {
       title: "What Customers Purchased",
       description: "Shows what customers actually bought. This helps identify best-selling items, low performers, and upsell opportunities.",
       icon: <ShoppingCart className="h-5 w-5 text-blue-500" />,
-      accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
+      accept: ".csv,.pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic",
       placeholder: "POS sales export, Shopify product sales, invoice breakdown, itemized order report",
       optional: true,
     },
@@ -106,7 +143,7 @@ export function UploadDialog({ children }: UploadDialogProps) {
       title: "Your Costs",
       description: "What it costs you to deliver your products or services. This allows us to estimate real profit, not just revenue.",
       icon: <DollarSign className="h-5 w-5 text-orange-500" />,
-      accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
+      accept: ".csv,.pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic",
       placeholder: "Ingredient/product cost sheet, contractor payments, software expenses, operating costs",
       optional: true,
     },
@@ -214,12 +251,12 @@ export function UploadDialog({ children }: UploadDialogProps) {
       const fileId = newFiles[i].id;
       
       try {
-        if (isImageOrPdf(file)) {
+        if (needsOCRProcessing(file)) {
           const base64Data = await readFileAsBase64(file);
           setUploadedFiles(prev => prev.map(f => 
             f.id === fileId ? { ...f, base64Data } : f
           ));
-          await performOCR(fileId, base64Data, file.type, file.name);
+          await performOCR(fileId, base64Data, file.type || getMimeType(file.name), file.name);
         } else {
           const content = await readFileContent(file);
           setUploadedFiles(prev => prev.map(f => 
