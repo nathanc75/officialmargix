@@ -1,166 +1,111 @@
 
-
-# Flow Redesign: Staged Document Upload with Insight Unlock Prompts
+# Plan: Humanize Leak Analysis Language
 
 ## Overview
+This plan updates the AI prompts and UI components to use plain, empathetic language that any business owner can understand. We'll remove technical jargon and restructure responses to answer the questions users actually have: What happened? Is money missing? Why did this happen? What do I do now?
 
-This plan restructures the upload and results flow to:
-1. Focus the initial upload on **Money In & Payouts** only
-2. After analysis, show results with **three upgrade prompts** to unlock deeper insights
-3. Each prompt leads to uploading additional document types for enhanced analysis
+## Changes Required
 
-## Current Flow vs. New Flow
+### 1. Update the AI Analysis Prompt (Edge Function)
 
+**File:** `supabase/functions/analyze-leaks/index.ts`
+
+The GPT system prompt will be completely rewritten to enforce the language rules:
+
+**Current problems:**
+- Uses terms like "revenue leaks", "reconciliation", "cross-validate"
+- Descriptions are technical rather than conversational
+- Recommendations sound like system logs
+
+**New prompt structure:**
+- Instruct the AI to write as if talking to a non-technical business owner
+- Every leak description must follow the format:
+  - **What happened** (clear human summary)
+  - **What this means** (is money missing, at risk, or lost)
+  - **Why this usually happens** (simple cause)
+  - **What to do** (specific next steps)
+- Tone: Calm, supportive, no blame, no jargon
+- Banned words in main descriptions: reconciliation, sync failure, webhook, revenue recognition, discrepancy, mapping issue
+
+**Example output transformation:**
 ```text
-CURRENT FLOW:
-Dashboard → Upload Dialog (all categories at once) → Analyze → Results
+BEFORE: "Revenue reconciliation discrepancy detected. Payment sync failure between POS and settlement."
 
-NEW FLOW:
-Dashboard → Upload Dialog (Money In only) → Analyze → Results Page
-                                                          ↓
-                                        "Want deeper insights?" section
-                                           ├─ Upload Prices  → Re-analyze
-                                           ├─ Upload Sales   → Re-analyze  
-                                           └─ Upload Costs   → Re-analyze
+AFTER: "You didn't get paid for this order. Your records show you earned $90, but no payment was actually processed. This usually happens when a payment fails silently or your system doesn't update correctly. Search your payment provider for this order — if no charge exists, contact the customer to retry the payment."
 ```
 
----
-
-## Implementation Details
-
-### 1. Simplify Initial Upload Dialog
-
-**File:** `src/components/dashboard/UploadDialog.tsx`
-
-The initial upload experience will only show the "Money In & Payouts" section. Premium/optional sections (Pricing, Orders, Costs) will be removed from this dialog since they'll be offered on the results page.
-
-Changes:
-- Remove the `premiumSections` array from the initial dialog
-- Simplify `sections` to only include the first `baseSections[0]` (Money In & Payouts)
-- Remove the optional "Your Listed Prices" from `baseSections` (it moves to results page)
-
-### 2. Create Deeper Insights Component
-
-**New File:** `src/components/results/DeeperInsightsSection.tsx`
-
-A new component displaying three insight unlock cards with the user-provided copy:
-
-| Card | Title | Description | Button | Icon |
-|------|-------|-------------|--------|------|
-| Pricing | Find Underpriced Services & Products | Upload your menu or price list to see where you may be charging too little and leaving money on the table. | Upload Prices | Tag icon |
-| Sales | See What Actually Makes You Money | Upload itemized sales or order reports to discover your best sellers, low performers, and upsell opportunities. | Upload Sales Report | ShoppingCart icon |
-| Profit | Calculate Your Real Profit | Add your costs and expenses to see which products or services are truly profitable - not just high revenue. | Upload Costs | TrendingDown icon |
-
-Structure:
-- Section header: "Want deeper insights? Add more context to your business"
-- Subtext: "Each upload unlocks new analysis."
-- Three cards in a responsive grid
-- Each card opens a focused upload dialog for that specific category
-
-### 3. Create Focused Upload Dialog for Each Category
-
-**New File:** `src/components/results/InsightUploadDialog.tsx`
-
-A simpler dialog that:
-- Accepts a single `category` prop (pricing, orders, or costs)
-- Shows only the upload zone for that category
-- On analyze, appends new document data to existing analysis
-- Re-runs the leak analysis with additional context
-- Updates the results page with enhanced insights
-
-### 4. Update Results Page
+### 2. Update Leak Type Labels
 
 **File:** `src/pages/LeakResults.tsx`
 
-Changes:
-- Import and render the new `DeeperInsightsSection` component
-- Position it after the main leak detection cards but before the "Get Ongoing Monitoring" CTA
-- Track which additional categories have been uploaded (via context or local state)
-- Hide individual insight cards once that category has been uploaded
+Change the `getLeakTypeLabel` function to use friendlier, more descriptive labels:
 
-### 5. Extend Analysis Context
+| Current | New |
+|---------|-----|
+| Missing Payments | Money That Never Arrived |
+| Duplicate Charges | You Got Charged Twice |
+| Unused Subscriptions | Paying for Things You Don't Use |
+| Failed Payments | Payments That Didn't Go Through |
+| Pricing Mismatches | You're Being Overcharged |
+| Billing Errors | Billing Mistakes |
 
-**File:** `src/context/AnalysisContext.tsx`
+### 3. Update Result Page Labels
 
-Add state to track which document categories have been uploaded:
+**File:** `src/pages/LeakResults.tsx`
 
-```typescript
-interface AnalysisState {
-  // ... existing fields
-  uploadedCategories: Set<DocumentCategory>;
-}
+- Change "Issues Found" → "Problems Found"
+- Change "Analysis Complete" → "We've finished checking your documents"
+- Update the subtitle from "We found X potential issues worth investigating" → "We found X things that might be costing you money"
 
-// New method to add documents and re-analyze
-appendDocuments: (category: DocumentCategory, content: string) => Promise<void>;
-```
+### 4. Update LeakCategoryTable Labels
 
-This allows the system to:
-- Know which categories have data
-- Trigger re-analysis when new categories are added
-- Show/hide the appropriate insight prompts
+**File:** `src/components/results/LeakCategoryTable.tsx`
 
----
+- Table header "Confidence" → "How sure we are"
+- Column header "Issue" → "Problem"
+- Column header "Impact" → "Money at Risk"
+- Remove or rename technical confidence labels
 
-## Technical Details
+### 5. Update LeakDetailDrawer Language
 
-### Component Structure
+**File:** `src/components/results/LeakDetailDrawer.tsx`
 
+- Section "What's happening" → "What went wrong"
+- Keep "Recommended Actions" as is (clear enough)
+- "Total potential loss" → "Money you could lose"
+- "Risk" label → "Urgency"
+- "Confidence" → "How sure we are"
+- Technical Details section: Keep as is (collapsed by default, for advanced users)
+- "Detection Source" → "How we found this"
+- "Detection Method" → keep in technical section
+
+### 6. Banner Message Updates
+
+**File:** `src/pages/LeakResults.tsx`
+
+Update the success banner:
 ```text
-src/
-├── components/
-│   ├── dashboard/
-│   │   └── UploadDialog.tsx          (simplified - Money In only)
-│   └── results/
-│       ├── DeeperInsightsSection.tsx (new - the 3-card section)
-│       └── InsightUploadDialog.tsx   (new - single-category upload)
-├── context/
-│   └── AnalysisContext.tsx           (extended with category tracking)
-└── pages/
-    └── LeakResults.tsx               (updated to show deeper insights)
+BEFORE: "Analysis Complete - We found X potential issues worth investigating"
+
+AFTER: "All done — We found X things that might be costing you money"
 ```
 
-### Insight Card Styling
-
-Each card will use the existing Card component with:
-- Gradient background matching the icon color theme
-- Hover state with shadow and border color change
-- Icon in a rounded container with gradient background
-- Clear hierarchy: Title → Description → Button
-
-### State Flow for Re-analysis
-
-1. User clicks "Upload Prices" on results page
-2. `InsightUploadDialog` opens with pricing-specific UI
-3. User uploads files, clicks analyze
-4. System calls `appendDocuments("pricing", content)`
-5. Context triggers re-analysis with combined data
-6. Results page updates with new insights
-7. Pricing card is marked as complete or hidden
-
 ---
 
-## Files to Create/Modify
+## Summary of Files to Edit
 
-| File | Action | Purpose |
-|------|--------|---------|
-| `src/components/dashboard/UploadDialog.tsx` | Modify | Simplify to Money In only |
-| `src/components/results/DeeperInsightsSection.tsx` | Create | Three insight prompt cards |
-| `src/components/results/InsightUploadDialog.tsx` | Create | Single-category upload dialog |
-| `src/context/AnalysisContext.tsx` | Modify | Track uploaded categories, add append method |
-| `src/pages/LeakResults.tsx` | Modify | Add DeeperInsightsSection component |
+| File | Changes |
+|------|---------|
+| `supabase/functions/analyze-leaks/index.ts` | Rewrite GPT prompt with language rules and human-friendly output format |
+| `src/pages/LeakResults.tsx` | Update labels, banner text, and leak type mappings |
+| `src/components/results/LeakCategoryTable.tsx` | Update column headers and labels |
+| `src/components/results/LeakDetailDrawer.tsx` | Update section titles and labels |
 
----
+## Language Guidelines Summary (for AI prompt)
 
-## User Experience Flow
-
-1. **Dashboard**: User sees "Upload Documents" button
-2. **Upload Dialog**: Shows only "Money In & Payouts" section - simple and focused
-3. **Analysis**: AI processes payment/payout documents
-4. **Results**: Shows leak detection results
-5. **Deeper Insights Section**: Three cards appear below results:
-   - "Wait... I might be undercharging??" → Upload Prices
-   - "Ohhh I want to know my top earners." → Upload Sales
-   - "Wait... revenue isn't profit??" → Upload Costs
-6. **Enhanced Analysis**: Each upload triggers re-analysis with richer context
-7. **Updated Results**: Page refreshes with new insights from additional data
-
+1. Start with a clear human summary: "We found an order that looks paid, but no payment was processed."
+2. Explain what this means: "Your records say you earned $90, but the customer was never charged."
+3. Simple cause: "This usually happens when a payment fails or your system doesn't update correctly."
+4. Clear action: "Search your payment provider for this order. If no charge exists, contact the customer."
+5. Tone: Calm, supportive, clear, no blame
+6. Avoid: reconciliation, sync failure, webhook, revenue recognition, discrepancy, mapping issue (keep these in Technical Details only if needed)
