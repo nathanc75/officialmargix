@@ -100,60 +100,17 @@ export function UploadDialog({ children }: UploadDialogProps) {
   const { toast } = useToast();
   const { isPaid } = useSubscription();
 
-  const baseSections: UploadSectionConfig[] = [
+  // Initial upload only shows Money In & Payouts - other categories are offered on results page
+  const sections: UploadSectionConfig[] = [
     {
       id: "payments",
       title: "Money In & Payouts",
       description: "Shows how much money you received and what fees were taken. This helps us understand your revenue, refunds, and payout trends.",
       icon: <CreditCard className="h-5 w-5 text-primary" />,
       accept: ".csv,.pdf,.txt,.tsv,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic",
-      placeholder: "Stripe payout export, PayPal activity, Square payments, Uber Eats/DoorDash earnings",
-    },
-    {
-      id: "pricing",
-      title: "Your Listed Prices",
-      description: "What you intend to charge customers. Upload your menu, rate sheet, or price list so we can spot underpricing and missed revenue opportunities.",
-      icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
-      accept: ".csv,.pdf,.txt,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
-      placeholder: "Menu (PDF or photo), service rate sheet, product price list, website pricing screenshots",
-      optional: true,
+      placeholder: "Stripe payout export, PayPal activity, Square payments, Uber Eats/DoorDash earnings, bank statements, invoices",
     },
   ];
-
-  const premiumSections: UploadSectionConfig[] = [
-    {
-      id: "pricing",
-      title: "Your Listed Prices",
-      description: "What you intend to charge customers. Upload your menu, rate sheet, or price list so we can spot underpricing and missed revenue opportunities.",
-      icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
-      accept: ".csv,.pdf,.txt,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
-      placeholder: "Menu (PDF or photo), service rate sheet, product price list, website pricing screenshots",
-    },
-    {
-      id: "orders",
-      title: "What Customers Purchased",
-      description: "Shows what customers actually bought. This helps identify best-selling items, low performers, and upsell opportunities.",
-      icon: <ShoppingCart className="h-5 w-5 text-blue-500" />,
-      accept: ".csv,.pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic",
-      placeholder: "POS sales export, Shopify product sales, invoice breakdown, itemized order report",
-      optional: true,
-    },
-    {
-      id: "costs",
-      title: "Your Costs",
-      description: "What it costs you to deliver your products or services. This allows us to estimate real profit, not just revenue.",
-      icon: <DollarSign className="h-5 w-5 text-orange-500" />,
-      accept: ".csv,.pdf,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.heic",
-      placeholder: "Ingredient/product cost sheet, contractor payments, software expenses, operating costs",
-      optional: true,
-    },
-  ];
-
-  // For paid users: payments + premium pricing + orders + costs
-  // For free users: payments + basic pricing (optional)
-  const sections = isPaid 
-    ? [baseSections[0], ...premiumSections] 
-    : baseSections;
 
   const getInputRef = (category: DocumentCategory) => {
     switch (category) {
