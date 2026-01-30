@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnalysisProvider } from "@/context/AnalysisContext";
 import { UserProvider } from "@/context/UserContext";
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import TrialDashboard from "./pages/TrialDashboard";
@@ -25,28 +26,30 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <UserProvider>
-        <AnalysisProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/trial" element={<TrialDashboard />} />
-            <Route path="/pricing" element={<Pricing />} />
-            
-            <Route path="/upload" element={<Uploads />} />
-            <Route path="/results" element={<LeakResults />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-        </AnalysisProvider>
+        <SubscriptionProvider>
+          <AnalysisProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/trial" element={<TrialDashboard />} />
+              <Route path="/pricing" element={<Pricing />} />
+              
+              <Route path="/upload" element={<Uploads />} />
+              <Route path="/results" element={<LeakResults />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+          </AnalysisProvider>
+        </SubscriptionProvider>
       </UserProvider>
     </TooltipProvider>
   </QueryClientProvider>
