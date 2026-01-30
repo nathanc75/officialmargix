@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Check, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import margixLogo from "@/assets/margix-logo.png";
 
@@ -63,6 +63,7 @@ const plans = [
 
 const Pricing = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSelectPlan = (planName: string) => {
     if (planName === "Free Scan") {
@@ -88,12 +89,16 @@ const Pricing = () => {
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <Link to="/">
-            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground" data-testid="button-back-home">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Home
-            </Button>
-          </Link>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="gap-2 text-muted-foreground" 
+            data-testid="button-back-home"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Button>
         </div>
 
         <div className="text-center mb-12">

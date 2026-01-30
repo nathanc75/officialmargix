@@ -253,14 +253,17 @@ const Signup = () => {
             </div>
           </div>
 
-          {/* Back to Home */}
+          {/* Back button */}
           <div className="mt-3 text-center">
-            <Link to="/">
-              <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Home
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="gap-2 text-muted-foreground"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </Button>
           </div>
         </div>
       </div>
