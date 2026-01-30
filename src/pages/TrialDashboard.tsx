@@ -1,4 +1,3 @@
-import { useState } from "react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import AnalysisBanner from "@/components/dashboard/AnalysisBanner";
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
@@ -9,8 +8,6 @@ import LockedPremiumSection from "@/components/dashboard/LockedPremiumSection";
 import { useAnalysis } from "@/context/AnalysisContext";
 
 const TrialDashboard = () => {
-  const [dateRange, setDateRange] = useState("30days");
-  const [documentType, setDocumentType] = useState("all");
   const { hasData, reportAnalysis, isAnalyzing, analysisStep } = useAnalysis();
 
   return (
@@ -29,13 +26,7 @@ const TrialDashboard = () => {
       </div>
 
       <div className="relative pt-4">
-        <DashboardHeader 
-          dateRange={dateRange} 
-          setDateRange={setDateRange} 
-          documentType={documentType} 
-          setDocumentType={setDocumentType}
-          isTrial={true}
-        />
+        <DashboardHeader />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           <AnalysisBanner 

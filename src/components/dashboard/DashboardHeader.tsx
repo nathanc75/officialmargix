@@ -1,27 +1,11 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, FileCheck, Menu, Upload } from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { ArrowLeft, FileCheck } from "lucide-react";
 import margixLogo from "@/assets/margix-logo.png";
 import { useGoBack } from "@/hooks/useGoBack";
 
-interface DashboardHeaderProps {
-  dateRange: string;
-  setDateRange: (value: string) => void;
-  documentType: string;
-  setDocumentType: (value: string) => void;
-  isTrial?: boolean;
-}
-
-const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentType, isTrial = false }: DashboardHeaderProps) => {
+const DashboardHeader = () => {
   const goBack = useGoBack();
   
   return (
@@ -59,80 +43,6 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
                 AI-Powered Scan
               </Badge>
             </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <div className="hidden md:flex items-center gap-2 bg-muted/50 p-1 rounded-lg border">
-              <Select value={documentType} onValueChange={setDocumentType}>
-                <SelectTrigger className="w-[100px] lg:w-[130px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
-                  <SelectValue placeholder="Document" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Documents</SelectItem>
-                  <SelectItem value="bank">Bank Statements</SelectItem>
-                  <SelectItem value="invoices">Invoices</SelectItem>
-                  <SelectItem value="payments">Payment Reports</SelectItem>
-                </SelectContent>
-              </Select>
-              <div className="w-px h-4 bg-border" />
-              <Select value={dateRange} onValueChange={setDateRange}>
-                <SelectTrigger className="w-[100px] lg:w-[120px] h-8 text-xs border-0 bg-transparent focus:ring-0 font-medium">
-                  <SelectValue placeholder="Period" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="7days">Last 7 Days</SelectItem>
-                  <SelectItem value="30days">Last 30 Days</SelectItem>
-                  <SelectItem value="custom">Custom Range</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="md:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="h-9 w-9">
-                    <Menu className="h-4 w-4" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px] z-[100]">
-                  <SheetHeader>
-                    <SheetTitle>Filter Analysis</SheetTitle>
-                  </SheetHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Document Type</label>
-                      <Select value={documentType} onValueChange={setDocumentType}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Type" />
-                        </SelectTrigger>
-                        <SelectContent className="z-[110]">
-                          <SelectItem value="all">All Documents</SelectItem>
-                          <SelectItem value="bank">Bank Statements</SelectItem>
-                          <SelectItem value="invoices">Invoices</SelectItem>
-                          <SelectItem value="payments">Payment Reports</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Period</label>
-                      <Select value={dateRange} onValueChange={setDateRange}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select Period" />
-                        </SelectTrigger>
-                        <SelectContent className="z-[110]">
-                          <SelectItem value="today">Today</SelectItem>
-                          <SelectItem value="7days">Last 7 Days</SelectItem>
-                          <SelectItem value="30days">Last 30 Days</SelectItem>
-                          <SelectItem value="custom">Custom Range</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-
           </div>
         </div>
       </div>

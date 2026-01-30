@@ -16,8 +16,6 @@ import { useAnalysis } from "@/context/AnalysisContext";
 import { AIChatWidget } from "@/components/AIChatWidget";
 
 const Dashboard = () => {
-  const [dateRange, setDateRange] = useState("7days");
-  const [documentType, setDocumentType] = useState("all");
   const { user } = useUser();
   const { leakAnalysis, hasData: hasAnalysisData } = useAnalysis();
   
@@ -51,13 +49,7 @@ const Dashboard = () => {
       </div>
 
       <div className="relative">
-        <DashboardHeader 
-          dateRange={dateRange} 
-          setDateRange={setDateRange} 
-          documentType={documentType} 
-          setDocumentType={setDocumentType}
-          isTrial={false}
-        />
+        <DashboardHeader />
         
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
           
