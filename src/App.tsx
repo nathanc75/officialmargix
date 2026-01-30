@@ -8,7 +8,7 @@ import { UserProvider } from "@/context/UserContext";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import TrialDashboard from "./pages/TrialDashboard";
-
+import UploadsAndPOS from "./pages/UploadsAndPOS";
 import Uploads from "./pages/Uploads";
 import Signup from "./pages/Signup";
 import SignIn from "./pages/SignIn";
@@ -37,7 +37,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/trial" element={<TrialDashboard />} />
             <Route path="/pricing" element={<Pricing />} />
-            
+            <Route path="/uploads-pos" element={<UploadsAndPOS />} />
             <Route path="/upload" element={<Uploads />} />
             <Route path="/results" element={<LeakResults />} />
             <Route path="/terms" element={<TermsOfService />} />

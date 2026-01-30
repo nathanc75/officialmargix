@@ -20,7 +20,7 @@ const Signup = () => {
   const { signUp } = useUser();
   const { toast } = useToast();
   
-  const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const redirectTo = searchParams.get("redirect") || "/uploads-pos";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

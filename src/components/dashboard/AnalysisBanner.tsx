@@ -48,10 +48,10 @@ const AnalysisBanner = ({ hasData = false, reportAnalysis, isAnalyzing = false, 
               </p>
             </div>
             
-            <Link to="/dashboard" className="shrink-0">
+            <Link to="/uploads-pos" className="shrink-0">
               <Button className="w-full sm:w-auto brand-gradient border-0 text-white gap-2" data-testid="button-connect-pos">
                 <Upload className="w-4 h-4" />
-                Upload Documents
+                Connect POS
               </Button>
             </Link>
           </div>
