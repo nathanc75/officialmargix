@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, CheckCircle2, Loader2, File, Trash2, CreditCard, ListOrdered, ArrowRight, Sparkles, Building2, Receipt, RotateCcw } from "lucide-react";
+import { Upload, CheckCircle2, Loader2, File, Trash2, CreditCard, ListOrdered, ArrowRight, Sparkles, ShoppingCart, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAnalysis, LeakAnalysis } from "@/context/AnalysisContext";
 import { useToast } from "@/hooks/use-toast";
@@ -11,7 +11,7 @@ import { AnalysisProgress, AnalysisStep } from "@/components/AnalysisProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
-type DocumentCategory = "payments" | "pricing" | "bank_statements" | "invoices" | "refunds";
+type DocumentCategory = "payments" | "pricing" | "orders" | "costs";
 
 interface UploadedFile {
   id: string;
@@ -56,9 +56,8 @@ export function UploadDialog({ children }: UploadDialogProps) {
   const [analysisStep, setAnalysisStep] = useState<AnalysisStep | null>(null);
   const paymentsInputRef = useRef<HTMLInputElement>(null);
   const pricingInputRef = useRef<HTMLInputElement>(null);
-  const bankStatementsInputRef = useRef<HTMLInputElement>(null);
-  const invoicesInputRef = useRef<HTMLInputElement>(null);
-  const refundsInputRef = useRef<HTMLInputElement>(null);
+  const ordersInputRef = useRef<HTMLInputElement>(null);
+  const costsInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { setLeakAnalysis } = useAnalysis();
   const { toast } = useToast();
@@ -86,43 +85,45 @@ export function UploadDialog({ children }: UploadDialogProps) {
 
   const premiumSections: UploadSectionConfig[] = [
     {
-      id: "bank_statements",
-      title: "Bank Statements",
-      description: "Upload bank statements for deeper reconciliation",
-      icon: <Building2 className="h-5 w-5 text-blue-500" />,
+      id: "pricing",
+      title: "Your Prices / Menu / Service Rates",
+      description: "Upload your menu, price list, service rates, or product pricing. Helps detect underpricing and missed revenue.",
+      icon: <ListOrdered className="h-5 w-5 text-emerald-500" />,
+      accept: ".csv,.pdf,.txt,.xlsx,.jpg,.jpeg,.png,.webp,.gif,.heic,.bmp,.tiff",
+      placeholder: "PDFs, images/screenshots, price lists, menus, website pricing exports",
+    },
+    {
+      id: "orders",
+      title: "Orders / Sales Report",
+      description: "Upload itemized sales or order reports from your POS, store, or invoicing system.",
+      icon: <ShoppingCart className="h-5 w-5 text-blue-500" />,
       accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
-      placeholder: "Monthly or quarterly bank statements",
+      placeholder: "POS sales export, product-level sales CSV, order breakdown report",
       optional: true,
     },
     {
-      id: "invoices",
-      title: "Invoices & Receipts",
-      description: "Track vendor payments and expense discrepancies",
-      icon: <Receipt className="h-5 w-5 text-purple-500" />,
+      id: "costs",
+      title: "Costs / Expenses",
+      description: "Upload cost data (ingredients, product costs, contractor payments, software, etc.) to calculate real profit.",
+      icon: <DollarSign className="h-5 w-5 text-orange-500" />,
       accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
-      placeholder: "Vendor invoices, supplier receipts",
-      optional: true,
-    },
-    {
-      id: "refunds",
-      title: "Refund Records",
-      description: "Identify refund patterns and anomalies",
-      icon: <RotateCcw className="h-5 w-5 text-orange-500" />,
-      accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
-      placeholder: "Customer refunds, chargebacks",
+      placeholder: "Ingredient costs, product costs, contractor payments, software expenses",
       optional: true,
     },
   ];
 
-  const sections = isPaid ? [...baseSections, ...premiumSections] : baseSections;
+  // For paid users: payments + premium pricing + orders + costs
+  // For free users: payments + basic pricing (optional)
+  const sections = isPaid 
+    ? [baseSections[0], ...premiumSections] 
+    : baseSections;
 
   const getInputRef = (category: DocumentCategory) => {
     switch (category) {
       case "payments": return paymentsInputRef;
       case "pricing": return pricingInputRef;
-      case "bank_statements": return bankStatementsInputRef;
-      case "invoices": return invoicesInputRef;
-      case "refunds": return refundsInputRef;
+      case "orders": return ordersInputRef;
+      case "costs": return costsInputRef;
       default: return null;
     }
   };
