@@ -238,12 +238,20 @@ const LeakResults = () => {
     : null;
 
   const chatContext = {
-    fileNames: [],
-    categories: {},
+    fileNames: leakAnalysis.leaks.map(l => l.description).slice(0, 5),
+    categories: Object.fromEntries(
+      leakCategories.map(c => [c.label, c.leaks.map(l => `${l.description} (${formatCurrency(l.amount)})`)])
+    ),
     analysisResults: {
       totalLeaks: leakAnalysis.totalLeaks,
       totalRecoverable: leakAnalysis.totalRecoverable,
       summary: leakAnalysis.summary,
+      leakBreakdown: leakCategories.map(c => ({
+        category: c.label,
+        count: c.count,
+        amount: c.totalAmount,
+        severity: c.severity,
+      })),
     },
   };
 
@@ -405,7 +413,7 @@ const LeakResults = () => {
       )}
 
       {/* AI Chat Widget */}
-      <AIChatWidget documentContext={chatContext} locked={true} />
+      <AIChatWidget documentContext={chatContext} locked={false} />
     </div>
   );
 };
