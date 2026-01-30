@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ArrowLeft, Upload, FileText, Link2, CheckCircle2, Plus, TrendingUp, TrendingDown, DollarSign, ShoppingBag, AlertTriangle, Percent, Clock, Lock, Sparkles, Loader2, Brain, Crown, Zap, Package, Clover } from "lucide-react";
-import { SiUbereats, SiDoordash, SiGrubhub, SiSquare } from "react-icons/si";
+import { SiSquare } from "react-icons/si";
 import { Badge } from "@/components/ui/badge";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUpload } from "@/hooks/use-upload";
@@ -161,13 +161,9 @@ const UploadsAndPOS = () => {
   };
 
   const platforms = [
-    { name: "UberEats", icon: <SiUbereats className="h-6 w-6 text-white" />, color: "bg-[#06C167]" },
-    { name: "DoorDash", icon: <SiDoordash className="h-6 w-6 text-white" />, color: "bg-[#FF3008]" },
-    { name: "Grubhub", icon: <SiGrubhub className="h-6 w-6 text-white" />, color: "bg-[#F63440]" },
-    { name: "Postmates", icon: <Package className="h-5 w-5 text-white" />, color: "bg-[#FFDF00]" },
-    { name: "Square POS", icon: <SiSquare className="h-6 w-6 text-white" />, color: "bg-[#006AFF]" },
-    { name: "Toast", icon: <div className="font-bold text-white text-sm">T</div>, color: "bg-[#FF6600]" },
-    { name: "Clover", icon: <Clover className="h-6 w-6 text-white" />, color: "bg-[#1BC47D]" },
+    { name: "Square POS", icon: <SiSquare className="h-6 w-6 text-white" />, color: "bg-[#006AFF]", comingSoon: true },
+    { name: "Toast", icon: <div className="font-bold text-white text-sm">T</div>, color: "bg-[#FF6600]", comingSoon: true },
+    { name: "Clover", icon: <Clover className="h-6 w-6 text-white" />, color: "bg-[#1BC47D]", comingSoon: true },
   ];
 
   const recentUploads: UploadData[] = [
@@ -345,7 +341,7 @@ const UploadsAndPOS = () => {
                     <p className="text-xs text-muted-foreground mb-3">
                       {isUploadingReport 
                         ? `${reportProgress}%` 
-                        : "CSV, Excel, PDF from Uber Eats, DoorDash, Grubhub"}
+                        : "CSV, Excel, or PDF delivery reports"}
                     </p>
                     <Button 
                       size="sm"
@@ -512,21 +508,36 @@ const UploadsAndPOS = () => {
                     <CardContent className="p-5">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-12 h-12 rounded-xl ${platform.color} flex items-center justify-center text-2xl shadow-sm ${!isPaidUser && !isConnected ? 'grayscale' : ''}`}>
+                          <div className={`w-12 h-12 rounded-xl ${platform.color} flex items-center justify-center text-2xl shadow-sm ${platform.comingSoon ? 'grayscale opacity-70' : !isPaidUser && !isConnected ? 'grayscale' : ''}`}>
                             {platform.icon}
                           </div>
                           <div>
                             <h3 className="font-semibold text-foreground">{platform.name}</h3>
-                            <p className={`text-xs ${isConnected ? 'text-emerald-600' : 'text-muted-foreground'}`}>
-                              {isConnected ? 'Connected' : 'Not connected'}
+                            <p className={`text-xs ${platform.comingSoon ? 'text-amber-600' : isConnected ? 'text-emerald-600' : 'text-muted-foreground'}`}>
+                              {platform.comingSoon ? 'Coming Soon' : isConnected ? 'Connected' : 'Not connected'}
                             </p>
                           </div>
                         </div>
-                        {isConnected && (
+                        {platform.comingSoon ? (
+                          <Badge variant="outline" className="text-amber-600 border-amber-500/30 bg-amber-50 dark:bg-amber-950/20">
+                            <Clock className="h-3 w-3 mr-1" />
+                            Soon
+                          </Badge>
+                        ) : isConnected && (
                           <CheckCircle2 className="h-5 w-5 text-emerald-500" />
                         )}
                       </div>
-                      {isPaidUser ? (
+                      {platform.comingSoon ? (
+                        <Button 
+                          variant="outline"
+                          className="w-full gap-2 opacity-60 cursor-not-allowed"
+                          size="sm"
+                          disabled
+                        >
+                          <Clock className="h-4 w-4" />
+                          Coming Soon
+                        </Button>
+                      ) : isPaidUser ? (
                         isConnected ? (
                           <Button 
                             variant="outline"
