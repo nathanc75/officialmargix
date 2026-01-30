@@ -41,7 +41,7 @@ const insightCards: InsightCardConfig[] = [
   {
     id: "costs",
     title: "📉 Your Business Costs",
-    description: "Add a few example costs so we can estimate real profit. This doesn't need to be perfect.",
+    description: "Add a few example costs — subscriptions, rent, supplies, payroll — so we can estimate real profit. This doesn't need to be perfect.",
     buttonText: "Upload Costs",
     hint: "Even 2–3 example expenses help.",
     icon: <TrendingDown className="h-5 w-5" />,
