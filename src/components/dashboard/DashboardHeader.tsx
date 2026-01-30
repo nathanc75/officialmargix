@@ -39,7 +39,7 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div className="flex items-center gap-2 sm:gap-3 group">
+            <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
               <div className="w-10 h-10 sm:w-12 sm:h-12 transition-transform group-hover:scale-105">
                 <img 
                   src={margixLogo} 
@@ -51,7 +51,7 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
                 <h1 className="text-sm sm:text-lg font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
                 <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block font-medium">Leak Detection Dashboard</p>
               </div>
-            </div>
+            </Link>
             
             <div className="hidden lg:flex items-center gap-2 ml-4">
               <Badge variant="secondary" className="gap-1.5 py-1 px-2.5 text-xs bg-primary/10 text-primary border-primary/20 font-medium">
