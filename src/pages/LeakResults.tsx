@@ -33,6 +33,7 @@ const getLeakTypeLabel = (type: string) => {
     failed_payment: "Payments That Didn't Go Through",
     pricing_inefficiency: "You're Being Overcharged",
     billing_error: "Billing Mistakes",
+    churn_permanent_loss: "Customers You've Lost",
     other: "Other Problems",
   };
   return labels[type] || type;
