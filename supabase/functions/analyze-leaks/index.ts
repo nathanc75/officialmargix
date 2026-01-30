@@ -60,7 +60,6 @@ Respond in JSON:
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [{ role: "user", content: geminiPrompt }],
-        temperature: 0.3,
       }),
     });
 
@@ -157,7 +156,6 @@ Respond in JSON:
           { role: "user", content: `Analyze these financial documents:\n\nFiles: ${fileNames.join(', ')}\n\n${fileContent}` }
         ],
         response_format: { type: "json_object" },
-        temperature: 0.3,
       }),
     });
 
