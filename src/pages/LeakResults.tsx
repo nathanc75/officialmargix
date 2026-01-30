@@ -257,12 +257,16 @@ const LeakResults = () => {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-4">
-                <Link to="/">
-                  <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground" data-testid="button-back">
-                    <ArrowLeft className="h-4 w-4" />
-                    <span className="hidden sm:inline">Home</span>
-                  </Button>
-                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="gap-2 text-muted-foreground hover:text-foreground" 
+                  data-testid="button-back"
+                  onClick={() => navigate(-1)}
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="hidden sm:inline">Back</span>
+                </Button>
                 <div className="h-5 w-px bg-border/60" />
                 <div className="flex items-center gap-2.5">
                   <img src={margixLogo} alt="MARGIX" className="w-7 h-7" />

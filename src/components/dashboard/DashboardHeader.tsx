@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,6 +21,8 @@ interface DashboardHeaderProps {
 }
 
 const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentType, isTrial = false }: DashboardHeaderProps) => {
+  const navigate = useNavigate();
+  
   return (
     <header 
       className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
@@ -28,11 +30,14 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-            <Link to="/">
-              <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-foreground">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9 text-muted-foreground hover:text-foreground"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
             <div className="flex items-center gap-2 sm:gap-3 group">
               <div className="w-10 h-10 sm:w-12 sm:h-12 transition-transform group-hover:scale-105">
                 <img 
