@@ -9,6 +9,7 @@ import ProfitOverview from "@/components/dashboard/ProfitOverview";
 import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
+import POSConnectSection from "@/components/dashboard/POSConnectSection";
 import { useUser } from "@/context/UserContext";
 import { useAnalysis } from "@/context/AnalysisContext";
 import { AIChatWidget } from "@/components/AIChatWidget";
@@ -303,6 +304,9 @@ const Dashboard = () => {
                   </p>
                 </div>
               </div>
+
+              {/* POS Connect Section */}
+              <POSConnectSection />
             </div>
           )}
           
