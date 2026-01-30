@@ -29,6 +29,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { jsPDF } from "jspdf";
+import { DeeperInsightsSection, InsightCategory } from "@/components/results/DeeperInsightsSection";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -60,6 +61,11 @@ const LeakResults = () => {
   const { leakAnalysis, clearAnalysis } = useAnalysis();
   const navigate = useNavigate();
   const [expandedLeaks, setExpandedLeaks] = useState<Set<string>>(new Set());
+  const [uploadedInsightCategories, setUploadedInsightCategories] = useState<Set<InsightCategory>>(new Set());
+
+  const handleInsightCategoryUploaded = (category: InsightCategory) => {
+    setUploadedInsightCategories(prev => new Set([...prev, category]));
+  };
 
   useEffect(() => {
     if (!leakAnalysis) {
@@ -612,6 +618,12 @@ const LeakResults = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* Deeper Insights Section - Unlock more analysis */}
+          <DeeperInsightsSection 
+            uploadedCategories={uploadedInsightCategories}
+            onCategoryUploaded={handleInsightCategoryUploaded}
+          />
 
           <Card className="border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-background">
             <CardContent className="p-6">
