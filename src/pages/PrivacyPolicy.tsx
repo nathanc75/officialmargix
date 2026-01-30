@@ -1,14 +1,14 @@
-import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { useGoBack } from "@/hooks/useGoBack";
 
 const PrivacyPolicy = () => {
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 py-12">
         <button
-          onClick={() => navigate(-1)}
+          onClick={goBack}
           className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8"
           data-testid="link-back-home"
         >

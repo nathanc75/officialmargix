@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useGoBack } from "@/hooks/useGoBack";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -40,6 +41,7 @@ const getLeakTypeLabel = (type: string) => {
 const LeakResults = () => {
   const { leakAnalysis, clearAnalysis } = useAnalysis();
   const navigate = useNavigate();
+  const goBack = useGoBack();
   const [uploadedInsightCategories, setUploadedInsightCategories] = useState<Set<InsightCategory>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -262,7 +264,7 @@ const LeakResults = () => {
                   size="sm" 
                   className="gap-2 text-muted-foreground hover:text-foreground" 
                   data-testid="button-back"
-                  onClick={() => navigate(-1)}
+                  onClick={goBack}
                 >
                   <ArrowLeft className="h-4 w-4" />
                   <span className="hidden sm:inline">Back</span>

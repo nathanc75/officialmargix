@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,6 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import margixLogo from "@/assets/margix-logo.png";
+import { useGoBack } from "@/hooks/useGoBack";
 
 interface DashboardHeaderProps {
   dateRange: string;
@@ -21,7 +22,7 @@ interface DashboardHeaderProps {
 }
 
 const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentType, isTrial = false }: DashboardHeaderProps) => {
-  const navigate = useNavigate();
+  const goBack = useGoBack();
   
   return (
     <header 
@@ -34,7 +35,7 @@ const DashboardHeader = ({ dateRange, setDateRange, documentType, setDocumentTyp
               variant="ghost" 
               size="icon" 
               className="h-9 w-9 text-muted-foreground hover:text-foreground"
-              onClick={() => navigate(-1)}
+              onClick={goBack}
             >
               <ArrowLeft className="h-4 w-4" />
             </Button>
