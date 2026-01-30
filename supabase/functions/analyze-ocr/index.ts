@@ -11,11 +11,11 @@ serve(async (req) => {
   }
 
   try {
-    const { imageBase64, imageMimeType, fileName } = await req.json();
+    const { imageBase64, imageMimeType, fileName, textContent } = await req.json();
 
-    if (!imageBase64) {
+    if (!imageBase64 && !textContent) {
       return new Response(
-        JSON.stringify({ error: "Image data is required" }),
+        JSON.stringify({ error: "Image data or text content is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -25,22 +25,55 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const isOfficeDoc = imageMimeType?.includes("word") || 
-                        imageMimeType?.includes("excel") || 
-                        imageMimeType?.includes("spreadsheet") ||
-                        fileName?.toLowerCase().endsWith(".doc") ||
-                        fileName?.toLowerCase().endsWith(".docx") ||
+    // Detect Office documents that can't be processed as images
+    const isExcelFile = imageMimeType?.includes("spreadsheet") || 
+                        imageMimeType?.includes("excel") ||
                         fileName?.toLowerCase().endsWith(".xls") ||
-                        fileName?.toLowerCase().endsWith(".xlsx");
+                        fileName?.toLowerCase().endsWith(".xlsx") ||
+                        fileName?.toLowerCase().endsWith(".csv");
+    
+    const isWordFile = imageMimeType?.includes("word") ||
+                       fileName?.toLowerCase().endsWith(".doc") ||
+                       fileName?.toLowerCase().endsWith(".docx");
 
-    const prompt = isOfficeDoc 
-      ? `You are a document OCR and data extraction specialist. This is a Microsoft Office document (Word or Excel). Extract all text and structured data.
+    // For Excel/CSV files, we need text content instead of image
+    if (isExcelFile && !textContent) {
+      return new Response(
+        JSON.stringify({ 
+          error: "Excel and CSV files should be read as text. Please use the text content extraction method.",
+          requiresTextExtraction: true,
+          fileType: "spreadsheet"
+        }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // For Word files without text content
+    if (isWordFile && !textContent) {
+      return new Response(
+        JSON.stringify({ 
+          error: "Word documents should be read as text. Please use the text content extraction method.",
+          requiresTextExtraction: true,
+          fileType: "document"
+        }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const isOfficeDoc = isExcelFile || isWordFile;
+
+    // If we have text content (for spreadsheets/documents), analyze it directly
+    if (textContent) {
+      const textPrompt = `You are a document data extraction specialist. Analyze this ${isExcelFile ? 'spreadsheet' : 'document'} content and extract all structured data.
 
 Extract the following:
-1. All text content, preserving formatting and structure
+1. All text content, preserving structure
 2. Any tables present (as structured data with headers and rows)
 3. Key financial figures: amounts, totals, dates, account numbers, transaction IDs
-4. Document metadata: type, date, any visible headers/footers
+4. Document metadata: type, any visible headers
+
+Content:
+${textContent}
 
 Respond in JSON format:
 {
@@ -59,8 +92,51 @@ Respond in JSON format:
   },
   "documentType": "spreadsheet | document | invoice | receipt | pricing_list | financial_report | other",
   "confidence": 0.95
-}`
-      : `You are a document OCR and data extraction specialist. Analyze this document image and extract all text and structured data.
+}`;
+
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "openai/gpt-5-mini",
+          messages: [{ role: "user", content: textPrompt }],
+        }),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("AI gateway error:", response.status, errorText);
+        throw new Error("AI gateway error");
+      }
+
+      const aiResponse = await response.json();
+      const text = aiResponse.choices[0].message.content || "";
+
+      let ocrResult;
+      try {
+        const jsonMatch = text.match(/```json\n?([\s\S]*?)\n?```/) || text.match(/\{[\s\S]*\}/);
+        ocrResult = JSON.parse(jsonMatch ? (jsonMatch[1] || jsonMatch[0]) : text);
+      } catch {
+        ocrResult = { rawText: text, confidence: 0.5, parseError: true };
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          ocrResult,
+          fileName,
+          model: "gpt-5-mini",
+          processedAt: new Date().toISOString(),
+        }),
+        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // For images, use vision model
+    const prompt = `You are a document OCR and data extraction specialist. Analyze this document image and extract all text and structured data.
 
 Extract the following:
 1. All raw text content, preserving formatting where possible
@@ -109,7 +185,6 @@ Respond in JSON format:
             ],
           },
         ],
-        temperature: 0.2,
       }),
     });
 
