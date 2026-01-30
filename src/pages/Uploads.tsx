@@ -49,6 +49,27 @@ const isImageOrPdf = (file: File): boolean => {
   return file.type.startsWith("image/") || file.type === "application/pdf";
 };
 
+const isSpreadsheetOrDoc = (file: File): boolean => {
+  const spreadsheetTypes = [
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "text/csv",
+    "application/csv",
+  ];
+  const docTypes = [
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  const fileName = file.name.toLowerCase();
+  return spreadsheetTypes.includes(file.type) || 
+         docTypes.includes(file.type) ||
+         fileName.endsWith(".csv") ||
+         fileName.endsWith(".xlsx") ||
+         fileName.endsWith(".xls") ||
+         fileName.endsWith(".doc") ||
+         fileName.endsWith(".docx");
+};
+
 const Uploads = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -144,8 +165,8 @@ const Uploads = () => {
     });
   };
 
-  // OCR extraction for images/PDFs
-  const performOCR = useCallback(async (fileId: string, base64Data: string, mimeType: string, fileName: string) => {
+  // OCR extraction for images/PDFs, or text extraction for spreadsheets/docs
+  const performOCR = useCallback(async (fileId: string, base64Data: string | null, mimeType: string, fileName: string, textContent?: string) => {
     setUploadedFiles(prev => prev.map(f => 
       f.id === fileId ? { ...f, status: "extracting" as const } : f
     ));
@@ -156,6 +177,7 @@ const Uploads = () => {
           imageBase64: base64Data,
           imageMimeType: mimeType,
           fileName,
+          textContent, // For spreadsheets/docs, send text content instead
         },
       });
 
@@ -242,15 +264,23 @@ const Uploads = () => {
       const fileId = newFiles[i].id;
       
       try {
-        if (isImageOrPdf(file)) {
-          // For images and PDFs, use OCR
+        if (isSpreadsheetOrDoc(file)) {
+          // For Excel/Word files, read as text and use AI extraction
+          const textContent = await readFileContent(file);
+          setUploadedFiles(prev => prev.map(f => 
+            f.id === fileId ? { ...f, content: textContent } : f
+          ));
+          // Send text content to the OCR function for AI processing
+          await performOCR(fileId, null, file.type, file.name, textContent);
+        } else if (isImageOrPdf(file)) {
+          // For images and PDFs, use OCR with vision
           const base64Data = await readFileAsBase64(file);
           setUploadedFiles(prev => prev.map(f => 
             f.id === fileId ? { ...f, base64Data } : f
           ));
           await performOCR(fileId, base64Data, file.type, file.name);
         } else {
-          // For text files, read directly
+          // For plain text files (.txt, .tsv), read directly
           const content = await readFileContent(file);
           setUploadedFiles(prev => prev.map(f => 
             f.id === fileId ? { ...f, status: "uploaded" as const, content } : f
