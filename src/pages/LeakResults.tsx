@@ -625,29 +625,6 @@ const LeakResults = () => {
             onCategoryUploaded={handleInsightCategoryUploaded}
           />
 
-          <Card className="border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-background">
-            <CardContent className="p-6">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                    <RefreshCw className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground text-lg">Get Ongoing Monitoring</h3>
-                    <p className="text-muted-foreground text-sm mt-1">
-                      Subscribe to catch leaks automatically every month. Never miss a duplicate charge or unused subscription again.
-                    </p>
-                  </div>
-                </div>
-                <Link to="/pricing">
-                  <Button className="gap-2 brand-gradient border-0 text-white" data-testid="button-upgrade">
-                    View Plans
-                    <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
         </main>
       </div>
 
