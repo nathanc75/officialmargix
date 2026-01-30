@@ -32,9 +32,9 @@ const formatCurrency = (amount: number) => {
 };
 
 const getConfidenceLabel = (confidence: number): { label: string; className: string } => {
-  if (confidence >= 0.8) return { label: "High", className: "text-emerald-700 bg-emerald-50 border-emerald-200" };
-  if (confidence >= 0.5) return { label: "Medium", className: "text-amber-700 bg-amber-50 border-amber-200" };
-  return { label: "Low", className: "text-slate-600 bg-slate-50 border-slate-200" };
+  if (confidence >= 0.8) return { label: "Very likely", className: "text-emerald-700 bg-emerald-50 border-emerald-200" };
+  if (confidence >= 0.5) return { label: "Likely", className: "text-amber-700 bg-amber-50 border-amber-200" };
+  return { label: "Possible", className: "text-slate-600 bg-slate-50 border-slate-200" };
 };
 
 const getCategoryIcon = (type: string) => {
@@ -83,9 +83,9 @@ export function LeakCategoryTable({ categories, onViewDetails }: LeakCategoryTab
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-border/40">
-              <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-6">Issue</TableHead>
-              <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right">Impact</TableHead>
-              <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-center">Confidence</TableHead>
+              <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider pl-6">Problem</TableHead>
+              <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right">Money at Risk</TableHead>
+              <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-center">How Sure We Are</TableHead>
               <TableHead className="text-xs font-semibold text-muted-foreground uppercase tracking-wider text-right pr-6">Action</TableHead>
             </TableRow>
           </TableHeader>

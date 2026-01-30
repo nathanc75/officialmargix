@@ -110,7 +110,7 @@ export function LeakDetailDrawer({
                   <p className="text-2xl font-bold text-destructive tabular-nums">
                     {formatCurrency(totalAmount)}
                   </p>
-                  <p className="text-xs text-muted-foreground">Total potential loss</p>
+                  <p className="text-xs text-muted-foreground">Money you could lose</p>
                 </div>
               </div>
               
@@ -124,14 +124,14 @@ export function LeakDetailDrawer({
                   <Badge variant="outline" className={`${severityInfo.className} text-xs`}>
                     {severityInfo.label}
                   </Badge>
-                  <p className="text-[10px] text-muted-foreground mt-1">Risk</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">Urgency</p>
                 </div>
                 <div className="text-center">
                   <div className="flex items-center justify-center mb-1">
                     <Gauge className="h-4 w-4 text-muted-foreground" />
                   </div>
                   <p className="text-sm font-semibold text-foreground">{Math.round(avgConfidence * 100)}%</p>
-                  <p className="text-[10px] text-muted-foreground">Confidence</p>
+                  <p className="text-[10px] text-muted-foreground">How sure we are</p>
                 </div>
               </div>
             </div>
@@ -174,10 +174,10 @@ export function LeakDetailDrawer({
                   </div>
 
                   <div className="p-4 space-y-4">
-                    {/* What's happening */}
+                    {/* What went wrong */}
                     <div>
                       <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                        What's happening
+                        What went wrong
                       </h4>
                       <p className="text-sm text-foreground leading-relaxed">{leak.description}</p>
                     </div>
@@ -224,13 +224,13 @@ export function LeakDetailDrawer({
                           <dl className="space-y-3 text-xs">
                             {leak.modelSource && (
                               <div>
-                                <dt className="text-muted-foreground font-medium mb-0.5">Detection Source</dt>
+                                <dt className="text-muted-foreground font-medium mb-0.5">How we found this</dt>
                                 <dd className="text-foreground font-mono">
                                   {leak.modelSource === "both" 
-                                    ? "Cross-validated (Gemini + GPT)" 
+                                    ? "Double-checked by two AI systems" 
                                     : leak.modelSource === "gemini" 
-                                      ? "Gemini AI" 
-                                      : "GPT AI"}
+                                      ? "Found by pattern analysis" 
+                                      : "Found by deep reasoning"}
                                 </dd>
                               </div>
                             )}
