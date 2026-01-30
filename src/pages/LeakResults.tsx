@@ -6,10 +6,10 @@ import {
   ArrowLeft, 
   DollarSign, 
   AlertTriangle, 
-  TrendingDown,
   Download,
   Plus,
-  ShieldCheck
+  ShieldCheck,
+  Sparkles
 } from "lucide-react";
 import { useAnalysis } from "@/context/AnalysisContext";
 import { useEffect, useState, useMemo } from "react";
@@ -18,6 +18,7 @@ import { jsPDF } from "jspdf";
 import { DeeperInsightsSection, InsightCategory } from "@/components/results/DeeperInsightsSection";
 import { LeakCategoryTable } from "@/components/results/LeakCategoryTable";
 import { LeakDetailDrawer } from "@/components/results/LeakDetailDrawer";
+import margixLogo from "@/assets/margix-logo.png";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -74,7 +75,6 @@ const LeakResults = () => {
         existing.totalAmount += leak.amount;
         existing.count += 1;
         existing.confidence = (existing.confidence * (existing.count - 1) + leakConfidence) / existing.count;
-        // Upgrade severity if this leak is higher
         if (leak.severity === "high") existing.severity = "high";
         else if (leak.severity === "medium" && existing.severity === "low") existing.severity = "medium";
         existing.leaks.push(leak);
@@ -91,7 +91,6 @@ const LeakResults = () => {
       }
     });
 
-    // Sort by amount descending
     return Array.from(categoryMap.values()).sort((a, b) => b.totalAmount - a.totalAmount);
   }, [leakAnalysis]);
 
@@ -111,7 +110,6 @@ const LeakResults = () => {
     const contentWidth = pageWidth - margin * 2;
     let yPos = 20;
 
-    // Load and add logo
     try {
       const logoImg = new Image();
       logoImg.crossOrigin = "anonymous";
@@ -226,18 +224,15 @@ const LeakResults = () => {
     doc.save(`margix-leak-report-${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
-  // Get overall confidence
   const overallConfidence = (leakAnalysis as any).confidence?.overallScore || 
     (leakCategories.length > 0 
       ? leakCategories.reduce((sum, c) => sum + c.confidence, 0) / leakCategories.length 
       : 0.75);
 
-  // Get selected category data for drawer
   const selectedCategoryData = selectedCategory 
     ? leakCategories.find(c => c.type === selectedCategory) 
     : null;
 
-  // Chat context for the assistant
   const chatContext = {
     fileNames: [],
     categories: {},
@@ -249,57 +244,80 @@ const LeakResults = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-1/4 -right-1/4 w-[800px] h-[800px] rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-primary/3 blur-3xl" />
+    <div className="min-h-screen bg-background">
+      {/* Subtle gradient background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-1/2 -right-1/2 w-[1000px] h-[1000px] rounded-full bg-primary/[0.02] blur-3xl" />
+        <div className="absolute -bottom-1/2 -left-1/2 w-[800px] h-[800px] rounded-full bg-primary/[0.015] blur-3xl" />
       </div>
 
       <div className="relative">
-        <header className="border-b border-border/50 bg-white/80 dark:bg-background/80 backdrop-blur-xl sticky top-0 z-50">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between">
+        {/* Header */}
+        <header className="border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-4">
                 <Link to="/">
-                  <Button variant="ghost" size="sm" className="gap-2" data-testid="button-back">
+                  <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground" data-testid="button-back">
                     <ArrowLeft className="h-4 w-4" />
                     <span className="hidden sm:inline">Home</span>
                   </Button>
                 </Link>
-                <div className="h-6 w-px bg-border" />
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                    <TrendingDown className="w-4 h-4 text-primary-foreground" />
-                  </div>
+                <div className="h-5 w-px bg-border/60" />
+                <div className="flex items-center gap-2.5">
+                  <img src={margixLogo} alt="MARGIX" className="w-7 h-7" />
                   <div>
-                    <h1 className="text-lg sm:text-xl font-bold text-foreground">Leak Scan Results</h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground">Analysis complete</p>
+                    <h1 className="text-base font-semibold text-foreground tracking-tight">Scan Results</h1>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Button variant="outline" size="sm" className="gap-2 hidden sm:flex" onClick={handleExport} data-testid="button-download">
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2 hidden sm:flex border-border/60" 
+                  onClick={handleExport} 
+                  data-testid="button-download"
+                >
                   <Download className="h-4 w-4" />
-                  Export
+                  Export PDF
                 </Button>
-                <Button size="sm" className="gap-2" onClick={handleNewScan} data-testid="button-new-scan">
+                <Button 
+                  size="sm" 
+                  className="gap-2 brand-gradient border-0 text-white" 
+                  onClick={handleNewScan} 
+                  data-testid="button-new-scan"
+                >
                   <Plus className="h-4 w-4" />
-                  New Scan
+                  <span className="hidden sm:inline">New Scan</span>
                 </Button>
               </div>
             </div>
           </div>
         </header>
 
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-          {/* LAYER 1: Executive Summary Bar */}
+        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          {/* Success Banner */}
+          <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-primary/5 via-primary/[0.03] to-transparent border border-primary/10 animate-fade-in">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+              <Sparkles className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground">Analysis Complete</p>
+              <p className="text-sm text-muted-foreground">
+                We found {leakAnalysis.totalLeaks} potential issue{leakAnalysis.totalLeaks !== 1 ? 's' : ''} worth investigating
+              </p>
+            </div>
+          </div>
+
+          {/* Executive Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+            <Card className="border-border/40 shadow-soft animate-fade-in" style={{ animationDelay: '50ms' }}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Total Leaks</p>
-                    <p className="text-3xl font-bold text-foreground mt-1" data-testid="text-total-leaks">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Issues Found</p>
+                    <p className="text-3xl font-bold text-foreground mt-1.5 tabular-nums" data-testid="text-total-leaks">
                       {leakAnalysis.totalLeaks}
                     </p>
                   </div>
@@ -310,28 +328,28 @@ const LeakResults = () => {
               </CardContent>
             </Card>
 
-            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+            <Card className="border-border/40 shadow-soft animate-fade-in" style={{ animationDelay: '100ms' }}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Recoverable</p>
-                    <p className="text-3xl font-bold text-green-600 mt-1" data-testid="text-recoverable">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Recoverable</p>
+                    <p className="text-3xl font-bold text-emerald-600 mt-1.5 tabular-nums" data-testid="text-recoverable">
                       {formatCurrency(leakAnalysis.totalRecoverable)}
                     </p>
                   </div>
-                  <div className="w-11 h-11 rounded-xl bg-green-500/10 flex items-center justify-center">
-                    <DollarSign className="w-5 h-5 text-green-600" />
+                  <div className="w-11 h-11 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                    <DollarSign className="w-5 h-5 text-emerald-600" />
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
+            <Card className="border-border/40 shadow-soft animate-fade-in" style={{ animationDelay: '150ms' }}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Confidence</p>
-                    <p className="text-3xl font-bold text-foreground mt-1">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Confidence</p>
+                    <p className="text-3xl font-bold text-foreground mt-1.5 tabular-nums">
                       {Math.round(overallConfidence * 100)}%
                     </p>
                   </div>
@@ -340,15 +358,15 @@ const LeakResults = () => {
                   </div>
                 </div>
                 {(leakAnalysis as any).confidence?.crossValidated > 0 && (
-                  <Badge variant="outline" className="mt-2 text-xs text-green-600 border-green-600/20">
-                    {(leakAnalysis as any).confidence.crossValidated} verified
+                  <Badge variant="outline" className="mt-3 text-xs text-emerald-700 bg-emerald-50 border-emerald-200">
+                    {(leakAnalysis as any).confidence.crossValidated} cross-verified
                   </Badge>
                 )}
               </CardContent>
             </Card>
           </div>
 
-          {/* LAYER 1: Where You're Losing Money Table */}
+          {/* Issues Table */}
           <LeakCategoryTable 
             categories={leakCategories}
             onViewDetails={(type) => setSelectedCategory(type)}
@@ -362,7 +380,7 @@ const LeakResults = () => {
         </main>
       </div>
 
-      {/* LAYER 2: Issue Detail Drawer */}
+      {/* Detail Drawer */}
       {selectedCategoryData && (
         <LeakDetailDrawer
           open={selectedCategory !== null}
