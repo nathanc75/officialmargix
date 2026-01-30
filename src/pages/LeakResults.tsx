@@ -1,35 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   ArrowLeft, 
   DollarSign, 
   AlertTriangle, 
-  CheckCircle2, 
   TrendingDown,
-  FileText,
   Download,
   Plus,
-  RefreshCw,
-  Calendar,
-  ArrowRight,
-  Brain,
-  Sparkles,
-  ShieldCheck,
-  ChevronDown,
-  ChevronUp
+  ShieldCheck
 } from "lucide-react";
 import { useAnalysis } from "@/context/AnalysisContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { AIChatWidget } from "@/components/AIChatWidget";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { jsPDF } from "jspdf";
 import { DeeperInsightsSection, InsightCategory } from "@/components/results/DeeperInsightsSection";
+import { LeakCategoryTable } from "@/components/results/LeakCategoryTable";
+import { LeakDetailDrawer } from "@/components/results/LeakDetailDrawer";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -37,31 +25,22 @@ const formatCurrency = (amount: number) => {
 
 const getLeakTypeLabel = (type: string) => {
   const labels: Record<string, string> = {
-    missing_payment: "Missing Payment",
-    duplicate_charge: "Duplicate Charge",
-    unused_subscription: "Unused Subscription",
-    failed_payment: "Failed Payment",
-    pricing_inefficiency: "Pricing Issue",
-    billing_error: "Billing Error",
-    other: "Other Issue",
+    missing_payment: "Missing Payments",
+    duplicate_charge: "Duplicate Charges",
+    unused_subscription: "Unused Subscriptions",
+    failed_payment: "Failed Payments",
+    pricing_inefficiency: "Pricing Mismatches",
+    billing_error: "Billing Errors",
+    other: "Other Issues",
   };
   return labels[type] || type;
-};
-
-const getSeverityColor = (severity: string) => {
-  switch (severity) {
-    case "high": return "bg-destructive/10 text-destructive border-destructive/20";
-    case "medium": return "bg-amber-500/10 text-amber-600 border-amber-500/20";
-    case "low": return "bg-green-500/10 text-green-600 border-green-500/20";
-    default: return "bg-secondary text-secondary-foreground";
-  }
 };
 
 const LeakResults = () => {
   const { leakAnalysis, clearAnalysis } = useAnalysis();
   const navigate = useNavigate();
-  const [expandedLeaks, setExpandedLeaks] = useState<Set<string>>(new Set());
   const [uploadedInsightCategories, setUploadedInsightCategories] = useState<Set<InsightCategory>>(new Set());
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const handleInsightCategoryUploaded = (category: InsightCategory) => {
     setUploadedInsightCategories(prev => new Set([...prev, category]));
@@ -72,6 +51,49 @@ const LeakResults = () => {
       navigate("/dashboard");
     }
   }, [leakAnalysis, navigate]);
+
+  // Group leaks by type into categories
+  const leakCategories = useMemo(() => {
+    if (!leakAnalysis?.leaks) return [];
+
+    const categoryMap = new Map<string, {
+      type: string;
+      label: string;
+      totalAmount: number;
+      count: number;
+      severity: "high" | "medium" | "low";
+      confidence: number;
+      leaks: typeof leakAnalysis.leaks;
+    }>();
+
+    leakAnalysis.leaks.forEach(leak => {
+      const existing = categoryMap.get(leak.type);
+      const leakConfidence = (leak as any).confidence || 0.7;
+      
+      if (existing) {
+        existing.totalAmount += leak.amount;
+        existing.count += 1;
+        existing.confidence = (existing.confidence * (existing.count - 1) + leakConfidence) / existing.count;
+        // Upgrade severity if this leak is higher
+        if (leak.severity === "high") existing.severity = "high";
+        else if (leak.severity === "medium" && existing.severity === "low") existing.severity = "medium";
+        existing.leaks.push(leak);
+      } else {
+        categoryMap.set(leak.type, {
+          type: leak.type,
+          label: getLeakTypeLabel(leak.type),
+          totalAmount: leak.amount,
+          count: 1,
+          severity: leak.severity as "high" | "medium" | "low",
+          confidence: leakConfidence,
+          leaks: [leak]
+        });
+      }
+    });
+
+    // Sort by amount descending
+    return Array.from(categoryMap.values()).sort((a, b) => b.totalAmount - a.totalAmount);
+  }, [leakAnalysis]);
 
   if (!leakAnalysis) {
     return null;
@@ -94,9 +116,8 @@ const LeakResults = () => {
       const logoImg = new Image();
       logoImg.crossOrigin = "anonymous";
       
-      await new Promise<void>((resolve, reject) => {
+      await new Promise<void>((resolve) => {
         logoImg.onload = () => {
-          // Add logo to PDF (30x30 pixels)
           const canvas = document.createElement('canvas');
           canvas.width = logoImg.width;
           canvas.height = logoImg.height;
@@ -108,14 +129,13 @@ const LeakResults = () => {
           }
           resolve();
         };
-        logoImg.onerror = () => resolve(); // Continue without logo if it fails
+        logoImg.onerror = () => resolve();
         logoImg.src = '/margix-logo-download.png';
       });
-    } catch (e) {
-      // Continue without logo if loading fails
+    } catch {
+      // Continue without logo
     }
 
-    // Header text (offset for logo)
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(0, 0, 0);
@@ -131,12 +151,10 @@ const LeakResults = () => {
     doc.setFontSize(10);
     doc.text(`Generated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`, margin, yPos);
 
-    // Line separator
     yPos += 8;
     doc.setDrawColor(200, 200, 200);
     doc.line(margin, yPos, pageWidth - margin, yPos);
 
-    // Summary Section
     yPos += 12;
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
@@ -144,10 +162,6 @@ const LeakResults = () => {
     doc.text("Summary", margin, yPos);
 
     yPos += 10;
-    doc.setFontSize(11);
-    doc.setFont("helvetica", "normal");
-    
-    // Stats boxes
     doc.setFillColor(245, 245, 245);
     doc.roundedRect(margin, yPos, 80, 25, 3, 3, 'F');
     doc.roundedRect(margin + 85, yPos, 80, 25, 3, 3, 'F');
@@ -172,97 +186,56 @@ const LeakResults = () => {
     doc.text(summaryLines, margin, yPos);
     yPos += summaryLines.length * 5 + 10;
 
-    // Line separator
     doc.setDrawColor(200, 200, 200);
     doc.line(margin, yPos, pageWidth - margin, yPos);
 
-    // Detected Issues Section
     yPos += 10;
     doc.setFontSize(14);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(0, 0, 0);
-    doc.text("Detected Issues", margin, yPos);
+    doc.text("Issues by Category", margin, yPos);
     yPos += 8;
 
-    leakAnalysis.leaks.forEach((leak, index) => {
-      // Check if we need a new page
+    leakCategories.forEach((category) => {
       if (yPos > 260) {
         doc.addPage();
         yPos = 20;
       }
 
-      // Severity color
-      const severityColors: Record<string, [number, number, number]> = {
-        high: [220, 38, 38],
-        medium: [245, 158, 11],
-        low: [22, 163, 74]
-      };
-      const color = severityColors[leak.severity] || [100, 100, 100];
-
-      // Issue card background
       doc.setFillColor(250, 250, 250);
-      doc.roundedRect(margin, yPos, contentWidth, 35, 2, 2, 'F');
-      
-      // Severity indicator
-      doc.setFillColor(color[0], color[1], color[2]);
-      doc.roundedRect(margin, yPos, 4, 35, 2, 2, 'F');
+      doc.roundedRect(margin, yPos, contentWidth, 20, 2, 2, 'F');
 
       yPos += 8;
       doc.setFontSize(11);
       doc.setFont("helvetica", "bold");
       doc.setTextColor(0, 0, 0);
-      doc.text(`${index + 1}. ${getLeakTypeLabel(leak.type)}`, margin + 8, yPos);
+      doc.text(`${category.label} (${category.count})`, margin + 5, yPos);
       
-      doc.setFontSize(11);
-      doc.setFont("helvetica", "bold");
-      doc.setTextColor(color[0], color[1], color[2]);
-      doc.text(formatCurrency(leak.amount), pageWidth - margin - 30, yPos);
+      doc.setTextColor(220, 38, 38);
+      doc.text(formatCurrency(category.totalAmount), pageWidth - margin - 30, yPos);
 
-      yPos += 6;
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 100, 100);
-      doc.text(`${leak.severity.toUpperCase()} SEVERITY • ${leak.date || 'N/A'}`, margin + 8, yPos);
-
-      yPos += 6;
-      doc.setTextColor(60, 60, 60);
-      const descLines = doc.splitTextToSize(leak.description, contentWidth - 16);
-      doc.text(descLines[0] || '', margin + 8, yPos);
-      
-      yPos += 20;
+      yPos += 18;
     });
 
-    // Footer
     yPos = doc.internal.pageSize.getHeight() - 15;
     doc.setFontSize(8);
     doc.setTextColor(150, 150, 150);
     doc.text("Report generated by MARGIX AI Financial Monitor", margin, yPos);
     doc.text(new Date().toISOString(), pageWidth - margin - 40, yPos);
 
-    // Save the PDF
     doc.save(`margix-leak-report-${new Date().toISOString().split('T')[0]}.pdf`);
   };
 
-  const toggleLeakExpanded = (leakId: string) => {
-    setExpandedLeaks(prev => {
-      const next = new Set(prev);
-      if (next.has(leakId)) {
-        next.delete(leakId);
-      } else {
-        next.add(leakId);
-      }
-      return next;
-    });
-  };
+  // Get overall confidence
+  const overallConfidence = (leakAnalysis as any).confidence?.overallScore || 
+    (leakCategories.length > 0 
+      ? leakCategories.reduce((sum, c) => sum + c.confidence, 0) / leakCategories.length 
+      : 0.75);
 
-  const highSeverityLeaks = leakAnalysis.leaks.filter(l => l.severity === "high");
-  const mediumSeverityLeaks = leakAnalysis.leaks.filter(l => l.severity === "medium");
-  const lowSeverityLeaks = leakAnalysis.leaks.filter(l => l.severity === "low");
-
-  // Check for multi-model analysis metadata
-  const isMultiModel = (leakAnalysis as any).multiModelAnalysis;
-  const confidence = (leakAnalysis as any).confidence;
-  const modelContributions = (leakAnalysis as any).modelContributions;
+  // Get selected category data for drawer
+  const selectedCategoryData = selectedCategory 
+    ? leakCategories.find(c => c.type === selectedCategory) 
+    : null;
 
   // Chat context for the assistant
   const chatContext = {
@@ -300,9 +273,7 @@ const LeakResults = () => {
                   </div>
                   <div>
                     <h1 className="text-lg sm:text-xl font-bold text-foreground">Leak Scan Results</h1>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
-                      {isMultiModel ? "Multi-model analysis complete" : "Analysis complete"}
-                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Analysis complete</p>
                   </div>
                 </div>
               </div>
@@ -321,314 +292,93 @@ const LeakResults = () => {
         </header>
 
         <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-          {/* Multi-Model Analysis Badge */}
-          {isMultiModel && (
-            <Card className="border-primary/20 bg-gradient-to-r from-primary/5 via-primary/3 to-background">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between flex-wrap gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Brain className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Multi-Model AI Analysis</p>
-                      <p className="text-sm text-muted-foreground">
-                        Cross-validated by Gemini + GPT
-                      </p>
-                    </div>
-                  </div>
-                  {confidence && (
-                    <div className="flex items-center gap-4">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-primary">
-                          {Math.round(confidence.overallScore * 100)}%
-                        </p>
-                        <p className="text-xs text-muted-foreground">Confidence</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-green-600">
-                          {confidence.crossValidated}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Verified</p>
-                      </div>
-                      {confidence.needsReview > 0 && (
-                        <div className="text-center">
-                          <p className="text-2xl font-bold text-amber-600">
-                            {confidence.needsReview}
-                          </p>
-                          <p className="text-xs text-muted-foreground">Needs Review</p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* LAYER 1: Executive Summary Bar */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Leaks Found</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Total Leaks</p>
                     <p className="text-3xl font-bold text-foreground mt-1" data-testid="text-total-leaks">
                       {leakAnalysis.totalLeaks}
                     </p>
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-destructive/10 flex items-center justify-center">
-                    <AlertTriangle className="w-6 h-6 text-destructive" />
+                  <div className="w-11 h-11 rounded-xl bg-destructive/10 flex items-center justify-center">
+                    <AlertTriangle className="w-5 h-5 text-destructive" />
                   </div>
-                </div>
-                <div className="flex items-center gap-2 mt-4">
-                  {highSeverityLeaks.length > 0 && (
-                    <Badge variant="outline" className={getSeverityColor("high")}>
-                      {highSeverityLeaks.length} High
-                    </Badge>
-                  )}
-                  {mediumSeverityLeaks.length > 0 && (
-                    <Badge variant="outline" className={getSeverityColor("medium")}>
-                      {mediumSeverityLeaks.length} Medium
-                    </Badge>
-                  )}
-                  {lowSeverityLeaks.length > 0 && (
-                    <Badge variant="outline" className={getSeverityColor("low")}>
-                      {lowSeverityLeaks.length} Low
-                    </Badge>
-                  )}
                 </div>
               </CardContent>
             </Card>
 
             <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Recoverable Amount</p>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Recoverable</p>
                     <p className="text-3xl font-bold text-green-600 mt-1" data-testid="text-recoverable">
                       {formatCurrency(leakAnalysis.totalRecoverable)}
                     </p>
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center">
-                    <DollarSign className="w-6 h-6 text-green-600" />
+                  <div className="w-11 h-11 rounded-xl bg-green-500/10 flex items-center justify-center">
+                    <DollarSign className="w-5 h-5 text-green-600" />
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground mt-4">
-                  Potential savings identified
-                </p>
               </CardContent>
             </Card>
 
             <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-              <CardContent className="p-6">
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Analysis Date</p>
-                    <p className="text-lg font-semibold text-foreground mt-1">
-                      {new Date(leakAnalysis.analyzedAt).toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric',
-                        year: 'numeric'
-                      })}
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide font-medium">Confidence</p>
+                    <p className="text-3xl font-bold text-foreground mt-1">
+                      {Math.round(overallConfidence * 100)}%
                     </p>
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Calendar className="w-6 h-6 text-primary" />
+                  <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <ShieldCheck className="w-5 h-5 text-primary" />
                   </div>
                 </div>
-                <div className="flex items-center gap-2 mt-4">
-                  <CheckCircle2 className="w-4 h-4 text-green-600" />
-                  <span className="text-sm text-muted-foreground">Analysis complete</span>
-                </div>
+                {(leakAnalysis as any).confidence?.crossValidated > 0 && (
+                  <Badge variant="outline" className="mt-2 text-xs text-green-600 border-green-600/20">
+                    {(leakAnalysis as any).confidence.crossValidated} verified
+                  </Badge>
+                )}
               </CardContent>
             </Card>
           </div>
 
-          {/* Model Contributions */}
-          {modelContributions && (
-            <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  AI Model Insights
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid md:grid-cols-2 gap-4">
-                {modelContributions.gemini && modelContributions.gemini.length > 0 && (
-                  <div className="p-4 rounded-lg bg-secondary/50">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
-                        <Sparkles className="h-3 w-3 text-primary" />
-                      </div>
-                      <span className="font-medium text-foreground">Gemini Patterns</span>
-                    </div>
-                    <ul className="space-y-2">
-                      {modelContributions.gemini.slice(0, 3).map((insight: string, idx: number) => (
-                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                          <span className="text-primary">•</span>
-                          {insight}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                {modelContributions.gpt && modelContributions.gpt.length > 0 && (
-                  <div className="p-4 rounded-lg bg-secondary/50">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="w-6 h-6 rounded-full bg-green-500/20 flex items-center justify-center">
-                        <Brain className="h-3 w-3 text-green-600" />
-                      </div>
-                      <span className="font-medium text-foreground">GPT Analysis</span>
-                    </div>
-                    <ul className="space-y-2">
-                      {modelContributions.gpt.slice(0, 3).map((insight: string, idx: number) => (
-                        <li key={idx} className="text-sm text-muted-foreground flex items-start gap-2">
-                          <span className="text-green-600">•</span>
-                          {insight}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          )}
+          {/* LAYER 1: Where You're Losing Money Table */}
+          <LeakCategoryTable 
+            categories={leakCategories}
+            onViewDetails={(type) => setSelectedCategory(type)}
+          />
 
-          <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <FileText className="h-5 w-5 text-primary" />
-                Summary
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-foreground" data-testid="text-summary">
-                {leakAnalysis.summary}
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="backdrop-blur-xl bg-white/70 dark:bg-card/70 border-white/20 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.08)]">
-            <CardHeader className="pb-3">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <AlertTriangle className="h-5 w-5 text-primary" />
-                Detected Leaks
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              {leakAnalysis.leaks.length === 0 ? (
-                <div className="p-8 text-center">
-                  <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                  <p className="text-lg font-medium text-foreground">No leaks detected</p>
-                  <p className="text-sm text-muted-foreground">Your financial documents look clean!</p>
-                </div>
-              ) : (
-                <div className="divide-y divide-border">
-                  {leakAnalysis.leaks.map((leak, index) => {
-                    const leakId = leak.id || `leak-${index}`;
-                    const isExpanded = expandedLeaks.has(leakId);
-                    const leakConfidence = (leak as any).confidence;
-                    const isCrossValidated = (leak as any).crossValidated;
-                    const modelSource = (leak as any).modelSource;
-
-                    return (
-                      <Collapsible 
-                        key={leakId}
-                        open={isExpanded}
-                        onOpenChange={() => toggleLeakExpanded(leakId)}
-                      >
-                        <div 
-                          className="p-4 hover:bg-secondary/30 transition-colors"
-                          data-testid={`leak-item-${index}`}
-                        >
-                          <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 mb-2 flex-wrap">
-                                <Badge variant="outline" className={getSeverityColor(leak.severity)}>
-                                  {leak.severity}
-                                </Badge>
-                                <Badge variant="secondary" className="text-xs">
-                                  {getLeakTypeLabel(leak.type)}
-                                </Badge>
-                                {isCrossValidated && (
-                                  <Badge variant="outline" className="text-xs text-green-600 border-green-600/20 gap-1">
-                                    <ShieldCheck className="h-3 w-3" />
-                                    Verified
-                                  </Badge>
-                                )}
-                                {leakConfidence && (
-                                  <Badge variant="outline" className="text-xs text-primary border-primary/20">
-                                    {Math.round(leakConfidence * 100)}% confidence
-                                  </Badge>
-                                )}
-                                {leak.date && (
-                                  <span className="text-xs text-muted-foreground">{leak.date}</span>
-                                )}
-                              </div>
-                              <p className="text-sm text-foreground font-medium">
-                                {leak.description}
-                              </p>
-                              <div className="mt-3 p-3 bg-secondary/50 rounded-lg">
-                                <p className="text-xs font-medium text-muted-foreground mb-1">Recommendation</p>
-                                <p className="text-sm text-foreground">{leak.recommendation}</p>
-                              </div>
-
-                              {/* Expandable AI Reasoning */}
-                              {modelSource && (
-                                <CollapsibleTrigger asChild>
-                                  <Button variant="ghost" size="sm" className="mt-2 gap-1 text-muted-foreground">
-                                    <Brain className="h-3 w-3" />
-                                    AI Reasoning
-                                    {isExpanded ? (
-                                      <ChevronUp className="h-3 w-3" />
-                                    ) : (
-                                      <ChevronDown className="h-3 w-3" />
-                                    )}
-                                  </Button>
-                                </CollapsibleTrigger>
-                              )}
-                            </div>
-                            <div className="text-right shrink-0">
-                              <p className="text-lg font-bold text-destructive">
-                                {formatCurrency(leak.amount)}
-                              </p>
-                              <p className="text-xs text-muted-foreground">potential loss</p>
-                            </div>
-                          </div>
-
-                          <CollapsibleContent>
-                            <div className="mt-4 p-4 rounded-lg bg-primary/5 border border-primary/10">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Sparkles className="h-4 w-4 text-primary" />
-                                <span className="text-sm font-medium text-foreground">
-                                  Detected by: {modelSource === "both" ? "Gemini + GPT" : modelSource === "gemini" ? "Gemini" : "GPT"}
-                                </span>
-                              </div>
-                              <p className="text-sm text-muted-foreground">
-                                This finding was {isCrossValidated ? "cross-validated by multiple AI models for higher accuracy" : "identified through deep analysis"}. 
-                                The confidence score of {leakConfidence ? `${Math.round(leakConfidence * 100)}%` : "N/A"} indicates the reliability of this detection.
-                              </p>
-                            </div>
-                          </CollapsibleContent>
-                        </div>
-                      </Collapsible>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {/* Deeper Insights Section - Unlock more analysis */}
+          {/* Deeper Insights Section */}
           <DeeperInsightsSection 
             uploadedCategories={uploadedInsightCategories}
             onCategoryUploaded={handleInsightCategoryUploaded}
           />
-
         </main>
       </div>
 
-      {/* AI Chat Widget - Locked for free scans */}
+      {/* LAYER 2: Issue Detail Drawer */}
+      {selectedCategoryData && (
+        <LeakDetailDrawer
+          open={selectedCategory !== null}
+          onOpenChange={(open) => !open && setSelectedCategory(null)}
+          categoryLabel={selectedCategoryData.label}
+          leaks={selectedCategoryData.leaks.map(l => ({
+            ...l,
+            confidence: (l as any).confidence,
+            crossValidated: (l as any).crossValidated,
+            modelSource: (l as any).modelSource,
+          }))}
+          totalAmount={selectedCategoryData.totalAmount}
+        />
+      )}
+
+      {/* AI Chat Widget */}
       <AIChatWidget documentContext={chatContext} locked={true} />
     </div>
   );
