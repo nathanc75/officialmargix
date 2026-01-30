@@ -42,7 +42,7 @@ const ItemBreakdownTable = ({ isTrial = false, hasData = false, reportAnalysis }
             <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
               Once uploaded, AI will break down every transaction, flag anomalies, and surface potential issues automatically.
             </p>
-            <Link to="/uploads-pos">
+            <Link to="/dashboard">
               <Button variant="outline" className="gap-2" data-testid="button-upload-for-analysis">
                 <Upload className="h-4 w-4" />
                 Upload Documents

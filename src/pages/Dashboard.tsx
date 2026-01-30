@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, Brain, AlertTriangle, TrendingDown, CreditCard, ArrowRight, Sparkles, CheckCircle2, RefreshCw } from "lucide-react";
+import { Brain, AlertTriangle, TrendingDown, CreditCard, ArrowRight, Sparkles, CheckCircle2, RefreshCw } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 import ProfitOverview from "@/components/dashboard/ProfitOverview";
@@ -10,6 +10,7 @@ import InsightsSection from "@/components/dashboard/InsightsSection";
 import ItemBreakdownTable from "@/components/dashboard/ItemBreakdownTable";
 import InsightsAnalysisTabs from "@/components/dashboard/InsightsAnalysisTabs";
 import POSConnectSection from "@/components/dashboard/POSConnectSection";
+import DashboardUploadSection from "@/components/dashboard/DashboardUploadSection";
 import { useUser } from "@/context/UserContext";
 import { useAnalysis } from "@/context/AnalysisContext";
 import { AIChatWidget } from "@/components/AIChatWidget";
@@ -100,12 +101,10 @@ const Dashboard = () => {
                     </p>
                   </div>
                 </div>
-                <Link to="/uploads-pos">
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <RefreshCw className="w-4 h-4" />
-                    New Scan
-                  </Button>
-                </Link>
+                <Button variant="outline" size="sm" className="gap-2" onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}>
+                  <RefreshCw className="w-4 h-4" />
+                  New Scan
+                </Button>
               </div>
 
               {/* Summary Metric Cards */}
@@ -204,46 +203,11 @@ const Dashboard = () => {
             </div>
           )}
 
-          {/* AI Intelligence Preview - Premium Empty State */}
+          {/* Upload Section - Empty State */}
           {!hasData && (
             <div className="space-y-6 animate-fade-in">
-              {/* Hero Card */}
-              <Card className="relative overflow-hidden border-0 shadow-xl bg-gradient-to-br from-card via-card to-primary/5">
-                {/* Decorative gradient overlay */}
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/10 via-primary/5 to-transparent pointer-events-none" />
-                <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-gradient-to-br from-primary/20 to-purple-500/20 blur-3xl" />
-                
-                <CardContent className="relative p-6 sm:p-8">
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                    <div className="flex items-start gap-4 flex-1">
-                      <div className="w-14 h-14 rounded-2xl brand-gradient flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
-                        <Sparkles className="w-7 h-7 text-white" />
-                      </div>
-                      <div className="space-y-3">
-                        <p className="text-sm font-medium text-muted-foreground">No data yet — your AI is standing by.</p>
-                        <h2 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
-                          Your AI Financial Monitor is <span className="text-gradient">Ready</span>
-                        </h2>
-                        <p className="text-muted-foreground text-sm sm:text-base max-w-2xl leading-relaxed">
-                          Upload financial documents to activate transaction analysis and issue detection.
-                        </p>
-                        <p className="text-xs text-muted-foreground/70 flex items-center gap-1.5">
-                          <span className="w-1 h-1 rounded-full bg-emerald-500" />
-                          Your documents are encrypted and processed securely.
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <Link to="/uploads-pos" className="shrink-0">
-                      <Button size="lg" className="w-full lg:w-auto gap-2 shadow-lg shadow-primary/25 h-12 px-6">
-                        <Upload className="w-5 h-5" />
-                        Upload Documents
-                        <ArrowRight className="w-4 h-4" />
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Upload Section */}
+              <DashboardUploadSection />
 
               {/* What AI Finds Section */}
               <div>

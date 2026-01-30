@@ -124,7 +124,7 @@ const ProfitOverview = ({ isTrial = false, hasData = false, reportAnalysis }: Pr
             <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
               Upload financial documents and our AI will extract transactions, categorize spending, and detect missed revenue.
             </p>
-            <Link to="/uploads-pos">
+            <Link to="/dashboard">
               <Button className="gap-2" data-testid="button-upload-documents">
                 <Upload className="h-4 w-4" />
                 Upload Documents

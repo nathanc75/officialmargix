@@ -47,7 +47,7 @@ const InsightsAnalysisTabs = ({ isTrial = false, hasData = false, reportAnalysis
                 <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
                   We scan statements to uncover forgotten subscriptions, duplicate billing, and recurring charges you might be missing.
                 </p>
-                <Link to="/uploads-pos">
+                <Link to="/dashboard">
                   <Button variant="outline" className="gap-2" data-testid="button-upload-for-subscriptions">
                     <Upload className="h-4 w-4" />
                     Upload Documents
@@ -65,7 +65,7 @@ const InsightsAnalysisTabs = ({ isTrial = false, hasData = false, reportAnalysis
                 <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
                   Upload financial documents to get AI-powered recommendations for recovering lost revenue
                 </p>
-                <Link to="/uploads-pos">
+                <Link to="/dashboard">
                   <Button className="gap-2" data-testid="button-upload-for-ai">
                     <Upload className="h-4 w-4" />
                     Upload Documents
