@@ -253,6 +253,10 @@ export function UploadDialog({ children }: UploadDialogProps) {
     setIsAnalyzing(true);
     
     try {
+      // Start with the very first step
+      setAnalysisStep("starting");
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
       setAnalysisStep("ocr");
       const filesNeedingOCR = uploadedFiles.filter(f => f.base64Data && !f.ocrResult);
       for (const file of filesNeedingOCR) {
@@ -263,9 +267,10 @@ export function UploadDialog({ children }: UploadDialogProps) {
 
       setAnalysisStep("categorize");
       setUploadedFiles(prev => prev.map(f => ({ ...f, status: "analyzing" as const })));
+      await new Promise(resolve => setTimeout(resolve, 600));
       
       setAnalysisStep("gemini_analysis");
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 800));
 
       setAnalysisStep("gpt_analysis");
       
