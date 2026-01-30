@@ -96,6 +96,19 @@ export function UserProvider({ children }: { children: ReactNode }) {
     password: string, 
     metadata?: { full_name?: string; business_name?: string }
   ): Promise<{ error: Error | null }> => {
+    // TEMP: Mock signup for testing - bypasses Supabase
+    setUser({
+      isAuthenticated: true,
+      planTier: "free",
+      connectedPlatforms: [],
+      email,
+      userId: "mock-user-id",
+      displayName: metadata?.full_name,
+    });
+    setIsLoading(false);
+    return { error: null };
+    
+    /* REAL SUPABASE AUTH - uncomment when ready
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -105,14 +118,28 @@ export function UserProvider({ children }: { children: ReactNode }) {
       },
     });
     return { error };
+    */
   }, []);
 
   const signIn = useCallback(async (email: string, password: string): Promise<{ error: Error | null }> => {
+    // TEMP: Mock signin for testing - bypasses Supabase
+    setUser({
+      isAuthenticated: true,
+      planTier: "free",
+      connectedPlatforms: [],
+      email,
+      userId: "mock-user-id",
+    });
+    setIsLoading(false);
+    return { error: null };
+    
+    /* REAL SUPABASE AUTH - uncomment when ready
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     return { error };
+    */
   }, []);
 
   const signOut = useCallback(async () => {
