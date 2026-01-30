@@ -76,26 +76,52 @@ const LeakResults = () => {
     navigate("/dashboard");
   };
 
-  const handleExport = () => {
+  const handleExport = async () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const margin = 20;
     const contentWidth = pageWidth - margin * 2;
     let yPos = 20;
 
-    // Header
+    // Load and add logo
+    try {
+      const logoImg = new Image();
+      logoImg.crossOrigin = "anonymous";
+      
+      await new Promise<void>((resolve, reject) => {
+        logoImg.onload = () => {
+          // Add logo to PDF (30x30 pixels)
+          const canvas = document.createElement('canvas');
+          canvas.width = logoImg.width;
+          canvas.height = logoImg.height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(logoImg, 0, 0);
+            const logoData = canvas.toDataURL('image/png');
+            doc.addImage(logoData, 'PNG', margin, yPos - 5, 20, 20);
+          }
+          resolve();
+        };
+        logoImg.onerror = () => resolve(); // Continue without logo if it fails
+        logoImg.src = '/margix-logo-download.png';
+      });
+    } catch (e) {
+      // Continue without logo if loading fails
+    }
+
+    // Header text (offset for logo)
     doc.setFontSize(24);
     doc.setFont("helvetica", "bold");
     doc.setTextColor(0, 0, 0);
-    doc.text("MARGIX", margin, yPos);
+    doc.text("MARGIX", margin + 25, yPos + 5);
     
-    yPos += 8;
+    yPos += 12;
     doc.setFontSize(12);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100, 100, 100);
-    doc.text("Leak Scan Report", margin, yPos);
+    doc.text("Leak Scan Report", margin + 25, yPos);
     
-    yPos += 6;
+    yPos += 10;
     doc.setFontSize(10);
     doc.text(`Generated: ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`, margin, yPos);
 
