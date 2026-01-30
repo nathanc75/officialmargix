@@ -59,10 +59,9 @@ Guidelines:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-5-mini",
+        model: "google/gemini-3-flash-preview",
         messages,
         stream: true,
-        temperature: 0.7,
       }),
     });
 
