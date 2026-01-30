@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Upload, CheckCircle2, Plus, Loader2, Search, Sparkles, AlertCircle, File, Trash2, CreditCard, ListOrdered, Lock, Building2, Receipt, ReceiptText, ArrowRight, Wand2, Brain } from "lucide-react";
+import { ArrowLeft, Upload, CheckCircle2, Plus, Loader2, Search, Sparkles, AlertCircle, File, Trash2, CreditCard, ListOrdered, Lock, Building2, Receipt, ReceiptText, ArrowRight, Wand2, Brain, Database } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import { useAnalysis, LeakAnalysis } from "@/context/AnalysisContext";
@@ -11,6 +11,8 @@ import { AIChatWidget } from "@/components/AIChatWidget";
 import { DocumentPreview, OCRResult } from "@/components/DocumentPreview";
 import { AnalysisProgress, AnalysisStep } from "@/components/AnalysisProgress";
 import { supabase } from "@/integrations/supabase/client";
+import type { UniversalExtraction } from "@/types/extraction";
+import { getFileKindLabel } from "@/types/extraction";
 
 type DocumentCategory = "payments" | "pricing" | "bank" | "invoices" | "refunds" | "promos";
 
@@ -26,6 +28,7 @@ interface UploadedFile {
   detectedCategory?: string;
   categoryConfidence?: number;
   base64Data?: string;
+  extraction?: UniversalExtraction;
 }
 
 interface UploadSectionConfig {
@@ -77,7 +80,7 @@ const Uploads = () => {
   const paymentsInputRef = useRef<HTMLInputElement>(null);
   const pricingInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const { setLeakAnalysis, leakAnalysis } = useAnalysis();
+  const { setLeakAnalysis, setExtractions, leakAnalysis } = useAnalysis();
   const { toast } = useToast();
 
   // Free scan sections - payment reports + optional pricing
@@ -202,31 +205,34 @@ const Uploads = () => {
     }
   }, []);
 
-  // Smart categorization
-  const categorizeDocument = useCallback(async (fileId: string, content: string, fileName: string) => {
+  // Universal extraction - replaces old categorization
+  const performExtraction = useCallback(async (fileId: string, content: string, fileName: string, fileType?: string) => {
     setUploadedFiles(prev => prev.map(f => 
       f.id === fileId ? { ...f, status: "categorizing" as const } : f
     ));
 
     try {
-      const { data, error } = await supabase.functions.invoke("analyze-categorize", {
-        body: { textContent: content, fileName },
+      const { data, error } = await supabase.functions.invoke("analyze-extract", {
+        body: { textContent: content, fileName, fileType },
       });
 
-      if (error) throw new Error(error.message || "Categorization failed");
+      if (error) throw new Error(error.message || "Extraction failed");
+      
+      const extraction = data.extraction as UniversalExtraction;
       
       setUploadedFiles(prev => prev.map(f => 
         f.id === fileId ? { 
           ...f, 
-          detectedCategory: data.classification.category,
-          categoryConfidence: data.classification.confidence,
+          extraction,
+          detectedCategory: extraction.file_kind,
+          categoryConfidence: extraction.classification_confidence,
           status: "uploaded" as const 
         } : f
       ));
 
-      return data.classification;
+      return extraction;
     } catch (error) {
-      console.error("Categorization error:", error);
+      console.error("Extraction error:", error);
       setUploadedFiles(prev => prev.map(f => 
         f.id === fileId ? { ...f, status: "uploaded" as const } : f
       ));
@@ -305,16 +311,16 @@ const Uploads = () => {
     if (!file || !file.content) return;
 
     toast({
-      title: "Detecting Document Type",
+      title: "Extracting & Classifying",
       description: "AI is analyzing your document...",
     });
 
-    const result = await categorizeDocument(fileId, file.content, file.name);
+    const result = await performExtraction(fileId, file.content, file.name, file.type);
     
     if (result) {
       toast({
-        title: "Document Classified",
-        description: `Detected as ${result.category.replace("_", " ")} (${Math.round(result.confidence * 100)}% confidence)`,
+        title: "Extraction Complete",
+        description: `Detected as ${getFileKindLabel(result.file_kind)} (${Math.round(result.classification_confidence * 100)}% confidence)`,
       });
     }
   };
@@ -342,14 +348,20 @@ const Uploads = () => {
         }
       }
 
-      // Step 2: Auto-categorize uncategorized files
+      // Step 2: Universal extraction for files without extraction
       setAnalysisStep("categorize");
-      const filesNeedingCategory = uploadedFiles.filter(f => f.content && !f.detectedCategory);
-      for (const file of filesNeedingCategory) {
+      const filesNeedingExtraction = uploadedFiles.filter(f => f.content && !f.extraction);
+      for (const file of filesNeedingExtraction) {
         if (file.content) {
-          await categorizeDocument(file.id, file.content, file.name);
+          await performExtraction(file.id, file.content, file.name, file.type);
         }
       }
+      
+      // Store all extractions in context
+      const allExtractions = uploadedFiles
+        .map(f => f.extraction)
+        .filter((e): e is UniversalExtraction => !!e);
+      setExtractions(allExtractions);
       
       // Update all files to analyzing status
       setUploadedFiles(prev => prev.map(f => ({ ...f, status: "analyzing" as const })));
@@ -634,15 +646,21 @@ const Uploads = () => {
                                     )}
                                   </div>
                                   <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-2">
+                                    <div className="flex items-center gap-2 flex-wrap">
                                       <p className="text-sm font-medium text-foreground truncate">{file.name}</p>
-                                      {file.detectedCategory && (
-                                        <Badge variant="outline" className="text-xs capitalize">
-                                          {file.detectedCategory.replace("_", " ")}
-                                          {file.categoryConfidence && ` ${Math.round(file.categoryConfidence * 100)}%`}
+                                      {file.extraction && (
+                                        <Badge variant="outline" className="text-xs">
+                                          {getFileKindLabel(file.extraction.file_kind)}
+                                          {` ${Math.round(file.extraction.classification_confidence * 100)}%`}
                                         </Badge>
                                       )}
-                                      {file.ocrResult && (
+                                      {file.extraction && (
+                                        <Badge variant="secondary" className="text-xs gap-1">
+                                          <Database className="h-3 w-3" />
+                                          Extracted
+                                        </Badge>
+                                      )}
+                                      {file.ocrResult && !file.extraction && (
                                         <Badge variant="secondary" className="text-xs gap-1">
                                           <Wand2 className="h-3 w-3" />
                                           OCR
@@ -653,15 +671,50 @@ const Uploads = () => {
                                       {formatFileSize(file.size)} - {
                                         file.status === "uploading" ? "Uploading..." :
                                         file.status === "extracting" ? "Extracting text..." :
-                                        file.status === "categorizing" ? "Categorizing..." :
+                                        file.status === "categorizing" ? "Extracting data..." :
                                         file.status === "analyzing" ? "Analyzing..." :
                                         file.status === "analyzed" ? "Analyzed" :
                                         file.status === "error" ? "Error" : "Ready"
                                       }
                                     </p>
+                                    {/* Show extraction summary */}
+                                    {file.extraction && file.extraction.sales_summary.gross_sales !== null && (
+                                      <div className="mt-1 flex flex-wrap gap-2 text-[11px]">
+                                        {file.extraction.sales_summary.gross_sales !== null && (
+                                          <span className="text-muted-foreground">
+                                            Sales: <span className="text-foreground font-medium">${file.extraction.sales_summary.gross_sales.toLocaleString()}</span>
+                                          </span>
+                                        )}
+                                        {file.extraction.sales_summary.fees_total !== null && file.extraction.sales_summary.fees_total > 0 && (
+                                          <span className="text-muted-foreground">
+                                            Fees: <span className="text-amber-600 font-medium">${file.extraction.sales_summary.fees_total.toLocaleString()}</span>
+                                          </span>
+                                        )}
+                                        {file.extraction.sales_summary.net_payout !== null && (
+                                          <span className="text-muted-foreground">
+                                            Net: <span className="text-green-600 font-medium">${file.extraction.sales_summary.net_payout.toLocaleString()}</span>
+                                          </span>
+                                        )}
+                                        {file.extraction.items.length > 0 && (
+                                          <span className="text-muted-foreground">
+                                            Items: <span className="text-foreground font-medium">{file.extraction.items.length}</span>
+                                          </span>
+                                        )}
+                                        {file.extraction.expenses.length > 0 && (
+                                          <span className="text-muted-foreground">
+                                            Expenses: <span className="text-foreground font-medium">{file.extraction.expenses.length}</span>
+                                          </span>
+                                        )}
+                                      </div>
+                                    )}
+                                    {file.extraction?.needs_user_mapping && (
+                                      <p className="mt-1 text-[11px] text-amber-600">
+                                        ⚠ Some fields may need verification
+                                      </p>
+                                    )}
                                   </div>
                                   <div className="flex items-center gap-2">
-                                    {file.status === "uploaded" && file.content && !file.detectedCategory && (
+                                    {file.status === "uploaded" && file.content && !file.extraction && (
                                       <Button
                                         variant="ghost"
                                         size="sm"
@@ -669,7 +722,7 @@ const Uploads = () => {
                                         onClick={() => handleAutoDetect(file.id)}
                                       >
                                         <Wand2 className="h-3 w-3" />
-                                        Auto-Detect
+                                        Extract
                                       </Button>
                                     )}
                                     {!["analyzing", "extracting", "categorizing"].includes(file.status) && (
@@ -692,7 +745,7 @@ const Uploads = () => {
                                     <DocumentPreview 
                                       fileName={file.name}
                                       ocrResult={file.ocrResult}
-                                      category={file.detectedCategory}
+                                      category={file.extraction?.file_kind || file.detectedCategory}
                                     />
                                   </div>
                                 )}
