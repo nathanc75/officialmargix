@@ -7,6 +7,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUser } from "@/context/UserContext";
 import { useToast } from "@/hooks/use-toast";
+import { useGoBack } from "@/hooks/useGoBack";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,7 @@ const Signup = () => {
   const [restaurantName, setRestaurantName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const goBack = useGoBack();
   const [searchParams] = useSearchParams();
   const { signUp } = useUser();
   const { toast } = useToast();
@@ -259,7 +261,7 @@ const Signup = () => {
               variant="ghost" 
               size="sm" 
               className="gap-2 text-muted-foreground"
-              onClick={() => navigate(-1)}
+              onClick={goBack}
             >
               <ArrowLeft className="w-4 h-4" />
               Back

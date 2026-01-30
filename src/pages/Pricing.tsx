@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Check, ArrowLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { useGoBack } from "@/hooks/useGoBack";
 import margixLogo from "@/assets/margix-logo.png";
 
 const plans = [
@@ -63,7 +64,7 @@ const plans = [
 
 const Pricing = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const goBack = useGoBack();
 
   const handleSelectPlan = (planName: string) => {
     if (planName === "Free Scan") {
@@ -94,7 +95,7 @@ const Pricing = () => {
             size="sm" 
             className="gap-2 text-muted-foreground" 
             data-testid="button-back-home"
-            onClick={() => navigate(-1)}
+            onClick={goBack}
           >
             <ArrowLeft className="w-4 h-4" />
             Back
