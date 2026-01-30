@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AnalysisProgress, AnalysisStep } from "@/components/AnalysisProgress";
 import { supabase } from "@/integrations/supabase/client";
 import { useSubscription } from "@/contexts/SubscriptionContext";
+import * as XLSX from "xlsx";
 
 type DocumentCategory = "payments" | "pricing" | "orders" | "costs";
 
@@ -68,19 +69,29 @@ const isImageOrPdf = (file: File): boolean => {
   return file.type.startsWith("image/") || file.type === "application/pdf";
 };
 
-const isOfficeDocument = (file: File): boolean => {
-  const officeTypes = [
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
-    "application/msword", // .doc
+const isSpreadsheet = (file: File): boolean => {
+  const spreadsheetTypes = [
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
     "application/vnd.ms-excel", // .xls
+    "text/csv",
+    "application/csv",
   ];
   const extension = file.name.toLowerCase().split(".").pop();
-  return officeTypes.includes(file.type) || ["doc", "docx", "xls", "xlsx"].includes(extension || "");
+  return spreadsheetTypes.includes(file.type) || ["xls", "xlsx", "csv"].includes(extension || "");
 };
 
+const isWordDocument = (file: File): boolean => {
+  const wordTypes = [
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    "application/msword", // .doc
+  ];
+  const extension = file.name.toLowerCase().split(".").pop();
+  return wordTypes.includes(file.type) || ["doc", "docx"].includes(extension || "");
+};
+
+// Only images and PDFs need OCR processing - spreadsheets are handled on frontend
 const needsOCRProcessing = (file: File): boolean => {
-  return isImageOrPdf(file) || isOfficeDocument(file);
+  return isImageOrPdf(file);
 };
 
 interface UploadDialogProps {
@@ -130,6 +141,33 @@ export function UploadDialog({ children }: UploadDialogProps) {
       reader.onload = (e) => resolve(e.target?.result as string);
       reader.onerror = reject;
       reader.readAsText(file);
+    });
+  };
+
+  // Read Excel files and convert to text using xlsx library
+  const readSpreadsheetAsText = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          
+          // Convert all sheets to CSV text
+          const allSheetsText: string[] = [];
+          workbook.SheetNames.forEach((sheetName) => {
+            const worksheet = workbook.Sheets[sheetName];
+            const csv = XLSX.utils.sheet_to_csv(worksheet);
+            allSheetsText.push(`=== Sheet: ${sheetName} ===\n${csv}`);
+          });
+          
+          resolve(allSheetsText.join("\n\n"));
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
     });
   };
 
@@ -210,19 +248,58 @@ export function UploadDialog({ children }: UploadDialogProps) {
       const fileId = newFiles[i].id;
       
       try {
-        if (needsOCRProcessing(file)) {
+        const fileName = file.name.toLowerCase();
+        const isExcel = fileName.endsWith(".xlsx") || fileName.endsWith(".xls");
+        const isCsv = fileName.endsWith(".csv") || file.type === "text/csv" || file.type === "application/csv";
+        
+        if (isExcel) {
+          // For Excel files, extract text content on frontend using xlsx library
+          const textContent = await readSpreadsheetAsText(file);
+          setUploadedFiles(prev => prev.map(f => 
+            f.id === fileId ? { 
+              ...f, 
+              content: textContent, 
+              status: "uploaded" as const,
+              ocrResult: {
+                rawText: textContent,
+                confidence: 1.0,
+                documentType: "spreadsheet",
+                structuredData: { source: "direct_extraction" }
+              }
+            } : f
+          ));
+        } else if (isCsv) {
+          // For CSV files, read as text directly
+          const textContent = await readFileContent(file);
+          setUploadedFiles(prev => prev.map(f => 
+            f.id === fileId ? { 
+              ...f, 
+              content: textContent, 
+              status: "uploaded" as const,
+              ocrResult: {
+                rawText: textContent,
+                confidence: 1.0,
+                documentType: "csv",
+                structuredData: { source: "direct_extraction" }
+              }
+            } : f
+          ));
+        } else if (needsOCRProcessing(file)) {
+          // For images and PDFs, use OCR with vision
           const base64Data = await readFileAsBase64(file);
           setUploadedFiles(prev => prev.map(f => 
             f.id === fileId ? { ...f, base64Data } : f
           ));
           await performOCR(fileId, base64Data, file.type || getMimeType(file.name), file.name);
         } else {
+          // For plain text files (.txt, .tsv, .doc, .docx), read directly
           const content = await readFileContent(file);
           setUploadedFiles(prev => prev.map(f => 
             f.id === fileId ? { ...f, status: "uploaded" as const, content } : f
           ));
         }
-      } catch {
+      } catch (err) {
+        console.error("File processing error:", err);
         setUploadedFiles(prev => prev.map(f => 
           f.id === fileId ? { ...f, status: "error" as const } : f
         ));
