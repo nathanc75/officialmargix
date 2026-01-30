@@ -3,14 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, CheckCircle2, Loader2, File, Trash2, CreditCard, ListOrdered, ArrowRight, Sparkles } from "lucide-react";
+import { Upload, CheckCircle2, Loader2, File, Trash2, CreditCard, ListOrdered, ArrowRight, Sparkles, Building2, Receipt, RotateCcw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useAnalysis, LeakAnalysis } from "@/context/AnalysisContext";
 import { useToast } from "@/hooks/use-toast";
 import { AnalysisProgress, AnalysisStep } from "@/components/AnalysisProgress";
 import { supabase } from "@/integrations/supabase/client";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
-type DocumentCategory = "payments" | "pricing";
+type DocumentCategory = "payments" | "pricing" | "bank_statements" | "invoices" | "refunds";
 
 interface UploadedFile {
   id: string;
@@ -55,11 +56,15 @@ export function UploadDialog({ children }: UploadDialogProps) {
   const [analysisStep, setAnalysisStep] = useState<AnalysisStep | null>(null);
   const paymentsInputRef = useRef<HTMLInputElement>(null);
   const pricingInputRef = useRef<HTMLInputElement>(null);
+  const bankStatementsInputRef = useRef<HTMLInputElement>(null);
+  const invoicesInputRef = useRef<HTMLInputElement>(null);
+  const refundsInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { setLeakAnalysis } = useAnalysis();
   const { toast } = useToast();
+  const { isPaid } = useSubscription();
 
-  const sections: UploadSectionConfig[] = [
+  const baseSections: UploadSectionConfig[] = [
     {
       id: "payments",
       title: "Payment or Payout Report",
@@ -79,10 +84,45 @@ export function UploadDialog({ children }: UploadDialogProps) {
     },
   ];
 
+  const premiumSections: UploadSectionConfig[] = [
+    {
+      id: "bank_statements",
+      title: "Bank Statements",
+      description: "Upload bank statements for deeper reconciliation",
+      icon: <Building2 className="h-5 w-5 text-blue-500" />,
+      accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
+      placeholder: "Monthly or quarterly bank statements",
+      optional: true,
+    },
+    {
+      id: "invoices",
+      title: "Invoices & Receipts",
+      description: "Track vendor payments and expense discrepancies",
+      icon: <Receipt className="h-5 w-5 text-purple-500" />,
+      accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
+      placeholder: "Vendor invoices, supplier receipts",
+      optional: true,
+    },
+    {
+      id: "refunds",
+      title: "Refund Records",
+      description: "Identify refund patterns and anomalies",
+      icon: <RotateCcw className="h-5 w-5 text-orange-500" />,
+      accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
+      placeholder: "Customer refunds, chargebacks",
+      optional: true,
+    },
+  ];
+
+  const sections = isPaid ? [...baseSections, ...premiumSections] : baseSections;
+
   const getInputRef = (category: DocumentCategory) => {
     switch (category) {
       case "payments": return paymentsInputRef;
       case "pricing": return pricingInputRef;
+      case "bank_statements": return bankStatementsInputRef;
+      case "invoices": return invoicesInputRef;
+      case "refunds": return refundsInputRef;
       default: return null;
     }
   };
