@@ -13,6 +13,7 @@ import { AnalysisProgress, AnalysisStep } from "@/components/AnalysisProgress";
 import { supabase } from "@/integrations/supabase/client";
 import type { UniversalExtraction } from "@/types/extraction";
 import { getFileKindLabel } from "@/types/extraction";
+import * as XLSX from "xlsx";
 
 type DocumentCategory = "payments" | "pricing" | "bank" | "invoices" | "refunds" | "promos";
 
@@ -154,6 +155,34 @@ const Uploads = () => {
     });
   };
 
+  // Read Excel/CSV files and convert to text using xlsx library
+  const readSpreadsheetAsText = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = new Uint8Array(e.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: "array" });
+          
+          // Convert all sheets to text
+          const allSheetsText: string[] = [];
+          workbook.SheetNames.forEach((sheetName) => {
+            const worksheet = workbook.Sheets[sheetName];
+            // Convert to CSV format for easy AI processing
+            const csv = XLSX.utils.sheet_to_csv(worksheet);
+            allSheetsText.push(`=== Sheet: ${sheetName} ===\n${csv}`);
+          });
+          
+          resolve(allSheetsText.join("\n\n"));
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsArrayBuffer(file);
+    });
+  };
+
   const readFileAsBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -270,14 +299,37 @@ const Uploads = () => {
       const fileId = newFiles[i].id;
       
       try {
-        if (isSpreadsheetOrDoc(file)) {
-          // For Excel/Word files, read as text and use AI extraction
+        const fileName = file.name.toLowerCase();
+        const isExcel = fileName.endsWith(".xlsx") || fileName.endsWith(".xls") || 
+                        file.type === "application/vnd.ms-excel" ||
+                        file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        const isCsv = fileName.endsWith(".csv") || file.type === "text/csv" || file.type === "application/csv";
+        
+        if (isExcel || isCsv) {
+          // For Excel/CSV files, extract text content directly on frontend
+          const textContent = isExcel 
+            ? await readSpreadsheetAsText(file)
+            : await readFileContent(file);
+          
+          setUploadedFiles(prev => prev.map(f => 
+            f.id === fileId ? { 
+              ...f, 
+              content: textContent, 
+              status: "uploaded" as const,
+              ocrResult: {
+                rawText: textContent,
+                confidence: 1.0,
+                documentType: isExcel ? "spreadsheet" : "csv",
+                structuredData: { source: "direct_extraction" }
+              }
+            } : f
+          ));
+        } else if (isSpreadsheetOrDoc(file)) {
+          // For Word docs, read as text
           const textContent = await readFileContent(file);
           setUploadedFiles(prev => prev.map(f => 
-            f.id === fileId ? { ...f, content: textContent } : f
+            f.id === fileId ? { ...f, content: textContent, status: "uploaded" as const } : f
           ));
-          // Send text content to the OCR function for AI processing
-          await performOCR(fileId, null, file.type, file.name, textContent);
         } else if (isImageOrPdf(file)) {
           // For images and PDFs, use OCR with vision
           const base64Data = await readFileAsBase64(file);
