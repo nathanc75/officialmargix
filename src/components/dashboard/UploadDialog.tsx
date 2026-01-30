@@ -33,6 +33,7 @@ interface UploadSectionConfig {
   accept: string;
   placeholder: string;
   optional?: boolean;
+  hint?: string;
 }
 
 const formatFileSize = (bytes: number): string => {
@@ -104,11 +105,12 @@ export function UploadDialog({ children }: UploadDialogProps) {
   const sections: UploadSectionConfig[] = [
     {
       id: "payments",
-      title: "Money In & Payouts",
-      description: "Shows how much money you received and what fees were taken. This helps us understand your revenue, refunds, and payout trends.",
+      title: "💰 Money In & Payouts",
+      description: "Upload one report from where you get paid. This helps us understand your revenue, fees, refunds, and payout trends.",
       icon: <CreditCard className="h-5 w-5 text-primary" />,
       accept: ".csv,.pdf,.txt,.tsv,.xlsx,.xls,.doc,.docx,.jpg,.jpeg,.png,.webp,.gif,.heic",
-      placeholder: "Stripe payout export, PayPal activity, Square payments, Uber Eats/DoorDash earnings, bank statements, invoices",
+      placeholder: "Stripe export, PayPal activity report, Square payments report, Uber Eats/DoorDash earnings",
+      hint: "One file is enough to begin.",
     },
   ];
 
@@ -440,6 +442,11 @@ export function UploadDialog({ children }: UploadDialogProps) {
                             <p className="text-[10px] text-muted-foreground/70">
                               {section.placeholder}
                             </p>
+                            {section.hint && (
+                              <p className="text-[10px] text-primary/80 font-medium mt-1">
+                                {section.hint}
+                              </p>
+                            )}
                           </div>
                           <input
                             ref={inputRef}
