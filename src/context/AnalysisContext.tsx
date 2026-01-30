@@ -1,5 +1,9 @@
 import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { UniversalExtraction } from "@/types/extraction";
+
+// Re-export extraction types for convenience
+export type { UniversalExtraction } from "@/types/extraction";
 
 export interface AnalysisSummary {
   totalRevenue: { value: number; isEstimate: boolean };
@@ -92,6 +96,7 @@ interface AnalysisState {
   menuAnalysis: MenuAnalysis | null;
   comparison: ComparisonResult | null;
   leakAnalysis: LeakAnalysis | null;
+  extractions: UniversalExtraction[];
   isAnalyzing: boolean;
   analysisStep: string;
   error: string | null;
@@ -102,6 +107,8 @@ interface AnalysisContextType extends AnalysisState {
   analyzeMenu: (imageBase64: string, imageMimeType: string) => Promise<MenuAnalysis | null>;
   compareData: () => Promise<ComparisonResult | null>;
   setLeakAnalysis: (analysis: LeakAnalysis) => void;
+  setExtractions: (extractions: UniversalExtraction[]) => void;
+  addExtraction: (extraction: UniversalExtraction) => void;
   clearAnalysis: () => void;
   hasData: boolean;
 }
@@ -114,6 +121,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     menuAnalysis: null,
     comparison: null,
     leakAnalysis: null,
+    extractions: [],
     isAnalyzing: false,
     analysisStep: "",
     error: null,
@@ -217,19 +225,28 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, leakAnalysis: analysis }));
   }, []);
 
+  const setExtractions = useCallback((extractions: UniversalExtraction[]) => {
+    setState(prev => ({ ...prev, extractions }));
+  }, []);
+
+  const addExtraction = useCallback((extraction: UniversalExtraction) => {
+    setState(prev => ({ ...prev, extractions: [...prev.extractions, extraction] }));
+  }, []);
+
   const clearAnalysis = useCallback(() => {
     setState({
       reportAnalysis: null,
       menuAnalysis: null,
       comparison: null,
       leakAnalysis: null,
+      extractions: [],
       isAnalyzing: false,
       analysisStep: "",
       error: null,
     });
   }, []);
 
-  const hasData = !!(state.reportAnalysis || state.menuAnalysis || state.leakAnalysis);
+  const hasData = !!(state.reportAnalysis || state.menuAnalysis || state.leakAnalysis || state.extractions.length > 0);
 
   return (
     <AnalysisContext.Provider
@@ -239,6 +256,8 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         analyzeMenu,
         compareData,
         setLeakAnalysis,
+        setExtractions,
+        addExtraction,
         clearAnalysis,
         hasData,
       }}
