@@ -108,7 +108,6 @@ export function UploadDialog({ children }: UploadDialogProps) {
       icon: <DollarSign className="h-5 w-5 text-orange-500" />,
       accept: ".csv,.pdf,.xlsx,.jpg,.jpeg,.png,.webp,.heic",
       placeholder: "Ingredient costs, product costs, contractor payments, software expenses",
-      optional: true,
     },
   ];
 
