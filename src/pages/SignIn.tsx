@@ -1,23 +1,42 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUser } from "@/context/UserContext";
+import { useToast } from "@/hooks/use-toast";
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { login } = useUser();
+  const { signIn } = useUser();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Sign in goes to paid (Pro) experience with full POS access
-    login(email, "pro");
+    setIsSubmitting(true);
+
+    const { error } = await signIn(email, password);
+
+    if (error) {
+      toast({
+        title: "Sign in failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    toast({
+      title: "Welcome back!",
+      description: "You've signed in successfully.",
+    });
     navigate("/dashboard");
   };
 
@@ -102,6 +121,7 @@ const SignIn = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -123,6 +143,7 @@ const SignIn = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-12 pr-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                     required
+                    disabled={isSubmitting}
                   />
                   <button
                     type="button"
@@ -138,8 +159,20 @@ const SignIn = () => {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white" data-testid="button-signin">
-                Sign in
+              <Button 
+                type="submit" 
+                className="w-full h-12 text-base brand-gradient border-0 text-white" 
+                data-testid="button-signin"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
               </Button>
             </form>
 

@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, Sparkles } from "lucide-react";
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, User, Building2, Sparkles, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import margixLogo from "@/assets/margix-logo.png";
 import { useUser } from "@/context/UserContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,16 +14,37 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [restaurantName, setRestaurantName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { login } = useUser();
+  const { signUp } = useUser();
+  const { toast } = useToast();
   
   const redirectTo = searchParams.get("redirect") || "/uploads-pos";
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Create account goes to Free Trial (demo mode with locked POS)
-    login(email, "free");
+    setIsSubmitting(true);
+
+    const { error } = await signUp(email, password, {
+      full_name: fullName,
+      business_name: restaurantName,
+    });
+
+    if (error) {
+      toast({
+        title: "Sign up failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    toast({
+      title: "Account created!",
+      description: "Welcome to MARGIX. Let's find your hidden leaks.",
+    });
     navigate(redirectTo);
   };
 
@@ -128,6 +150,7 @@ const Signup = () => {
                       onChange={(e) => setFullName(e.target.value)}
                       className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -142,6 +165,7 @@ const Signup = () => {
                       onChange={(e) => setRestaurantName(e.target.value)}
                       className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
@@ -159,6 +183,7 @@ const Signup = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     className="pl-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -175,6 +200,8 @@ const Signup = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     className="pl-12 pr-12 h-12 text-base bg-background/50 border-border focus:border-primary"
                     required
+                    disabled={isSubmitting}
+                    minLength={6}
                   />
                   <button
                     type="button"
@@ -189,13 +216,22 @@ const Signup = () => {
                   </button>
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-1 px-1">
-                  Must be at least 8 characters with a number and symbol.
+                  Must be at least 6 characters.
                 </p>
               </div>
 
-              <Button type="submit" className="w-full h-12 text-base brand-gradient border-0 text-white mt-2" data-testid="button-run-analysis">
-                <Sparkles className="w-4 h-4 mr-2" />
-                Start Free Scan
+              <Button 
+                type="submit" 
+                className="w-full h-12 text-base brand-gradient border-0 text-white mt-2" 
+                data-testid="button-run-analysis"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <Sparkles className="w-4 h-4 mr-2" />
+                )}
+                {isSubmitting ? "Creating account..." : "Start Free Scan"}
               </Button>
             </form>
 
