@@ -25,7 +25,42 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    const prompt = `You are a document OCR and data extraction specialist. Analyze this document image and extract all text and structured data.
+    const isOfficeDoc = imageMimeType?.includes("word") || 
+                        imageMimeType?.includes("excel") || 
+                        imageMimeType?.includes("spreadsheet") ||
+                        fileName?.toLowerCase().endsWith(".doc") ||
+                        fileName?.toLowerCase().endsWith(".docx") ||
+                        fileName?.toLowerCase().endsWith(".xls") ||
+                        fileName?.toLowerCase().endsWith(".xlsx");
+
+    const prompt = isOfficeDoc 
+      ? `You are a document OCR and data extraction specialist. This is a Microsoft Office document (Word or Excel). Extract all text and structured data.
+
+Extract the following:
+1. All text content, preserving formatting and structure
+2. Any tables present (as structured data with headers and rows)
+3. Key financial figures: amounts, totals, dates, account numbers, transaction IDs
+4. Document metadata: type, date, any visible headers/footers
+
+Respond in JSON format:
+{
+  "rawText": "full extracted text content",
+  "tables": [
+    {
+      "headers": ["Column1", "Column2"],
+      "rows": [["val1", "val2"], ["val3", "val4"]]
+    }
+  ],
+  "extractedData": {
+    "amounts": [{ "value": 123.45, "description": "Total amount" }],
+    "dates": ["2024-01-15", "2024-01-20"],
+    "accountNumbers": ["****1234"],
+    "transactionIds": ["TXN-12345"]
+  },
+  "documentType": "spreadsheet | document | invoice | receipt | pricing_list | financial_report | other",
+  "confidence": 0.95
+}`
+      : `You are a document OCR and data extraction specialist. Analyze this document image and extract all text and structured data.
 
 Extract the following:
 1. All raw text content, preserving formatting where possible

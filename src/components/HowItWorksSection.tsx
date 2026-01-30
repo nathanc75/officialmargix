@@ -10,7 +10,7 @@ const steps = [
     title: "Upload Files",
     number: "01",
     heading: "Upload your financial documents",
-    description: "Upload bank statements, invoices, payment processor exports, or any financial reports you have. We accept PDF and CSV files — no account connections needed.",
+    description: "Upload bank statements, invoices, payment processor exports, or any financial reports you have. We accept PDF, CSV, Excel, Word, and image files — no account connections needed.",
     features: ["Bank statements", "Payment processor exports", "Invoices & receipts"],
   },
   {
