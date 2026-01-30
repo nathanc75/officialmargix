@@ -248,12 +248,11 @@ const Dashboard = () => {
                 </div>
                 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <Card className="group relative overflow-hidden border border-red-500/20 bg-gradient-to-br from-card via-card to-red-500/5 hover:shadow-xl hover:shadow-red-500/10 hover:border-red-500/40 transition-all duration-300">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-red-500/10 to-transparent rounded-bl-full" />
+                  <Card className="group relative overflow-hidden border border-border/60 bg-card hover:shadow-lg hover:border-border transition-all duration-300">
                     <CardContent className="relative p-5">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/10 border border-red-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-red-500/10">
-                          <TrendingDown className="w-6 h-6 text-red-500" />
+                        <div className="w-12 h-12 rounded-xl bg-muted/50 border border-border flex items-center justify-center shrink-0 group-hover:bg-muted transition-colors duration-300">
+                          <TrendingDown className="w-6 h-6 text-muted-foreground" />
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1.5">Missed Payments</p>
@@ -263,12 +262,11 @@ const Dashboard = () => {
                     </CardContent>
                   </Card>
                   
-                  <Card className="group relative overflow-hidden border border-amber-500/20 bg-gradient-to-br from-card via-card to-amber-500/5 hover:shadow-xl hover:shadow-amber-500/10 hover:border-amber-500/40 transition-all duration-300">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-amber-500/10 to-transparent rounded-bl-full" />
+                  <Card className="group relative overflow-hidden border border-border/60 bg-card hover:shadow-lg hover:border-border transition-all duration-300">
                     <CardContent className="relative p-5">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-amber-600/10 border border-amber-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-amber-500/10">
-                          <CreditCard className="w-6 h-6 text-amber-500" />
+                        <div className="w-12 h-12 rounded-xl bg-muted/50 border border-border flex items-center justify-center shrink-0 group-hover:bg-muted transition-colors duration-300">
+                          <CreditCard className="w-6 h-6 text-muted-foreground" />
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1.5">Duplicate Charges</p>
@@ -278,12 +276,11 @@ const Dashboard = () => {
                     </CardContent>
                   </Card>
                   
-                  <Card className="group relative overflow-hidden border border-orange-500/20 bg-gradient-to-br from-card via-card to-orange-500/5 hover:shadow-xl hover:shadow-orange-500/10 hover:border-orange-500/40 transition-all duration-300">
-                    <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-orange-500/10 to-transparent rounded-bl-full" />
+                  <Card className="group relative overflow-hidden border border-border/60 bg-card hover:shadow-lg hover:border-border transition-all duration-300">
                     <CardContent className="relative p-5">
                       <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-600/10 border border-orange-500/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-orange-500/10">
-                          <AlertTriangle className="w-6 h-6 text-orange-500" />
+                        <div className="w-12 h-12 rounded-xl bg-muted/50 border border-border flex items-center justify-center shrink-0 group-hover:bg-muted transition-colors duration-300">
+                          <AlertTriangle className="w-6 h-6 text-muted-foreground" />
                         </div>
                         <div>
                           <p className="font-semibold text-foreground mb-1.5">Forgotten Subscriptions</p>

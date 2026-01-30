@@ -8,30 +8,15 @@ const POSConnectSection = () => {
   const platforms = [
     { 
       name: "Square POS", 
-      icon: <SiSquare className="h-5 w-5 text-white" />, 
-      color: "bg-gradient-to-br from-[#006AFF] to-[#0052CC]",
-      shadowColor: "shadow-[#006AFF]/20",
-      borderColor: "border-blue-500/30",
-      hoverBorder: "hover:border-blue-500/50",
-      bgGradient: "from-blue-500/5 to-transparent"
+      icon: <SiSquare className="h-5 w-5 text-muted-foreground" />, 
     },
     { 
       name: "Toast", 
-      icon: <div className="font-bold text-white text-sm">T</div>, 
-      color: "bg-gradient-to-br from-[#FF6600] to-[#E55A00]",
-      shadowColor: "shadow-orange-500/20",
-      borderColor: "border-orange-500/30",
-      hoverBorder: "hover:border-orange-500/50",
-      bgGradient: "from-orange-500/5 to-transparent"
+      icon: <div className="font-bold text-muted-foreground text-sm">T</div>, 
     },
     { 
       name: "Clover", 
-      icon: <Clover className="h-5 w-5 text-white" />, 
-      color: "bg-gradient-to-br from-[#1BC47D] to-[#15A066]",
-      shadowColor: "shadow-emerald-500/20",
-      borderColor: "border-emerald-500/30",
-      hoverBorder: "hover:border-emerald-500/50",
-      bgGradient: "from-emerald-500/5 to-transparent"
+      icon: <Clover className="h-5 w-5 text-muted-foreground" />, 
     },
   ];
 
@@ -48,21 +33,20 @@ const POSConnectSection = () => {
         {platforms.map((platform) => (
           <Card 
             key={platform.name} 
-            className={`group relative overflow-hidden border ${platform.borderColor} bg-gradient-to-br from-card via-card ${platform.bgGradient} ${platform.hoverBorder} hover:shadow-lg transition-all duration-300`}
+            className="group relative overflow-hidden border border-border/60 bg-card hover:shadow-lg hover:border-border transition-all duration-300"
           >
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-primary/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             <CardContent className="relative p-5">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 rounded-xl ${platform.color} flex items-center justify-center shadow-lg ${platform.shadowColor} group-hover:scale-105 transition-transform duration-300`}>
+                  <div className="w-11 h-11 rounded-xl bg-muted/50 border border-border flex items-center justify-center group-hover:bg-muted transition-colors duration-300">
                     {platform.icon}
                   </div>
                   <div>
                     <h3 className="font-semibold text-foreground text-sm">{platform.name}</h3>
-                    <p className="text-xs text-amber-600 font-medium">Coming Soon</p>
+                    <p className="text-xs text-muted-foreground font-medium">Coming Soon</p>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-amber-600 border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 text-[10px] px-2 py-0.5 font-medium">
+                <Badge variant="outline" className="text-muted-foreground border-border bg-muted/30 text-[10px] px-2 py-0.5 font-medium">
                   <Clock className="h-2.5 w-2.5 mr-1" />
                   Soon
                 </Badge>
