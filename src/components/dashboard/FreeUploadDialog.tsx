@@ -305,7 +305,7 @@ export function FreeUploadDialog({ children, onAnalysisComplete }: FreeUploadDia
       
       setTimeout(() => {
         setOpen(false);
-        navigate("/results");
+        navigate("/free-results");
       }, 1000);
       
     } catch (error) {

@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import TrialDashboard from "./pages/TrialDashboard";
 import FreeAnalysis from "./pages/FreeAnalysis";
+import FreeAnalysisResults from "./pages/FreeAnalysisResults";
 
 import Uploads from "./pages/Uploads";
 import Signup from "./pages/Signup";
@@ -44,6 +45,7 @@ const App = () => (
               
               <Route path="/upload" element={<Uploads />} />
               <Route path="/results" element={<LeakResults />} />
+              <Route path="/free-results" element={<FreeAnalysisResults />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
