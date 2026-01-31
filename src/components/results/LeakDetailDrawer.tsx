@@ -14,8 +14,17 @@ import {
   Code2,
   Lightbulb,
   AlertTriangle,
-  Gauge
+  Gauge,
+  ArrowLeft
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+const formatCategoryLabel = (label: string) => {
+  // Convert snake_case to Title Case
+  return label
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, char => char.toUpperCase());
+};
 
 interface LeakItem {
   id?: string;
@@ -60,6 +69,8 @@ export function LeakDetailDrawer({
   totalAmount 
 }: LeakDetailDrawerProps) {
   const [expandedTechnical, setExpandedTechnical] = useState<Set<string>>(new Set());
+  const isMobile = useIsMobile();
+  const formattedLabel = formatCategoryLabel(categoryLabel);
 
   const toggleTechnical = (id: string) => {
     setExpandedTechnical(prev => {
@@ -91,8 +102,19 @@ export function LeakDetailDrawer({
         {/* Header */}
         <div className="sticky top-0 z-10 bg-background border-b border-border/40">
           <SheetHeader className="px-6 py-5">
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-fit gap-2 -ml-2 mb-2 text-muted-foreground hover:text-foreground"
+                onClick={() => onOpenChange(false)}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+            )}
             <SheetTitle className="text-xl font-semibold tracking-tight">
-              {categoryLabel}
+              {formattedLabel}
             </SheetTitle>
             <SheetDescription className="text-sm text-muted-foreground">
               {leaks.length} issue{leaks.length !== 1 ? 's' : ''} found in this category
