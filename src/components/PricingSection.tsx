@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -17,7 +18,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: 99,
+    price: 49,
     cta: "Get Pro",
     popular: true,
     purpose: "Your core plan",
@@ -33,8 +34,9 @@ const plans = [
   {
     name: "Business",
     price: 199,
-    cta: "Get Business",
+    cta: "Coming Soon",
     purpose: "For serious operators",
+    comingSoon: true,
     features: [
       "Higher upload limits",
       "Multi-location or higher-volume businesses",
@@ -112,6 +114,13 @@ const PricingSection = () => {
                   </span>
                 </div>
               )}
+              {plan.comingSoon && (
+                <div className="absolute -top-3 left-6">
+                  <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200 text-xs font-semibold">
+                    Coming Soon
+                  </Badge>
+                </div>
+              )}
 
               <div className="mb-4">
                 <h3 className="text-lg font-semibold text-foreground">
@@ -142,6 +151,7 @@ const PricingSection = () => {
                 }`}
                 variant={plan.popular ? "default" : "outline"}
                 onClick={() => handlePlanSelect(plan.name)}
+                disabled={plan.comingSoon}
                 data-testid={`button-pricing-${plan.name.toLowerCase().replace(' ', '-')}`}
               >
                 {plan.cta}
