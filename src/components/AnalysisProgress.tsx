@@ -42,14 +42,14 @@ export function AnalysisProgress({ currentStep, stepProgress = 0 }: AnalysisProg
     : ((currentStepIndex / steps.length) * 100) + ((stepProgress / 100) * (100 / steps.length));
 
   return (
-    <Card className="border-border bg-card shadow-sm">
-      <CardContent className="p-6">
-        <div className="space-y-6">
+    <Card className="border-border bg-card shadow-sm w-full">
+      <CardContent className="p-4 sm:p-6">
+        <div className="space-y-4 sm:space-y-6">
           {/* Overall Progress Bar */}
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs sm:text-sm">
               <span className="font-medium text-foreground">
-                {isComplete ? "Analysis Complete" : "Analyzing Documents..."}
+                {isComplete ? "Analysis Complete" : "Analyzing..."}
               </span>
               <span className="text-muted-foreground">
                 {Math.round(overallProgress)}%
@@ -59,7 +59,7 @@ export function AnalysisProgress({ currentStep, stepProgress = 0 }: AnalysisProg
           </div>
 
           {/* Step Indicators */}
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {steps.map((step, index) => {
               const StepIcon = step.icon;
               const isActive = step.id === currentStep;
@@ -70,35 +70,35 @@ export function AnalysisProgress({ currentStep, stepProgress = 0 }: AnalysisProg
                 <div 
                   key={step.id}
                   className={cn(
-                    "flex items-center gap-4 p-3 rounded-lg transition-all",
+                    "flex items-center gap-3 sm:gap-4 p-2 sm:p-3 rounded-lg transition-all",
                     isActive && "bg-primary/5 border border-primary/20",
                     isCompleted && "opacity-60",
                     isPending && "opacity-40"
                   )}
                 >
                   <div className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center shrink-0",
+                    "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0",
                     isActive && "bg-primary text-primary-foreground",
                     isCompleted && "bg-green-500/20 text-green-600",
                     isPending && "bg-secondary text-muted-foreground"
                   )}>
                     {isActive ? (
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
                     ) : isCompleted ? (
-                      <CheckCircle2 className="h-5 w-5" />
+                      <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5" />
                     ) : (
-                      <StepIcon className="h-5 w-5" />
+                      <StepIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className={cn(
-                      "font-medium",
+                      "text-sm font-medium truncate",
                       isActive && "text-foreground",
                       !isActive && "text-muted-foreground"
                     )}>
                       {step.label}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-xs text-muted-foreground truncate hidden sm:block">
                       {step.description}
                     </p>
                   </div>
@@ -118,9 +118,9 @@ export function AnalysisProgress({ currentStep, stepProgress = 0 }: AnalysisProg
           </div>
 
           {/* Model Indicators */}
-          <div className="flex items-center justify-center gap-6 pt-4 border-t border-border">
+          <div className="flex items-center justify-center gap-4 sm:gap-6 pt-3 sm:pt-4 border-t border-border">
             <div className={cn(
-              "flex items-center gap-2 text-xs",
+              "flex items-center gap-1.5 sm:gap-2 text-xs",
               currentStep === "gemini_analysis" ? "text-primary font-medium" : "text-muted-foreground"
             )}>
               <div className={cn(
@@ -128,10 +128,10 @@ export function AnalysisProgress({ currentStep, stepProgress = 0 }: AnalysisProg
                 currentStepIndex >= 2 || isComplete ? "bg-green-500" : 
                 currentStep === "gemini_analysis" ? "bg-primary animate-pulse" : "bg-muted"
               )} />
-              Gemini AI
+              Gemini
             </div>
             <div className={cn(
-              "flex items-center gap-2 text-xs",
+              "flex items-center gap-1.5 sm:gap-2 text-xs",
               currentStep === "gpt_analysis" ? "text-primary font-medium" : "text-muted-foreground"
             )}>
               <div className={cn(
@@ -139,7 +139,7 @@ export function AnalysisProgress({ currentStep, stepProgress = 0 }: AnalysisProg
                 currentStepIndex >= 3 || isComplete ? "bg-green-500" : 
                 currentStep === "gpt_analysis" ? "bg-primary animate-pulse" : "bg-muted"
               )} />
-              GPT Analysis
+              GPT
             </div>
           </div>
         </div>
