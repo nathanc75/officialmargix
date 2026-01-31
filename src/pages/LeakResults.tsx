@@ -309,16 +309,16 @@ const LeakResults = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="gap-2 hidden sm:flex border-border/60"
+                      className="gap-2 border-border/60"
                       onClick={() => navigate("/my-analyses")}
                     >
                       <History className="h-4 w-4" />
-                      My Analyses
+                      <span className="hidden sm:inline">My Analyses</span>
                     </Button>
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="gap-2 hidden sm:flex border-border/60" 
+                      className="gap-2 border-border/60" 
                       onClick={handleSaveAnalysis}
                       disabled={isSaved || isSaving}
                     >
@@ -327,19 +327,19 @@ const LeakResults = () => {
                       ) : (
                         <Save className="h-4 w-4" />
                       )}
-                      {isSaved ? "Saved" : "Save"}
+                      <span className="hidden sm:inline">{isSaved ? "Saved" : "Save"}</span>
                     </Button>
                   </>
                 )}
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="gap-2 hidden sm:flex border-border/60" 
+                  className="gap-2 border-border/60" 
                   onClick={handleExport} 
                   data-testid="button-download"
                 >
                   <Download className="h-4 w-4" />
-                  Export PDF
+                  <span className="hidden sm:inline">Export PDF</span>
                 </Button>
                 <Button 
                   size="sm" 
