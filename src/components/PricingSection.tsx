@@ -66,7 +66,7 @@ const PricingSection = () => {
 
   const handlePlanSelect = (planName: string) => {
     if (planName === "Free Scan") {
-      navigate('/upload');
+      navigate('/free-analysis');
     } else if (planName === "Custom") {
       document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
     } else {
