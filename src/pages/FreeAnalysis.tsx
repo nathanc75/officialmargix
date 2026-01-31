@@ -41,9 +41,12 @@ const FreeAnalysis = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Only allow CSV files
-    if (!file.name.toLowerCase().endsWith('.csv')) {
-      toast.error("Only CSV files are allowed in the free analysis");
+    const fileName = file.name.toLowerCase();
+    const allowedExtensions = ['.csv', '.xlsx', '.xls', '.pdf', '.png', '.jpg', '.jpeg', '.docx'];
+    const hasValidExtension = allowedExtensions.some(ext => fileName.endsWith(ext));
+    
+    if (!hasValidExtension) {
+      toast.error("Supported formats: CSV, Excel, PDF, images, and Word documents");
       return;
     }
 
@@ -163,7 +166,7 @@ const FreeAnalysis = () => {
               </span>
               {!hasData && (
                 <span className="text-xs text-muted-foreground">
-                  Upload a POS report CSV to begin your free analysis.
+                  Upload a POS report to begin your free analysis.
                 </span>
               )}
             </div>
@@ -186,16 +189,12 @@ const FreeAnalysis = () => {
                       Your AI Financial Monitor is <span className="text-gradient">Ready</span>
                     </h2>
                     <p className="text-muted-foreground text-sm sm:text-base max-w-2xl leading-relaxed">
-                      Upload your POS report in CSV format to start your free analysis.
+                      Upload your POS report to start your free analysis.
                     </p>
                     <div className="flex items-center gap-3">
                       <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground/70">
                         <span className="w-1 h-1 rounded-full bg-emerald-500" />
                         Your documents are encrypted and processed securely.
-                      </span>
-                      <span className="inline-flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400">
-                        <FileSpreadsheet className="w-3 h-3" />
-                        CSV files only
                       </span>
                     </div>
                   </div>
@@ -205,7 +204,7 @@ const FreeAnalysis = () => {
                   <DialogTrigger asChild>
                     <Button size="lg" className="w-full lg:w-auto gap-2 shadow-lg shadow-primary/25 h-12 px-6">
                       <Upload className="w-5 h-5" />
-                      Upload CSV
+                      Upload File
                       <ArrowRight className="w-4 h-4" />
                     </Button>
                   </DialogTrigger>
@@ -218,22 +217,22 @@ const FreeAnalysis = () => {
                     </DialogHeader>
                     <div className="space-y-4 py-4">
                       <div className="text-sm text-muted-foreground">
-                        Upload a single CSV file containing your POS sales report. This is limited in the free tier.
+                        Upload a single file containing your POS sales report. This is limited in the free tier.
                       </div>
                       <div className="border-2 border-dashed border-border rounded-xl p-6 text-center hover:border-primary/50 transition-colors">
-                        <FileSpreadsheet className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
+                        <Upload className="w-12 h-12 mx-auto text-muted-foreground mb-3" />
                         <label className="cursor-pointer">
-                          <span className="text-primary font-medium hover:underline">Choose CSV file</span>
+                          <span className="text-primary font-medium hover:underline">Choose file</span>
                           <Input
                             type="file"
-                            accept=".csv"
+                            accept=".csv,.xlsx,.xls,.pdf,.png,.jpg,.jpeg,.docx"
                             className="hidden"
                             onChange={handleFileUpload}
                             disabled={isUploading}
                           />
                         </label>
                         <p className="text-xs text-muted-foreground mt-2">
-                          CSV format only • Max 10MB
+                          CSV, Excel, PDF, images, Word • Max 10MB
                         </p>
                       </div>
                       {isUploading && (
