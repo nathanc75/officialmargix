@@ -10,7 +10,10 @@ import {
   Download,
   Plus,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  Save,
+  Loader2,
+  History
 } from "lucide-react";
 import { useAnalysis } from "@/context/AnalysisContext";
 import { useEffect, useState, useMemo } from "react";
@@ -20,6 +23,8 @@ import { DeeperInsightsSection, InsightCategory } from "@/components/results/Dee
 import { LeakCategoryTable } from "@/components/results/LeakCategoryTable";
 import { LeakDetailDrawer } from "@/components/results/LeakDetailDrawer";
 import margixLogo from "@/assets/margix-logo.png";
+import { useSavedAnalyses } from "@/hooks/useSavedAnalyses";
+import { useUser } from "@/context/UserContext";
 
 const formatCurrency = (amount: number) => {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
@@ -44,6 +49,9 @@ const LeakResults = () => {
   const { leakAnalysis, clearAnalysis } = useAnalysis();
   const navigate = useNavigate();
   const goBack = useGoBack();
+  const { user } = useUser();
+  const { saveAnalysis, isSaving } = useSavedAnalyses();
+  const [isSaved, setIsSaved] = useState(false);
   const [uploadedInsightCategories, setUploadedInsightCategories] = useState<Set<InsightCategory>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -105,6 +113,14 @@ const LeakResults = () => {
   const handleNewScan = () => {
     clearAnalysis();
     navigate("/dashboard");
+  };
+
+  const handleSaveAnalysis = async () => {
+    if (!leakAnalysis || isSaved || isSaving) return;
+    const success = await saveAnalysis(leakAnalysis);
+    if (success) {
+      setIsSaved(true);
+    }
   };
 
   const handleExport = async () => {
@@ -288,6 +304,33 @@ const LeakResults = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
+                {user && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 hidden sm:flex border-border/60"
+                      onClick={() => navigate("/my-analyses")}
+                    >
+                      <History className="h-4 w-4" />
+                      My Analyses
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="gap-2 hidden sm:flex border-border/60" 
+                      onClick={handleSaveAnalysis}
+                      disabled={isSaved || isSaving}
+                    >
+                      {isSaving ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Save className="h-4 w-4" />
+                      )}
+                      {isSaved ? "Saved" : "Save"}
+                    </Button>
+                  </>
+                )}
                 <Button 
                   variant="outline" 
                   size="sm" 
