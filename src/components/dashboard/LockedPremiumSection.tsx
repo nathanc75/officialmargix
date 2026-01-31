@@ -15,20 +15,23 @@ const LockedPremiumSection = () => {
     {
       icon: Bell,
       title: "Real-time Alerts",
-      description: "Get instant notifications when pricing errors or fee anomalies are detected. Real-time order tracking available for POS-connected stores.",
-      value: "Catch errors as they happen"
+      description: "Coming Soon: Pricing & fee anomaly detection",
+      value: "Catch errors as they happen",
+      comingSoon: true
     },
     {
       icon: FileDown,
       title: "Export Reports",
       description: "Download detailed PDF and Excel reports for your records and accountant",
-      value: "Unlimited exports"
+      value: "Unlimited exports",
+      comingSoon: false
     },
     {
       icon: BarChart3,
       title: "Platform Comparison",
-      description: "Deep dive analytics comparing performance across all delivery platforms",
-      value: "Side-by-side insights"
+      description: "Coming Soon: Cross-platform performance analytics",
+      value: "Side-by-side insights",
+      comingSoon: true
     }
   ];
 
@@ -52,7 +55,12 @@ const LockedPremiumSection = () => {
                 key={index}
                 className="relative p-4 rounded-xl bg-background/80 border border-muted/50 opacity-70"
               >
-                <div className="absolute top-3 right-3">
+                <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                  {feature.comingSoon && (
+                    <Badge variant="outline" className="text-[8px] h-4 px-1.5 bg-amber-50 text-amber-600 border-amber-200">
+                      Coming Soon
+                    </Badge>
+                  )}
                   <Lock className="w-4 h-4 text-muted-foreground/50" />
                 </div>
                 <div className="flex items-start gap-3">
