@@ -157,21 +157,36 @@ export function FreeUploadDialog({ children, onAnalysisComplete }: FreeUploadDia
     const file = files[0];
     const fileId = `file-${Date.now()}`;
     
+    // Determine the file type
+    const fileName = file.name.toLowerCase();
+    const isExcel = fileName.endsWith(".xlsx") || fileName.endsWith(".xls");
+    const isCsv = fileName.endsWith(".csv");
+    const isPdf = fileName.endsWith(".pdf");
+    const isImage = file.type.startsWith("image/") || 
+                   [".jpg", ".jpeg", ".png", ".webp", ".gif", ".heic", ".bmp", ".tiff"].some(ext => fileName.endsWith(ext));
+    
+    // Determine mime type
+    let mimeType = file.type;
+    if (!mimeType || mimeType === "application/octet-stream") {
+      mimeType = getMimeType(file.name);
+    }
+    
     const newFile: UploadedFile = {
       id: fileId,
       name: file.name,
       size: file.size,
-      type: file.type || (file.name.endsWith('.csv') ? 'text/csv' : 'application/pdf'),
+      type: mimeType,
       status: "uploading",
     };
     
     setUploadedFile(newFile);
     
+    // Clear input immediately
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    
     try {
-      const fileName = file.name.toLowerCase();
-      const isExcel = fileName.endsWith(".xlsx") || fileName.endsWith(".xls");
-      const isCsv = fileName.endsWith(".csv") || file.type === "text/csv" || file.type === "application/csv";
-      
       if (isExcel) {
         const textContent = await readSpreadsheetAsText(file);
         setUploadedFile(prev => prev ? { 
@@ -198,21 +213,34 @@ export function FreeUploadDialog({ children, onAnalysisComplete }: FreeUploadDia
             structuredData: { source: "direct_extraction" }
           }
         } : null);
-      } else if (needsOCRProcessing(file)) {
+      } else if (isPdf || isImage) {
+        // OCR processing for images and PDFs
         const base64Data = await readFileAsBase64(file);
         setUploadedFile(prev => prev ? { ...prev, base64Data } : null);
-        await performOCR(fileId, base64Data, file.type || getMimeType(file.name), file.name);
+        await performOCR(fileId, base64Data, mimeType, file.name);
       } else {
+        // Text-based files
         const content = await readFileContent(file);
-        setUploadedFile(prev => prev ? { ...prev, status: "uploaded" as const, content } : null);
+        setUploadedFile(prev => prev ? { 
+          ...prev, 
+          status: "uploaded" as const, 
+          content,
+          ocrResult: {
+            rawText: content,
+            confidence: 1.0,
+            documentType: "text",
+            structuredData: { source: "direct_extraction" }
+          }
+        } : null);
       }
     } catch (err) {
       console.error("File processing error:", err);
       setUploadedFile(prev => prev ? { ...prev, status: "error" as const } : null);
-    }
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+      toast({
+        title: "File Error",
+        description: "Could not read the file. Please try a different format.",
+        variant: "destructive",
+      });
     }
   };
 
