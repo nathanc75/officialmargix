@@ -91,11 +91,11 @@ const Pricing = () => {
       </div>
 
       <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="mb-8">
+        <div className="mb-8 relative z-10">
           <Button 
             variant="ghost" 
             size="sm" 
-            className="gap-2 text-muted-foreground" 
+            className="gap-2 text-muted-foreground hover:text-foreground" 
             data-testid="button-back-home"
             onClick={goBack}
           >
