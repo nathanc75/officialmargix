@@ -11,9 +11,9 @@ import {
   ArrowRight, 
   Sparkles, 
   Lock,
-  FileSpreadsheet,
   Zap,
-  Crown
+  Crown,
+  FileText
 } from "lucide-react";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import POSConnectSection from "@/components/dashboard/POSConnectSection";
@@ -23,6 +23,7 @@ import { useSubscription } from "@/contexts/SubscriptionContext";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import * as XLSX from "xlsx";
 
 const FreeAnalysis = () => {
@@ -34,8 +35,46 @@ const FreeAnalysis = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [hasUploaded, setHasUploaded] = useState(false);
+  const [processingStep, setProcessingStep] = useState("");
   
   const hasData = hasAnalysisData || hasUploaded;
+
+  // Helper to convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        // Remove data URL prefix to get pure base64
+        const base64 = result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Parse spreadsheet files client-side
+  const parseSpreadsheet = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = event.target?.result;
+          const workbook = XLSX.read(data, { type: 'binary' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          // Convert to CSV text for AI processing
+          const csvText = XLSX.utils.sheet_to_csv(worksheet);
+          resolve(csvText);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.onerror = reject;
+      reader.readAsBinaryString(file);
+    });
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -51,70 +90,80 @@ const FreeAnalysis = () => {
     }
 
     setIsUploading(true);
+    setProcessingStep("Reading file...");
     
     try {
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        try {
-      const data = event.target?.result;
-          const workbook = XLSX.read(data, { type: 'binary' });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
-          
-          // Create a proper extraction object
-          addExtraction({
-            file_kind: "pos_summary",
-            classification_confidence: 0.85,
-            grain: "summary_only",
-            period: {
-              start: new Date().toISOString().split('T')[0],
-              end: new Date().toISOString().split('T')[0],
-            },
-            needs_user_mapping: false,
-            mapping_suggestions: {},
-            sales_summary: {
-              gross_sales: null,
-              net_sales: null,
-              taxes_collected: null,
-              tips_collected: null,
-              discounts_total: null,
-              promotions_total: null,
-              refunds_total: null,
-              chargebacks_total: null,
-              fees_total: null,
-              net_payout: null,
-              order_count: jsonData.length,
-            },
-            items: [],
-            expenses: [],
-            confidence: {
-              sales_summary: {},
-              items: {},
-              expenses: {},
-            },
-            validation: {
-              math_check_passed: null,
-              notes: "Uploaded via free analysis CSV import",
-            },
-            notes_for_user: `Imported ${jsonData.length} rows from CSV`,
-          });
-          
-          setHasUploaded(true);
-          setUploadDialogOpen(false);
-          toast.success("File uploaded successfully! Running free analysis...");
-          
-          // Navigate to results after a brief delay
-          setTimeout(() => {
-            navigate("/results");
-          }, 1500);
-        } catch (err) {
-          toast.error("Failed to parse CSV file");
+      const isSpreadsheet = fileName.endsWith('.csv') || fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
+      const isImage = fileName.endsWith('.png') || fileName.endsWith('.jpg') || fileName.endsWith('.jpeg');
+      const isPdf = fileName.endsWith('.pdf');
+      
+      let textContent = "";
+      let imageBase64 = "";
+      let imageMimeType = "";
+
+      if (isSpreadsheet) {
+        // Parse spreadsheet client-side
+        setProcessingStep("Parsing spreadsheet...");
+        textContent = await parseSpreadsheet(file);
+      } else if (isImage || isPdf) {
+        // Convert to base64 for OCR
+        setProcessingStep("Preparing for OCR...");
+        imageBase64 = await fileToBase64(file);
+        imageMimeType = file.type || (isPdf ? "application/pdf" : "image/jpeg");
+      } else {
+        // Word docs - read as text (simplified)
+        setProcessingStep("Reading document...");
+        textContent = await file.text();
+      }
+
+      // Step 1: OCR if needed (images/PDFs)
+      if (imageBase64) {
+        setProcessingStep("Extracting text with AI OCR...");
+        const { data: ocrData, error: ocrError } = await supabase.functions.invoke("analyze-ocr", {
+          body: { imageBase64, imageMimeType, fileName: file.name },
+        });
+
+        if (ocrError) {
+          throw new Error(ocrError.message || "OCR failed");
         }
-      };
-      reader.readAsBinaryString(file);
+
+        // Get raw text from OCR result
+        textContent = ocrData?.ocrResult?.rawText || "";
+        if (!textContent) {
+          throw new Error("Could not extract text from document");
+        }
+      }
+
+      // Step 2: Extract structured data
+      setProcessingStep("Analyzing document with AI...");
+      const { data: extractData, error: extractError } = await supabase.functions.invoke("analyze-extract", {
+        body: { textContent, fileName: file.name, fileType: file.type },
+      });
+
+      if (extractError) {
+        throw new Error(extractError.message || "Extraction failed");
+      }
+
+      if (!extractData?.success || !extractData.extraction) {
+        throw new Error(extractData?.error || "No extraction data returned");
+      }
+
+      // Add to analysis context
+      addExtraction(extractData.extraction);
+      
+      setHasUploaded(true);
+      setUploadDialogOpen(false);
+      setProcessingStep("");
+      toast.success("Analysis complete! Viewing results...");
+      
+      // Navigate to results after a brief delay
+      setTimeout(() => {
+        navigate("/results");
+      }, 1000);
     } catch (err) {
-      toast.error("Failed to upload file");
+      console.error("Upload error:", err);
+      toast.error(err instanceof Error ? err.message : "Failed to process file");
+      setProcessingStep("");
     } finally {
       setIsUploading(false);
     }
@@ -211,7 +260,7 @@ const FreeAnalysis = () => {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="flex items-center gap-2">
-                        <FileSpreadsheet className="w-5 h-5 text-primary" />
+                        <FileText className="w-5 h-5 text-primary" />
                         Upload POS Report
                       </DialogTitle>
                     </DialogHeader>
@@ -236,9 +285,9 @@ const FreeAnalysis = () => {
                         </p>
                       </div>
                       {isUploading && (
-                        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                          Processing file...
+                        <div className="flex flex-col items-center justify-center gap-2 py-2">
+                          <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                          <span className="text-sm text-muted-foreground">{processingStep || "Processing..."}</span>
                         </div>
                       )}
                     </div>
