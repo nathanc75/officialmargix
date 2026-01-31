@@ -110,6 +110,7 @@ interface AnalysisContextType extends AnalysisState {
   setExtractions: (extractions: UniversalExtraction[]) => void;
   addExtraction: (extraction: UniversalExtraction) => void;
   clearAnalysis: () => void;
+  loadSavedAnalysis: (analysis: Omit<LeakAnalysis, 'multiModelAnalysis' | 'modelContributions'>) => void;
   hasData: boolean;
 }
 
@@ -246,6 +247,17 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const loadSavedAnalysis = useCallback((analysis: Omit<LeakAnalysis, 'multiModelAnalysis' | 'modelContributions'>) => {
+    setState(prev => ({
+      ...prev,
+      leakAnalysis: {
+        ...analysis,
+        multiModelAnalysis: false,
+        modelContributions: undefined,
+      },
+    }));
+  }, []);
+
   const hasData = !!(state.reportAnalysis || state.menuAnalysis || state.leakAnalysis || state.extractions.length > 0);
 
   return (
@@ -259,6 +271,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         setExtractions,
         addExtraction,
         clearAnalysis,
+        loadSavedAnalysis,
         hasData,
       }}
     >

@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, FileCheck } from "lucide-react";
+import { ArrowLeft, FileCheck, History } from "lucide-react";
 import margixLogo from "@/assets/margix-logo.png";
 import { useGoBack } from "@/hooks/useGoBack";
+import { useUser } from "@/context/UserContext";
 
 const DashboardHeader = () => {
   const goBack = useGoBack();
+  const { user } = useUser();
   
   return (
     <header 
@@ -43,6 +45,15 @@ const DashboardHeader = () => {
                 AI-Powered Scan
               </Badge>
             </div>
+
+            {user && (
+              <Link to="/my-analyses" className="hidden sm:flex ml-4">
+                <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                  <History className="h-4 w-4" />
+                  My Analyses
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

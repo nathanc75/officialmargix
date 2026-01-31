@@ -44,6 +44,45 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_analyses: {
+        Row: {
+          analyzed_at: string
+          confidence: Json | null
+          created_at: string
+          id: string
+          leaks: Json
+          summary: string | null
+          title: string
+          total_leaks: number
+          total_recoverable: number
+          user_id: string
+        }
+        Insert: {
+          analyzed_at: string
+          confidence?: Json | null
+          created_at?: string
+          id?: string
+          leaks?: Json
+          summary?: string | null
+          title?: string
+          total_leaks?: number
+          total_recoverable?: number
+          user_id: string
+        }
+        Update: {
+          analyzed_at?: string
+          confidence?: Json | null
+          created_at?: string
+          id?: string
+          leaks?: Json
+          summary?: string | null
+          title?: string
+          total_leaks?: number
+          total_recoverable?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
