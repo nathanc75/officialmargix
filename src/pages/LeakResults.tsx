@@ -282,43 +282,43 @@ const LeakResults = () => {
       <div className="relative">
         {/* Header */}
         <header className="border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
-              <div className="flex items-center gap-4">
+          <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-14 sm:h-16">
+              <div className="flex items-center gap-2 sm:gap-4">
                 <Button 
                   variant="ghost" 
-                  size="sm" 
-                  className="gap-2 text-muted-foreground hover:text-foreground" 
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 text-muted-foreground hover:text-foreground" 
                   data-testid="button-back"
                   onClick={goBack}
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline">Back</span>
+                  <span className="hidden sm:inline ml-2">Back</span>
                 </Button>
-                <div className="h-5 w-px bg-border/60" />
-                <div className="flex items-center gap-2.5">
-                  <img src={margixLogo} alt="MARGIX" className="w-7 h-7" />
-                  <div>
-                    <h1 className="text-base font-semibold text-foreground tracking-tight">Scan Results</h1>
-                  </div>
+                <div className="h-4 w-px bg-border/60 hidden sm:block" />
+                <div className="flex items-center gap-1.5 sm:gap-2.5">
+                  <img src={margixLogo} alt="MARGIX" className="w-6 h-6 sm:w-7 sm:h-7" />
+                  <h1 className="text-sm sm:text-base font-semibold text-foreground tracking-tight hidden xs:block">
+                    Results
+                  </h1>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 {user && (
                   <>
                     <Button
                       variant="outline"
-                      size="sm"
-                      className="gap-2 border-border/60"
+                      size="icon"
+                      className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 border-border/60"
                       onClick={() => navigate("/my-analyses")}
                     >
                       <History className="h-4 w-4" />
-                      <span className="hidden sm:inline">My Analyses</span>
+                      <span className="hidden sm:inline ml-2">My Analyses</span>
                     </Button>
                     <Button 
                       variant="outline" 
-                      size="sm" 
-                      className="gap-2 border-border/60" 
+                      size="icon"
+                      className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 border-border/60" 
                       onClick={handleSaveAnalysis}
                       disabled={isSaved || isSaving}
                     >
@@ -327,28 +327,28 @@ const LeakResults = () => {
                       ) : (
                         <Save className="h-4 w-4" />
                       )}
-                      <span className="hidden sm:inline">{isSaved ? "Saved" : "Save"}</span>
+                      <span className="hidden sm:inline ml-2">{isSaved ? "Saved" : "Save"}</span>
                     </Button>
                   </>
                 )}
                 <Button 
                   variant="outline" 
-                  size="sm" 
-                  className="gap-2 border-border/60" 
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 border-border/60" 
                   onClick={handleExport} 
                   data-testid="button-download"
                 >
                   <Download className="h-4 w-4" />
-                  <span className="hidden sm:inline">Export PDF</span>
+                  <span className="hidden sm:inline ml-2">Export</span>
                 </Button>
                 <Button 
-                  size="sm" 
-                  className="gap-2 brand-gradient border-0 text-white" 
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 brand-gradient border-0 text-white" 
                   onClick={handleNewScan} 
                   data-testid="button-new-scan"
                 >
                   <Plus className="h-4 w-4" />
-                  <span className="hidden sm:inline">New Scan</span>
+                  <span className="hidden sm:inline ml-2">New Scan</span>
                 </Button>
               </div>
             </div>
