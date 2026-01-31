@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,9 +10,19 @@ import { useAnalysis } from "@/context/AnalysisContext";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { SiSquare } from "react-icons/si";
 
+const FREE_SCAN_STORAGE_KEY = "margix_free_scan_used";
+
 const FreeAnalysis = () => {
   const { leakAnalysis, hasData: hasAnalysisData } = useAnalysis();
-  const [hasUsedFreeScan, setHasUsedFreeScan] = useState(false);
+  const [hasUsedFreeScan, setHasUsedFreeScan] = useState(() => {
+    // Check localStorage on initial render
+    return localStorage.getItem(FREE_SCAN_STORAGE_KEY) === "true";
+  });
+
+  const handleAnalysisComplete = () => {
+    localStorage.setItem(FREE_SCAN_STORAGE_KEY, "true");
+    setHasUsedFreeScan(true);
+  };
 
   // Mock data for demo - in production this would come from analysis
   const scanResults = {
@@ -95,13 +105,15 @@ const FreeAnalysis = () => {
           {/* AI Status Strip */}
           <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-secondary/80 via-secondary/50 to-transparent border border-border/50 backdrop-blur-sm">
             <div className="relative flex items-center justify-center">
-              <div className={`w-2.5 h-2.5 rounded-full ${hasAnalysisData ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+              <div className={`w-2.5 h-2.5 rounded-full ${hasAnalysisData ? 'bg-emerald-500' : hasUsedFreeScan ? 'bg-amber-500' : 'bg-amber-500'}`} />
               <div className={`absolute w-2.5 h-2.5 rounded-full ${hasAnalysisData ? 'bg-emerald-500' : 'bg-amber-500'} animate-ping opacity-75`} />
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
               <span className="text-sm font-medium text-foreground">
                 {hasAnalysisData ? (
                   <>AI Status: <span className="text-primary">Analysis complete</span></>
+                ) : hasUsedFreeScan ? (
+                  <span className="text-amber-600 dark:text-amber-400">AI Status: Free scan already used</span>
                 ) : (
                   <span className="text-amber-600 dark:text-amber-400">AI Status: Waiting for your document</span>
                 )}
@@ -111,13 +123,36 @@ const FreeAnalysis = () => {
                   You get one complimentary scan. Make it count!
                 </span>
               )}
-              {hasUsedFreeScan && !hasAnalysisData && (
-                <span className="text-xs text-amber-600">
-                  You've used your free scan.
-                </span>
-              )}
             </div>
           </div>
+
+          {/* Already Used Free Scan Banner */}
+          {hasUsedFreeScan && !hasAnalysisData && (
+            <Card className="border-2 border-dashed border-amber-300 bg-gradient-to-r from-amber-50 via-amber-25 to-transparent dark:from-amber-950/30 dark:to-transparent overflow-hidden animate-fade-in">
+              <CardContent className="p-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center shrink-0">
+                      <CheckCircle2 className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <div className="text-center sm:text-left">
+                      <h3 className="font-bold text-foreground">You've already used your free scan</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Upgrade to get unlimited scans, AI assistant, and detailed exports
+                      </p>
+                    </div>
+                  </div>
+                  <Link to="/pricing" className="shrink-0">
+                    <Button className="gap-2 brand-gradient border-0 text-white" size="lg">
+                      <Sparkles className="w-4 h-4" />
+                      Unlock Full Access
+                      <ArrowRight className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Results State - When user has analyzed data */}
           {hasAnalysisData && (
@@ -219,7 +254,7 @@ const FreeAnalysis = () => {
                     </div>
                     
                     {!hasUsedFreeScan ? (
-                      <FreeUploadDialog onAnalysisComplete={() => setHasUsedFreeScan(true)}>
+                      <FreeUploadDialog onAnalysisComplete={handleAnalysisComplete}>
                         <Button size="lg" className="w-full lg:w-auto gap-2 shadow-lg shadow-primary/25 h-12 px-6">
                           <Upload className="w-5 h-5" />
                           Upload Document
