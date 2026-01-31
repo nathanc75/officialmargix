@@ -12,7 +12,7 @@ import TrialDashboard from "./pages/TrialDashboard";
 import FreeAnalysis from "./pages/FreeAnalysis";
 import FreeAnalysisResults from "./pages/FreeAnalysisResults";
 
-import Uploads from "./pages/Uploads";
+
 import Signup from "./pages/Signup";
 import SignIn from "./pages/SignIn";
 import Pricing from "./pages/Pricing";
@@ -43,7 +43,7 @@ const App = () => (
               <Route path="/free-analysis" element={<FreeAnalysis />} />
               <Route path="/pricing" element={<Pricing />} />
               
-              <Route path="/upload" element={<Uploads />} />
+              
               <Route path="/results" element={<LeakResults />} />
               <Route path="/free-results" element={<FreeAnalysisResults />} />
               <Route path="/terms" element={<TermsOfService />} />

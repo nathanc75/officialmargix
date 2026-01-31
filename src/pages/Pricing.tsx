@@ -70,7 +70,7 @@ const Pricing = () => {
 
   const handleSelectPlan = (planName: string) => {
     if (planName === "Free Scan") {
-      window.location.href = "/upload";
+      window.location.href = "/free-analysis";
       return;
     }
     if (planName === "Custom") {
