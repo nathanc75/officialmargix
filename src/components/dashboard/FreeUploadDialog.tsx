@@ -397,8 +397,11 @@ export function FreeUploadDialog({ children, onAnalysisComplete }: FreeUploadDia
                     <p className="text-sm text-muted-foreground">
                       Click to upload or drag and drop
                     </p>
-                    <p className="text-xs text-muted-foreground/70 mt-1">
-                      CSV, PDF, Excel, or image formats supported
+                    <p className="text-xs text-muted-foreground/80 mt-1">
+                      For best results, upload a CSV or Excel export from your payment platform.
+                    </p>
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
+                      Screenshots work too, but may have lower accuracy.
                     </p>
                     <input
                       ref={fileInputRef}

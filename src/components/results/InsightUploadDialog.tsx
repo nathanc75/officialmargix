@@ -417,6 +417,9 @@ export function InsightUploadDialog({ category, open, onOpenChange, onComplete }
                     <p className="text-xs text-primary/80 font-medium mt-1">
                       {config.hint}
                     </p>
+                    <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                      CSV/Excel exports give the best accuracy.
+                    </p>
                   </div>
                 </div>
               </CardContent>

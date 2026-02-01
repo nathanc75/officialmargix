@@ -519,6 +519,12 @@ export function UploadDialog({ children }: UploadDialogProps) {
                             <p className="text-[10px] text-muted-foreground/70">
                               {section.placeholder}
                             </p>
+                            <p className="text-[10px] text-muted-foreground/80 mt-1">
+                              For best results, upload a CSV or Excel export.
+                            </p>
+                            <p className="text-[10px] text-amber-600 dark:text-amber-400">
+                              Screenshots work too, but may have lower accuracy.
+                            </p>
                             {section.hint && (
                               <p className="text-[10px] text-primary/80 font-medium mt-1">
                                 {section.hint}
