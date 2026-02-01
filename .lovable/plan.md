@@ -1,84 +1,70 @@
 
-# Plan: Fix "Missing Payment" Misclassification Issue
+# Plan: Fix Subscription Expense Misclassification
 
 ## Problem
-The leak detection AI is incorrectly categorizing **your unpaid bills to vendors** as "Money That Never Arrived" (missing customer payments). When you upload a document showing your business is past due on a subscription, it's being flagged as if a customer owes you money.
+When you upload a subscription document showing you're past due on a payment (e.g., a SaaS tool you're paying for), the AI is still incorrectly flagging it as "Money That Never Arrived" instead of recognizing it as a normal business expense/accounts payable item that should NOT be flagged at all.
 
-## Root Cause
-The AI prompt in `analyze-leaks` doesn't clearly distinguish between:
-- **Incoming money** (revenue/receivables) - customer payments to you
-- **Outgoing money** (expenses/payables) - your payments to vendors
-
-The current prompt says "Money you expected but never received" but doesn't clarify the **direction** of the money flow.
-
----
+## Root Cause Analysis
+The current prompt tells the AI what NOT to flag, but:
+1. The instruction may not be strong enough at the beginning of the prompt
+2. The AI doesn't have a clear "skip this" action — so it tries to fit everything into a leak category
+3. The Gemini pattern detection step doesn't have the money flow rules, so it might be seeding bad classifications
 
 ## Solution
 
 ### File: `supabase/functions/analyze-leaks/index.ts`
 
-Update the GPT system prompt (lines 96-162) to add explicit direction-of-flow guidance:
+**Change 1: Add money flow rules to Gemini prompt (lines 29-52)**
 
-**Changes to the prompt:**
+The Gemini step currently just looks for "revenue leaks" without distinguishing direction. We need to add context so it doesn't flag accounts payable items as patterns.
 
-1. **Add a new "MONEY FLOW RULE" section** that instructs the AI to first determine whether a transaction represents:
-   - Money flowing INTO the business (revenue, receivables, customer payments)
-   - Money flowing OUT of the business (expenses, payables, vendor payments)
-
-2. **Clarify each leak type** with explicit direction indicators:
-   - MISSING PAYMENTS: Only for money owed TO you BY customers, NOT your unpaid bills
-   - UNUSED SUBSCRIPTIONS: Only for subscriptions YOU pay for but don't use
-   - etc.
-
-3. **Add explicit exclusions**:
-   - "Do NOT flag the business's own unpaid bills as 'missing payments'"
-   - "Your past-due obligations to vendors are NOT leaks - they are accounts payable"
-
-**Updated prompt section:**
 ```text
-CRITICAL - MONEY FLOW DIRECTION:
-Before classifying any issue, determine the money flow:
-- INFLOW (revenue): Money coming INTO the business from customers
-- OUTFLOW (expense): Money going OUT to vendors, suppliers, platforms
+Add to Gemini prompt:
+IMPORTANT: Only look for patterns that represent money LOST or LEAKED from the business.
+Do NOT flag the business's own unpaid bills or past-due notices — those are obligations the business owes, not leaks.
+```
 
-Issue types - ONLY flag these:
+**Change 2: Add explicit "NOT A LEAK" handling instruction to GPT prompt**
 
-- MISSING PAYMENTS - Money owed TO YOU by customers that never arrived
-  ✓ Include: Customer invoices unpaid, expected deposits missing, refunds owed to you
-  ✗ Exclude: YOUR unpaid bills to vendors, YOUR past-due subscriptions
+Add a clear instruction that if a document represents the business's own expense or obligation, the AI should NOT create a leak entry for it — just skip it or note it's a normal expense.
 
-- UNUSED SUBSCRIPTIONS - Services YOU PAY FOR but aren't using
-  ✓ Include: Software you're paying for monthly but haven't logged into
-  ✗ Exclude: Subscriptions customers owe you for
+```text
+IMPORTANT INSTRUCTION:
+If a document shows the business owes money to a vendor/platform (past-due notice, invoice from supplier, subscription bill):
+- This is NOT a leak — it's a normal business obligation
+- Do NOT create any leak entry for it
+- You may mention it in the summary as "normal accounts payable" if relevant
+- Only flag issues where the BUSINESS is losing money it shouldn't lose
+```
 
-- DUPLICATE CHARGES - You got billed twice for the same thing (outflow)
-- FAILED PAYMENTS - Payments TO YOU that failed and weren't retried (inflow)
-- PRICING INEFFICIENCIES - You're being charged more than market rate (outflow)
-- BILLING ERRORS - Mistakes in invoices or calculations (either direction)
-- REFUND FEE LOSS - You refunded a customer but still paid the processing fee
-- CHURN PERMANENT LOSS - Customers who cancelled their subscriptions with you
+**Change 3: Make "DO NOT FLAG" section more prominent**
+
+Move the "DO NOT FLAG AS LEAKS" section higher in the prompt, right after the money flow direction rules, so the AI sees it before trying to classify.
+
+**Change 4: Add explicit examples of what IS vs what IS NOT a leak**
+
+```text
+EXAMPLES:
+✓ LEAK: Customer invoice from 60 days ago still unpaid → Missing Payment (they owe YOU)
+✗ NOT A LEAK: Your Quickbooks subscription is past due → Normal expense (YOU owe them)
+
+✓ LEAK: Same $50 charge from Stripe appeared twice → Duplicate Charge
+✗ NOT A LEAK: $50 monthly software subscription each month → Normal recurring expense
 ```
 
 ---
 
-## Technical Details
+## Technical Implementation
 
-### Edge Function Changes
-- **File**: `supabase/functions/analyze-leaks/index.ts`
-- **Location**: GPT system prompt (lines 96-162)
-- **Change Type**: Prompt engineering - no code logic changes
+### Changes to `supabase/functions/analyze-leaks/index.ts`:
 
-### What This Fixes
-- Past-due subscription notices for services you use will no longer be flagged as "missing payments"
-- The AI will correctly understand that your unpaid vendor bills are accounts payable, not revenue leaks
-- Only genuine revenue-side issues will appear in the "Money That Never Arrived" category
+1. **Lines 29-52 (Gemini prompt)**: Add money flow awareness
+2. **Lines 96-160 (GPT system prompt)**: 
+   - Move "DO NOT FLAG" section earlier
+   - Add explicit "skip it" instruction for vendor obligations
+   - Add clear examples
 
-### No UI Changes Required
-The frontend correctly displays whatever the AI returns - the fix is entirely in the AI prompt logic.
-
----
-
-## After Implementation
+### After Implementation
 - Redeploy the `analyze-leaks` edge function
-- Run a test scan with the same subscription past-due document
-- Verify it no longer appears as "Missing Payment"
+- Test with the same subscription past-due document
+- It should either: show no leaks, or correctly categorize as something other than "Missing Payment"
