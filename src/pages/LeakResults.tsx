@@ -22,6 +22,7 @@ import { jsPDF } from "jspdf";
 import { DeeperInsightsSection, InsightCategory } from "@/components/results/DeeperInsightsSection";
 import { LeakCategoryTable } from "@/components/results/LeakCategoryTable";
 import { LeakDetailDrawer } from "@/components/results/LeakDetailDrawer";
+import { ScanCoverageSection } from "@/components/results/ScanCoverageSection";
 import margixLogo from "@/assets/margix-logo.png";
 import { useSavedAnalyses } from "@/hooks/useSavedAnalyses";
 import { useUser } from "@/context/UserContext";
@@ -105,6 +106,13 @@ const LeakResults = () => {
 
     return Array.from(categoryMap.values()).sort((a, b) => b.totalAmount - a.totalAmount);
   }, [leakAnalysis]);
+
+  // Get found types and counts for the coverage section
+  const foundTypes = useMemo(() => leakCategories.map(c => c.type), [leakCategories]);
+  const foundCounts = useMemo(() => 
+    Object.fromEntries(leakCategories.map(c => [c.type, c.count])), 
+    [leakCategories]
+  );
 
   if (!leakAnalysis) {
     return null;
@@ -424,6 +432,12 @@ const LeakResults = () => {
               </CardContent>
             </Card>
           </div>
+
+          {/* Scan Coverage - What We Checked */}
+          <ScanCoverageSection 
+            foundTypes={foundTypes}
+            foundCounts={foundCounts}
+          />
 
           {/* Issues Table */}
           <LeakCategoryTable 
