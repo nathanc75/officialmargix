@@ -69,7 +69,7 @@ const Signup = () => {
       {/* Left Side - Branding */}
       <div className="hidden lg:flex lg:w-[45%] relative items-center justify-end pr-8 xl:pr-16">
         <div className="max-w-md">
-          <Link to="/" className="flex items-center gap-1.5 mb-8 group">
+          <Link to="/" className="flex items-center gap-2 mb-8 group">
             <div className="w-12 h-12 transition-transform group-hover:scale-105">
               <img 
                 src={margixLogo} 
@@ -115,7 +115,7 @@ const Signup = () => {
         <div className="w-full max-w-lg mx-auto lg:mx-0">
           {/* Mobile Logo */}
           <div className="lg:hidden mb-10">
-            <Link to="/" className="flex items-center gap-1 justify-center group">
+            <Link to="/" className="flex items-center gap-2 justify-center group">
               <div className="w-10 h-10 transition-transform group-hover:scale-105">
                 <img 
                   src={margixLogo} 
