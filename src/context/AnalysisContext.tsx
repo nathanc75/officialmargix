@@ -62,9 +62,23 @@ export interface ComparisonResult {
   summary: string;
 }
 
+export interface ExpenseItem {
+  id: string;
+  type: "subscription" | "vendor_bill" | "utility" | "rent" | "other";
+  description: string;
+  amount: number;
+  dueDate?: string;
+  daysOverdue?: number;
+  severity: "high" | "medium" | "low";
+  recommendation: string;
+  vendor?: string;
+}
+
 export interface LeakAnalysis {
   totalLeaks: number;
   totalRecoverable: number;
+  totalAmountDue: number;
+  expenses: ExpenseItem[];
   leaks: {
     id: string;
     type: string;

@@ -62,6 +62,8 @@ const MyAnalyses = () => {
     loadSavedAnalysis({
       totalLeaks: analysis.total_leaks,
       totalRecoverable: analysis.total_recoverable,
+      totalAmountDue: 0, // Saved analyses don't have expense data yet
+      expenses: [], // Saved analyses don't have expense data yet
       leaks: analysis.leaks,
       summary: analysis.summary || "",
       analyzedAt: analysis.analyzed_at,

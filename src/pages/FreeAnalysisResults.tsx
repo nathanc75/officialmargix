@@ -11,13 +11,17 @@ import {
   ShieldCheck,
   Sparkles,
   Lock,
-  ArrowRight
+  ArrowRight,
+  Clock
 } from "lucide-react";
 import { useAnalysis } from "@/context/AnalysisContext";
+import type { ExpenseItem } from "@/context/AnalysisContext";
 import { useEffect, useMemo } from "react";
 import { AIChatWidget } from "@/components/AIChatWidget";
 import { LeakCategoryTable } from "@/components/results/LeakCategoryTable";
 import { LeakDetailDrawer } from "@/components/results/LeakDetailDrawer";
+import { ExpenseCategoryTable, getExpenseTypeLabel } from "@/components/results/ExpenseCategoryTable";
+import { ExpenseDetailDrawer } from "@/components/results/ExpenseDetailDrawer";
 import margixLogo from "@/assets/margix-logo.png";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -47,6 +51,7 @@ const FreeAnalysisResults = () => {
   const navigate = useNavigate();
   const goBack = useGoBack();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedExpenseCategory, setSelectedExpenseCategory] = useState<string | null>(null);
 
   useEffect(() => {
     if (!leakAnalysis) {
@@ -95,6 +100,43 @@ const FreeAnalysisResults = () => {
     return Array.from(categoryMap.values()).sort((a, b) => b.totalAmount - a.totalAmount);
   }, [leakAnalysis]);
 
+  // Group expenses by type into categories
+  const expenseCategories = useMemo(() => {
+    if (!leakAnalysis?.expenses || leakAnalysis.expenses.length === 0) return [];
+
+    const categoryMap = new Map<string, {
+      type: string;
+      label: string;
+      totalAmount: number;
+      count: number;
+      severity: "high" | "medium" | "low";
+      expenses: ExpenseItem[];
+    }>();
+
+    leakAnalysis.expenses.forEach(expense => {
+      const existing = categoryMap.get(expense.type);
+      
+      if (existing) {
+        existing.totalAmount += expense.amount;
+        existing.count += 1;
+        if (expense.severity === "high") existing.severity = "high";
+        else if (expense.severity === "medium" && existing.severity === "low") existing.severity = "medium";
+        existing.expenses.push(expense);
+      } else {
+        categoryMap.set(expense.type, {
+          type: expense.type,
+          label: getExpenseTypeLabel(expense.type),
+          totalAmount: expense.amount,
+          count: 1,
+          severity: expense.severity as "high" | "medium" | "low",
+          expenses: [expense]
+        });
+      }
+    });
+
+    return Array.from(categoryMap.values()).sort((a, b) => b.totalAmount - a.totalAmount);
+  }, [leakAnalysis]);
+
   if (!leakAnalysis) {
     return null;
   }
@@ -107,6 +149,12 @@ const FreeAnalysisResults = () => {
   const selectedCategoryData = selectedCategory 
     ? leakCategories.find(c => c.type === selectedCategory) 
     : null;
+
+  const selectedExpenseCategoryData = selectedExpenseCategory
+    ? expenseCategories.find(c => c.type === selectedExpenseCategory)
+    : null;
+
+  const totalAmountDue = leakAnalysis.totalAmountDue || 0;
 
   const chatContext = {
     fileNames: leakAnalysis.leaks.map(l => l.description).slice(0, 5),
@@ -236,7 +284,7 @@ const FreeAnalysisResults = () => {
           </Card>
 
           {/* Executive Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <Card className="border-border/40 shadow-soft animate-fade-in" style={{ animationDelay: '50ms' }}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
@@ -269,7 +317,28 @@ const FreeAnalysisResults = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-border/40 shadow-soft animate-fade-in" style={{ animationDelay: '150ms' }}>
+            <Card className="border-amber-200/50 bg-gradient-to-br from-amber-50/30 to-transparent shadow-soft animate-fade-in" style={{ animationDelay: '150ms' }}>
+              <CardContent className="p-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Amount Due</p>
+                    <p className="text-3xl font-bold text-amber-700 mt-1.5 tabular-nums" data-testid="text-amount-due">
+                      {formatCurrency(totalAmountDue)}
+                    </p>
+                  </div>
+                  <div className="w-11 h-11 rounded-xl bg-amber-100 border border-amber-200 flex items-center justify-center">
+                    <Clock className="w-5 h-5 text-amber-700" />
+                  </div>
+                </div>
+                {expenseCategories.length > 0 && (
+                  <Badge variant="outline" className="mt-3 text-xs text-amber-700 bg-amber-50 border-amber-200">
+                    {expenseCategories.reduce((sum, c) => sum + c.count, 0)} bill{expenseCategories.reduce((sum, c) => sum + c.count, 0) !== 1 ? 's' : ''} due
+                  </Badge>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/40 shadow-soft animate-fade-in" style={{ animationDelay: '200ms' }}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">
                   <div>
@@ -291,11 +360,13 @@ const FreeAnalysisResults = () => {
             </Card>
           </div>
 
-          {/* Issues Table */}
-          <LeakCategoryTable 
-            categories={leakCategories}
-            onViewDetails={(type) => setSelectedCategory(type)}
-          />
+          {/* Expenses Table - Only show if there are expenses */}
+          {expenseCategories.length > 0 && (
+            <ExpenseCategoryTable 
+              categories={expenseCategories}
+              onViewDetails={(type) => setSelectedExpenseCategory(type)}
+            />
+          )}
 
           {/* Locked Deeper Insights Section */}
           <LockedDeeperInsightsSection />
@@ -305,7 +376,7 @@ const FreeAnalysisResults = () => {
         </main>
       </div>
 
-      {/* Detail Drawer */}
+      {/* Leak Detail Drawer */}
       {selectedCategoryData && (
         <LeakDetailDrawer
           open={selectedCategory !== null}
@@ -318,6 +389,17 @@ const FreeAnalysisResults = () => {
             modelSource: (l as any).modelSource,
           }))}
           totalAmount={selectedCategoryData.totalAmount}
+        />
+      )}
+
+      {/* Expense Detail Drawer */}
+      {selectedExpenseCategoryData && (
+        <ExpenseDetailDrawer
+          open={selectedExpenseCategory !== null}
+          onOpenChange={(open) => !open && setSelectedExpenseCategory(null)}
+          categoryLabel={selectedExpenseCategoryData.label}
+          expenses={selectedExpenseCategoryData.expenses}
+          totalAmount={selectedExpenseCategoryData.totalAmount}
         />
       )}
 
