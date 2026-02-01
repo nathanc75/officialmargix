@@ -87,7 +87,7 @@ export function ScanCoverageSection({ foundTypes, foundCounts }: ScanCoverageSec
       </div>
       <CardContent className="p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {ALL_LEAK_TYPES.map((leakType) => {
+        {ALL_LEAK_TYPES.map((leakType, index) => {
             const found = foundSet.has(leakType.type);
             const count = foundCounts[leakType.type] || 0;
             const Icon = leakType.icon;
@@ -95,11 +95,15 @@ export function ScanCoverageSection({ foundTypes, foundCounts }: ScanCoverageSec
             return (
               <div 
                 key={leakType.type}
-                className={`flex items-start gap-3 p-3 rounded-lg border transition-colors ${
+                className={`flex items-start gap-3 p-3 rounded-lg border transition-colors animate-fade-in opacity-0 ${
                   found 
                     ? "bg-destructive/5 border-destructive/20" 
                     : "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200/50 dark:border-emerald-800/30"
                 }`}
+                style={{ 
+                  animationDelay: `${index * 60}ms`,
+                  animationFillMode: 'forwards'
+                }}
               >
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
                   found 
