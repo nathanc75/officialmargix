@@ -1,50 +1,34 @@
 
-# Plan: Add Format Recommendation Tip to Upload Dialogs
+# Plan: Enable Unlimited Free Analysis for Testing
 
 ## Overview
-Add a helpful tip message to guide users toward CSV and Excel formats while still accepting screenshots. This message will set clear expectations about accuracy and encourage best practices.
+Temporarily disable the free scan limit so you can test the free analysis feature as many times as needed.
 
-## Changes
+## Change
 
-### 1. FreeUploadDialog (`src/components/dashboard/FreeUploadDialog.tsx`)
+### File: `src/pages/FreeAnalysis.tsx`
 
-**Location:** Inside the upload zone area (around line 400-402)
-
-**Current text:**
-```
-CSV, PDF, Excel, or image formats supported
-```
-
-**New text:**
-```
-For best results, upload a CSV or Excel export from your payment platform.
-Screenshots work too, but may have lower accuracy.
+**Current behavior (line 17-20):**
+The component checks localStorage on load to see if a free scan was already used:
+```tsx
+const [hasUsedFreeScan, setHasUsedFreeScan] = useState(() => {
+  return localStorage.getItem(FREE_SCAN_STORAGE_KEY) === "true";
+});
 ```
 
-This replaces the simple format list with a more helpful recommendation that sets expectations.
+**New behavior:**
+Force `hasUsedFreeScan` to always be `false`, bypassing the localStorage check:
+```tsx
+const [hasUsedFreeScan, setHasUsedFreeScan] = useState(false);
+```
 
-### 2. UploadDialog (`src/components/dashboard/UploadDialog.tsx`)
-
-**Location:** Inside the upload zone section (similar structure)
-
-Add the same tip below the existing format information to maintain consistency across the paid upload flow.
-
-### 3. InsightUploadDialog (`src/components/results/InsightUploadDialog.tsx`)
-
-**Location:** After the placeholder text in the upload zone (around line 414-419)
-
-Add a similar but slightly shorter tip that fits the context of insight uploads where screenshots are more common (menu photos, etc.).
+This one-line change will:
+- Always show the upload button instead of the "already used" banner
+- Let you run as many test scans as you want
+- Keep all other functionality intact
 
 ---
 
-## Technical Details
-
-- Use `text-xs text-muted-foreground/80` for the main recommendation
-- Use `text-amber-600 dark:text-amber-400` or similar for the accuracy warning to draw attention
-- Keep the message concise and non-technical per brand voice guidelines
-- No structural changes needed - just text updates within existing upload zones
-
-## Files to Modify
-- `src/components/dashboard/FreeUploadDialog.tsx`
-- `src/components/dashboard/UploadDialog.tsx`
-- `src/components/results/InsightUploadDialog.tsx`
+## Notes
+- The `handleAnalysisComplete` function will still try to set localStorage, but that won't affect anything since we're ignoring it on load
+- When you're done testing, just revert this line back to the original to restore the one-scan limit
