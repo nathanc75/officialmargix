@@ -11,7 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import TrialDashboard from "./pages/TrialDashboard";
 import FreeAnalysis from "./pages/FreeAnalysis";
 import FreeAnalysisResults from "./pages/FreeAnalysisResults";
-import MyAnalyses from "./pages/MyAnalyses";
+
 import Signup from "./pages/Signup";
 import SignIn from "./pages/SignIn";
 import Pricing from "./pages/Pricing";
@@ -44,7 +44,7 @@ const App = () => (
               
               
               <Route path="/results" element={<LeakResults />} />
-              <Route path="/my-analyses" element={<MyAnalyses />} />
+              
               <Route path="/free-results" element={<FreeAnalysisResults />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
