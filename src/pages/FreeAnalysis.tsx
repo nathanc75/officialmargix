@@ -65,35 +65,37 @@ const FreeAnalysis = () => {
       <div className="relative">
         {/* Custom Header with Free Badge */}
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex h-16 sm:h-18 items-center justify-between gap-4">
-              <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-                <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 transition-transform group-hover:scale-105">
+          <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="flex h-14 sm:h-16 items-center justify-between gap-2 sm:gap-4">
+              <div className="flex items-center gap-1.5 sm:gap-3 min-w-0 shrink-0">
+                <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 transition-transform group-hover:scale-105">
                     <img 
                       src="/margix-logo-download.png" 
                       alt="MARGIX" 
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  <div>
-                    <h1 className="text-sm sm:text-lg font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
-                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block font-medium">Leak Detection Dashboard</p>
+                  <div className="hidden xs:block">
+                    <h1 className="text-sm sm:text-base font-bold text-foreground leading-none tracking-tight">MARGIX</h1>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 hidden sm:block font-medium">Leak Detection</p>
                   </div>
                 </Link>
                 
-                <div className="flex items-center gap-2 ml-4">
-                  <Badge variant="outline" className="gap-1.5 py-1 px-2.5 text-xs bg-amber-50 text-amber-700 border-amber-200 font-medium">
-                    <Sparkles className="h-3 w-3" />
-                    Free Analysis
-                  </Badge>
-                </div>
+                <Badge variant="outline" className="gap-1 sm:gap-1.5 py-0.5 sm:py-1 px-1.5 sm:px-2.5 text-[10px] sm:text-xs bg-amber-50 text-amber-700 border-amber-200 font-medium whitespace-nowrap">
+                  <Sparkles className="h-2.5 w-2.5 sm:h-3 sm:w-3 shrink-0" />
+                  <span className="hidden sm:inline">Free Analysis</span>
+                  <span className="sm:hidden">Free</span>
+                </Badge>
               </div>
               
-              <Link to="/pricing">
-                <Button size="sm" className="gap-2 brand-gradient border-0 text-white">
-                  <Sparkles className="h-3.5 w-3.5" />
-                  Upgrade
+              <Link to="/pricing" className="shrink-0">
+                <Button 
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-auto sm:px-4 brand-gradient border-0 text-white"
+                >
+                  <Sparkles className="h-4 w-4 shrink-0" />
+                  <span className="hidden sm:inline ml-1.5">Upgrade</span>
                 </Button>
               </Link>
             </div>
