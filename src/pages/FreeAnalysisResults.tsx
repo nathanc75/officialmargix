@@ -137,51 +137,57 @@ const FreeAnalysisResults = () => {
       <div className="relative">
         {/* Header */}
         <header className="border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between h-16">
+          <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-14 sm:h-16">
               <div className="flex items-center gap-4">
                 <Button 
                   variant="ghost" 
-                  size="sm" 
-                  className="gap-2 text-muted-foreground hover:text-foreground" 
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 text-muted-foreground hover:text-foreground" 
                   data-testid="button-back"
                   onClick={goBack}
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  <span className="hidden sm:inline">Back</span>
+                  <span className="hidden sm:inline ml-2">Back</span>
                 </Button>
-                <div className="h-5 w-px bg-border/60" />
-                <div className="flex items-center gap-2.5">
-                  <img src={margixLogo} alt="MARGIX" className="w-7 h-7" />
+                <div className="h-4 w-px bg-border/60 hidden sm:block" />
+                <div className="flex items-center gap-1.5 sm:gap-2.5">
+                  <img src={margixLogo} alt="MARGIX" className="w-6 h-6 sm:w-7 sm:h-7" />
                   <div className="flex items-center gap-2">
-                    <h1 className="text-base font-semibold text-foreground tracking-tight">Scan Results</h1>
-                    <Badge variant="outline" className="text-[10px] h-5 gap-1 text-amber-600 border-amber-300 bg-amber-50">
-                      Free Analysis
+                    <h1 className="text-sm sm:text-base font-semibold text-foreground tracking-tight hidden xs:block">
+                      Results
+                    </h1>
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] h-6 sm:h-5 px-2 sm:px-2 gap-1 text-amber-600 border-amber-300 bg-amber-50"
+                    >
+                      <span className="sm:hidden">Free</span>
+                      <span className="hidden sm:inline">Free Analysis</span>
                     </Badge>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2">
                 {/* Export locked for free users */}
                 <Button 
                   variant="outline" 
-                  size="sm" 
-                  className="gap-2 hidden sm:flex border-border/60 opacity-50 cursor-not-allowed" 
+                  size="icon"
+                  className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 gap-2 border-border/60 opacity-50 cursor-not-allowed" 
                   disabled
                   data-testid="button-download-locked"
                 >
                   <Lock className="h-3 w-3" />
                   <Download className="h-4 w-4" />
-                  Export
+                  <span className="hidden sm:inline ml-2">Export</span>
                 </Button>
                 <Link to="/pricing">
                   <Button 
-                    size="sm" 
-                    className="gap-2 brand-gradient border-0 text-white" 
+                    size="icon"
+                    className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 gap-2 brand-gradient border-0 text-white" 
                     data-testid="button-upgrade"
                   >
                     <Sparkles className="h-4 w-4" />
-                    <span className="hidden sm:inline">Upgrade</span>
+                    <span className="hidden sm:inline ml-2">Upgrade</span>
                   </Button>
                 </Link>
               </div>
