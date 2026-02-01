@@ -139,7 +139,7 @@ const FreeAnalysisResults = () => {
         <header className="border-b border-border/40 bg-background/95 backdrop-blur-sm sticky top-0 z-50">
           <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-14 sm:h-16">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <Button 
                   variant="ghost" 
                   size="icon"
@@ -153,13 +153,13 @@ const FreeAnalysisResults = () => {
                 <div className="h-4 w-px bg-border/60 hidden sm:block" />
                 <div className="flex items-center gap-1.5 sm:gap-2.5">
                   <img src={margixLogo} alt="MARGIX" className="w-6 h-6 sm:w-7 sm:h-7" />
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                     <h1 className="text-sm sm:text-base font-semibold text-foreground tracking-tight hidden xs:block">
                       Results
                     </h1>
                     <Badge
                       variant="outline"
-                      className="text-[10px] h-6 sm:h-5 px-2 sm:px-2 gap-1 text-amber-600 border-amber-300 bg-amber-50"
+                      className="text-[10px] h-5 px-2 gap-1 text-amber-600 border-amber-300 bg-amber-50 whitespace-nowrap"
                     >
                       <span className="sm:hidden">Free</span>
                       <span className="hidden sm:inline">Free Analysis</span>
@@ -176,8 +176,8 @@ const FreeAnalysisResults = () => {
                   disabled
                   data-testid="button-download-locked"
                 >
-                  <Lock className="h-3 w-3" />
-                  <Download className="h-4 w-4" />
+                  <Lock className="h-4 w-4 sm:h-3 sm:w-3" />
+                  <Download className="hidden sm:inline h-4 w-4" />
                   <span className="hidden sm:inline ml-2">Export</span>
                 </Button>
                 <Link to="/pricing">
