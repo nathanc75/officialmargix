@@ -98,6 +98,14 @@ Respond in JSON:
 Pattern Analysis Results:
 ${JSON.stringify(geminiFindings, null, 2)}
 
+CRITICAL - MONEY FLOW DIRECTION:
+Before classifying ANY issue, first determine the money flow direction:
+- INFLOW (revenue): Money coming INTO the business from customers, clients, or sales
+- OUTFLOW (expense): Money going OUT to vendors, suppliers, platforms, subscriptions
+
+This distinction is ESSENTIAL. A past-due notice from a vendor means YOU owe THEM money (outflow/accounts payable).
+That is NOT a "missing payment" — missing payments are when CUSTOMERS owe YOU money (inflow/accounts receivable).
+
 HOW TO EXPLAIN EVERY ISSUE:
 
 1. **Start with what happened** — State it simply, like you're telling a friend.
@@ -121,15 +129,33 @@ TONE RULES:
 BANNED WORDS (never use these in main descriptions):
 reconciliation, sync failure, webhook, revenue recognition, discrepancy, mapping issue, variance, settlement, ledger, POS integration, API, data mismatch, transaction log
 
-Issue types to look for:
-- MISSING PAYMENTS - Money you expected but never received
-- DUPLICATE CHARGES - You paid for the same thing twice  
-- UNUSED SUBSCRIPTIONS - You're paying for something you don't use
-- FAILED PAYMENTS - A payment didn't go through and was never retried
-- PRICING INEFFICIENCIES - You're being charged more than you should be
-- BILLING ERRORS - Simple mistakes in amounts or calculations
-- REFUND FEE LOSS - You gave a refund but still got charged the processing fee
-- CHURN PERMANENT LOSS - Customers who left and took their business elsewhere
+Issue types - ONLY flag these (pay attention to money flow direction!):
+
+- MISSING PAYMENTS - Money owed TO YOU by customers that never arrived (INFLOW issue)
+  ✓ Include: Customer invoices unpaid, expected deposits missing, refunds owed to you by platforms
+  ✗ Exclude: YOUR unpaid bills to vendors, YOUR past-due subscriptions, YOUR accounts payable
+
+- DUPLICATE CHARGES - You got billed twice for the same thing (OUTFLOW issue)
+  ✓ Include: Same vendor charge appearing twice, double processing fees
+  ✗ Exclude: Legitimate recurring charges
+
+- UNUSED SUBSCRIPTIONS - Services YOU PAY FOR but aren't using (OUTFLOW issue)
+  ✓ Include: Software you're paying for monthly but haven't logged into
+  ✗ Exclude: Subscriptions customers owe you for
+
+- FAILED PAYMENTS - Payments TO YOU that failed and weren't retried (INFLOW issue)
+  ✓ Include: Customer card declined, ACH returns
+  ✗ Exclude: Your failed payments to vendors
+
+- PRICING INEFFICIENCIES - You're being charged more than market rate (OUTFLOW issue)
+- BILLING ERRORS - Mistakes in invoices or calculations (either direction)
+- REFUND FEE LOSS - You refunded a customer but still paid the processing fee (OUTFLOW issue)
+- CHURN PERMANENT LOSS - Customers who cancelled their subscriptions with you (INFLOW loss)
+
+DO NOT FLAG AS LEAKS:
+- Your own unpaid bills to vendors (that's accounts payable, not a leak)
+- Past-due notices for subscriptions you use (that's your obligation, not missing revenue)
+- Normal business expenses
 
 Respond in JSON:
 {
