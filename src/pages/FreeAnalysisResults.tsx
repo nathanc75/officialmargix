@@ -183,11 +183,11 @@ const FreeAnalysisResults = () => {
                 <Link to="/pricing">
                   <Button 
                     size="icon"
-                    className="h-8 w-8 sm:h-9 sm:w-auto sm:px-3 gap-2 brand-gradient border-0 text-white" 
+                    className="h-8 w-8 sm:h-9 sm:w-auto sm:px-4 brand-gradient border-0 text-white" 
                     data-testid="button-upgrade"
                   >
-                    <Sparkles className="h-4 w-4" />
-                    <span className="hidden sm:inline ml-2">Upgrade</span>
+                    <Sparkles className="h-4 w-4 shrink-0" />
+                    <span className="hidden sm:inline ml-1.5">Upgrade</span>
                   </Button>
                 </Link>
               </div>
