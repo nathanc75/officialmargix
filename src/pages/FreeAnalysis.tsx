@@ -14,10 +14,8 @@ const FREE_SCAN_STORAGE_KEY = "margix_free_scan_used";
 
 const FreeAnalysis = () => {
   const { leakAnalysis, hasData: hasAnalysisData } = useAnalysis();
-  const [hasUsedFreeScan, setHasUsedFreeScan] = useState(() => {
-    // Check localStorage on initial render
-    return localStorage.getItem(FREE_SCAN_STORAGE_KEY) === "true";
-  });
+  // TESTING MODE: Bypass free scan limit
+  const [hasUsedFreeScan, setHasUsedFreeScan] = useState(false);
 
   const handleAnalysisComplete = () => {
     localStorage.setItem(FREE_SCAN_STORAGE_KEY, "true");
