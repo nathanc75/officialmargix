@@ -26,13 +26,28 @@ serve(async (req) => {
     }
 
     // STEP 1: Gemini Pattern Detection (using gemini-3-flash-preview)
-    const geminiPrompt = `You are a financial pattern detection AI. Analyze these documents for patterns that might indicate revenue leaks:
+    const geminiPrompt = `You are a financial pattern detection AI. Analyze these documents for patterns that might indicate revenue leaks.
 
-1. Recurring charges on specific dates
-2. Duplicate amounts across transactions
-3. Unusual fee patterns
-4. Subscription patterns
-5. Refund patterns
+CRITICAL - MONEY FLOW DIRECTION:
+First, determine the direction of money flow for each item:
+- INFLOW (revenue): Money coming INTO the business from customers, clients, or sales
+- OUTFLOW (expense): Money going OUT to vendors, suppliers, platforms, subscriptions
+
+IMPORTANT: Only look for patterns that represent money LOST or LEAKED from the business.
+Do NOT flag the business's own unpaid bills or past-due notices — those are obligations the business owes, not leaks.
+Past-due subscription notices for services the business uses are NOT leaks — they are accounts payable.
+
+Look for these LEAK patterns only:
+1. Duplicate charges (same amount charged twice from a vendor)
+2. Unusual fee patterns (fees higher than expected)
+3. Missing customer payments (customers who haven't paid YOU)
+4. Refund patterns where you still paid processing fees
+5. Subscriptions the business pays for but doesn't use
+
+DO NOT flag as patterns:
+- Normal recurring expenses the business pays
+- Past-due notices for services the business subscribes to
+- Vendor invoices the business needs to pay
 
 Documents analyzed: ${fileNames.join(', ')}
 
@@ -47,6 +62,9 @@ Respond in JSON:
   ],
   "anomalies": [
     { "description": "Unusual spike in refunds on March 15", "severity": "medium" }
+  ],
+  "notLeaks": [
+    { "description": "Past-due subscription to vendor X - normal accounts payable", "reason": "business_expense" }
   ],
   "summary": "Brief pattern summary"
 }`;
@@ -98,64 +116,78 @@ Respond in JSON:
 Pattern Analysis Results:
 ${JSON.stringify(geminiFindings, null, 2)}
 
-CRITICAL - MONEY FLOW DIRECTION:
-Before classifying ANY issue, first determine the money flow direction:
+=== CRITICAL FIRST STEP - MONEY FLOW DIRECTION ===
+Before classifying ANY item, FIRST determine the money flow direction:
+
 - INFLOW (revenue): Money coming INTO the business from customers, clients, or sales
 - OUTFLOW (expense): Money going OUT to vendors, suppliers, platforms, subscriptions
 
-This distinction is ESSENTIAL. A past-due notice from a vendor means YOU owe THEM money (outflow/accounts payable).
-That is NOT a "missing payment" — missing payments are when CUSTOMERS owe YOU money (inflow/accounts receivable).
+This distinction is ESSENTIAL for correct classification.
 
-HOW TO EXPLAIN EVERY ISSUE:
+=== WHAT IS NOT A LEAK (SKIP THESE) ===
+The following are NORMAL BUSINESS OPERATIONS — do NOT create leak entries for them:
 
-1. **Start with what happened** — State it simply, like you're telling a friend.
-   Example: "We found a charge on your account that showed up twice."
+1. Business's own unpaid bills to vendors (that's accounts payable)
+2. Past-due notices for subscriptions the business uses (that's your obligation)
+3. Invoices from suppliers the business needs to pay
+4. Normal recurring business expenses
+5. Monthly software subscriptions the business actively uses
 
-2. **Explain what it means for the money** — Is it missing? At risk? Just costing more than it should?
-   Example: "This means you paid $49.99 extra that you shouldn't have."
+If the ONLY documents uploaded are the business's own expenses/bills, return:
+- totalLeaks: 0
+- totalRecoverable: 0
+- leaks: []
+- summary: "No revenue leaks detected. The documents show normal business expenses."
 
-3. **Give the most common reason** — Keep it short and relatable.
-   Example: "This usually happens when a payment system retries automatically."
+=== EXAMPLES TO GUIDE YOUR CLASSIFICATION ===
 
-4. **End with clear next steps** — What can they do right now?
-   Example: "Check your bank statement for the duplicate and request a refund from the provider."
+✓ THIS IS A LEAK:
+- Customer invoice from 60 days ago still unpaid → Missing Payment (they owe YOU money)
+- Same $50 charge from Stripe appeared twice on same day → Duplicate Charge (you got billed twice)
+- You're paying $99/month for software nobody has logged into in 6 months → Unused Subscription
 
-TONE RULES:
-- Calm and supportive — never alarming or robotic
-- Human and conversational — like talking to a neighbor, not reading a report
-- No blame — focus on solutions, not mistakes
-- Make the user feel in control and confident about what to do next
+✗ THIS IS NOT A LEAK:
+- Your Quickbooks subscription is past due → Normal expense (YOU owe THEM money) - SKIP IT
+- Monthly $50 software subscription bill → Normal recurring expense - SKIP IT
+- Vendor invoice saying "payment overdue" → Accounts payable, not a leak - SKIP IT
 
-BANNED WORDS (never use these in main descriptions):
-reconciliation, sync failure, webhook, revenue recognition, discrepancy, mapping issue, variance, settlement, ledger, POS integration, API, data mismatch, transaction log
+=== LEAK TYPES (ONLY FLAG THESE) ===
 
-Issue types - ONLY flag these (pay attention to money flow direction!):
-
-- MISSING PAYMENTS - Money owed TO YOU by customers that never arrived (INFLOW issue)
+- MISSING PAYMENTS (INFLOW issue) - Money owed TO YOU by customers that never arrived
   ✓ Include: Customer invoices unpaid, expected deposits missing, refunds owed to you by platforms
   ✗ Exclude: YOUR unpaid bills to vendors, YOUR past-due subscriptions, YOUR accounts payable
 
-- DUPLICATE CHARGES - You got billed twice for the same thing (OUTFLOW issue)
+- DUPLICATE CHARGES (OUTFLOW issue) - You got billed twice for the same thing
   ✓ Include: Same vendor charge appearing twice, double processing fees
-  ✗ Exclude: Legitimate recurring charges
+  ✗ Exclude: Legitimate recurring monthly charges
 
-- UNUSED SUBSCRIPTIONS - Services YOU PAY FOR but aren't using (OUTFLOW issue)
+- UNUSED SUBSCRIPTIONS (OUTFLOW issue) - Services YOU PAY FOR but aren't using
   ✓ Include: Software you're paying for monthly but haven't logged into
-  ✗ Exclude: Subscriptions customers owe you for
+  ✗ Exclude: Active subscriptions you use, subscriptions customers owe you for
 
-- FAILED PAYMENTS - Payments TO YOU that failed and weren't retried (INFLOW issue)
+- FAILED PAYMENTS (INFLOW issue) - Payments TO YOU that failed and weren't retried
   ✓ Include: Customer card declined, ACH returns
   ✗ Exclude: Your failed payments to vendors
 
-- PRICING INEFFICIENCIES - You're being charged more than market rate (OUTFLOW issue)
+- PRICING INEFFICIENCIES (OUTFLOW issue) - You're being charged more than market rate
 - BILLING ERRORS - Mistakes in invoices or calculations (either direction)
-- REFUND FEE LOSS - You refunded a customer but still paid the processing fee (OUTFLOW issue)
-- CHURN PERMANENT LOSS - Customers who cancelled their subscriptions with you (INFLOW loss)
+- REFUND FEE LOSS (OUTFLOW issue) - You refunded a customer but still paid the processing fee
+- CHURN PERMANENT LOSS (INFLOW loss) - Customers who cancelled their subscriptions with you
 
-DO NOT FLAG AS LEAKS:
-- Your own unpaid bills to vendors (that's accounts payable, not a leak)
-- Past-due notices for subscriptions you use (that's your obligation, not missing revenue)
-- Normal business expenses
+=== HOW TO EXPLAIN EVERY ISSUE ===
+
+1. **Start with what happened** — State it simply, like you're telling a friend.
+2. **Explain what it means for the money** — Is it missing? At risk? Just costing more than it should?
+3. **Give the most common reason** — Keep it short and relatable.
+4. **End with clear next steps** — What can they do right now?
+
+TONE RULES:
+- Calm and supportive — never alarming or robotic
+- Human and conversational — like talking to a neighbor
+- No blame — focus on solutions, not mistakes
+
+BANNED WORDS (never use these in main descriptions):
+reconciliation, sync failure, webhook, revenue recognition, discrepancy, mapping issue, variance, settlement, ledger, POS integration, API, data mismatch, transaction log
 
 Respond in JSON:
 {
